@@ -24,7 +24,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-webPush.setVapidDetails(`mailto:${process.env.VAPID_MAILTO}`, process.env.VAPID_PUBLIC_KEY!, process.env.VAPID_PRIVATE_KEY!);
+// webPush.setVapidDetails(`mailto:${process.env.VAPID_MAILTO}`, process.env.VAPID_PUBLIC_KEY!, process.env.VAPID_PRIVATE_KEY!);
 app.use((req, res, next) => {
     /**
      * THIS IS LOGING MIDDLEWARE
