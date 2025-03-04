@@ -72,8 +72,8 @@ httpServer.listen(httpPort, () => {
  * `mkcert -key-file key.pem -cert-file cert.pem {domain}`
  */
 const httpsServer = https.createServer({
-    key: fs.readFileSync(path.resolve(__dirname, '../key.pem')),
-    cert: fs.readFileSync(path.resolve(__dirname, '../cert.pem')),
+    key: fs.readFileSync(process.env.KEY_PATH ?? ""),
+    cert: fs.readFileSync(process.env.CERT_PATH ?? ""),
 }, app);
 
 httpsServer.listen(httpsPort, () => {
