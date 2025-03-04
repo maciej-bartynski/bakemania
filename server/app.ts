@@ -58,13 +58,13 @@ app.use(express.static(path.resolve(__dirname, '../bakemania-spa/dist/.')));
 // });
 
 const httpsPort = parseInt(process.env.PORT!);
-const httpPort = httpsPort + 1;
+// const httpPort = httpsPort + 1;
 
-const httpServer = http.createServer(app);
-httpServer.listen(httpPort, () => {
-    console.log(`HTTP: http://${getLocalIP()}:${httpPort}`);
-    console.log(`HTTP: http://localhost:${httpPort}`);
-});
+// const httpServer = http.createServer(app);
+// httpServer.listen(httpPort, () => {
+//     console.log(`HTTP: http://${getLocalIP()}:${httpPort}`);
+//     console.log(`HTTP: http://localhost:${httpPort}`);
+// });
 
 /**
  * **How to generate cert**
@@ -94,16 +94,16 @@ function getLocalIP() {
     return "localhost";
 }
 
-const wsConnections = new Map();
-// --- WebSocket Serwer dla HTTP ---
-const wsHttpServer = new WebSocketServer({ server: httpServer });
-wsHttpServer.on("connection", (ws) => {
-    console.log("connection ws", ws)
-    ws.on("message", (message) => {
-        console.log(`Odebrano: ${message}`);
-        ws.send(`Otrzymałem: ${message}`);
-    });
-});
+// const wsConnections = new Map();
+// // --- WebSocket Serwer dla HTTP ---
+// const wsHttpServer = new WebSocketServer({ server: httpServer });
+// wsHttpServer.on("connection", (ws) => {
+//     console.log("connection ws", ws)
+//     ws.on("message", (message) => {
+//         console.log(`Odebrano: ${message}`);
+//         ws.send(`Otrzymałem: ${message}`);
+//     });
+// });
 
 // --- WebSocket Serwer dla HTTPS ---
 const wsHttpsServer = new WebSocketServer({ server: httpsServer });
