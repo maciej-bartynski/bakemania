@@ -1,0 +1,204 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+:root {
+  --bakemaniaGold: rgb(135, 99, 17);
+  --text: #140901;
+
+  --colorBakedA: rgba(59, 45, 28, 1);
+  --colorBakedB: rgba(34, 12, 0, 1);
+  --colorCoffeeDark: rgba(34, 12, 0, 1);
+  --colorCoffeeMilk: rgba(96, 55, 7, 1);
+  --colorFlourWet: rgba(233, 233, 233, 1);
+  --colorFlourDry: rgba(255, 255, 255, 1);
+  --colorFlour: rgba(176, 176, 176, 1);
+  --colorOfSlot: rgba(59, 45, 28, 0.2);
+  --colorOfWatermark: rgba(155, 121, 79, 0.6);
+
+  --colorActive: #646cff;
+  --colorText: #213547;
+
+  --bakemania-dark-color: black;
+  --bakemania-light-color: white;
+  --flour-dark-color: #a0958d;
+  --flour-light-color: #eac5ac;
+  --dark-color: #140901;
+  --light-color: #ffbc8c;
+}
+
+*:not(strong) {
+  box-sizing: border-box;
+  font-family: 'Nunito', sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  color: var(--dark-color);
+  line-height: 1.5;
+  font-size: 16px;
+  font-weight: 400;
+  color-scheme: light dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: transparent;
+}
+
+.global-loader-spinner {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: var(--bakemania-light-color);
+  animation: global-animation-loader-shimmer 1000ms ease-in-out infinite forwards;
+}
+
+.global-loader-spinner::after,
+.global-loader-spinner::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  width: calc(100% + 6px);
+  height: calc(100% + 6px);
+  border-radius: 50%;
+  border: solid 2px transparent;
+  background-color: transparent;
+  display: block;
+  box-sizing: border-box;
+}
+
+.global-loader-spinner::after {
+  border-top-color: var(--bakemania-dark-color);
+  animation: global-animation-loader-spin 1000ms ease-in-out infinite normal, global-animation-border-shimmer 1000ms ease-in-out infinite normal;
+  top: -6px;
+  left: -6px;
+  width: calc(100% + 12px);
+  height: calc(100% + 12px);
+}
+
+.global-loader-spinner::before {
+  border-top-color: var(--bakemania-light-color);
+  animation: global-animation-loader-spin 1000ms ease-in-out infinite reverse, global-animation-border-shimmer 1000ms ease-in-out infinite reverse;
+}
+
+@keyframes global-animation-loader-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes global-animation-loader-shimmer {
+  0% {
+    background-color: var(--bakemania-light-color);
+  }
+
+  50% {
+    background-color: var(--bakemania-dark-color);
+  }
+
+  100% {
+    background-color: var(--bakemania-light-color);
+  }
+}
+
+@keyframes global-animation-border-shimmer {
+  0% {
+    border-top-color: var(--bakemania-light-color);
+  }
+
+  50% {
+    border-top-color: var(--bakemania-dark-color);
+  }
+
+  100% {
+    border-top-color: var(--bakemania-light-color);
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button,
+a {
+  height: 50px;
+  border-radius: 6px;
+  background: black;
+  color: white;
+  font-size: 12px;
+  border: solid 1px black;
+  font-weight: 900;
+}
+
+button.secondary,
+a.secondary {
+  height: 50px;
+  border-radius: 6px;
+  background: transparent;
+  color: black;
+  font-size: 12px;
+  border: solid 2px black;
+  font-weight: 900;
+}
+
+button:not(.secondary):focus,
+button:not(.secondary):focus-visible,
+a:focus,
+a:focus-visible {
+  outline: 1px auto var(--colorActive);
+}
+
+button:disabled,
+a:disabled {
+  border-color: #bfbfbf;
+  background-color: #bfbfbf;
+  color: white;
+}
+
+label {
+  width: 100%;
+}
+
+input {
+  width: 100%;
+  height: 50px;
+  border-radius: 6px;
+  padding-left: 10px;
+  font-size: 14px;
+  border: solid 1px var(--colorBakedB);
+  background-color: transparent;
+  background: transparent;
+}
+
+input:active,
+input:focus {
+  border: solid 1px var(--colorActive);
+  outline: solid 1px var(--colorActive);
+}
+
+@keyframes global-fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+/* @media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+} */

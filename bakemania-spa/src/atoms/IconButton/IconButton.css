@@ -1,0 +1,28 @@
+.icon-button {
+    width: 60px;
+    height: 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0;
+    justify-content: space-between;
+    background-color: transparent;
+    overflow: hidden;
+    gap: 6px;
+    border: none;
+}
+
+.icon-button__icon {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+}
+
+.icon-button__label {
+    color: white;
+    font-size: 8px;
+    flex: 1;
+}

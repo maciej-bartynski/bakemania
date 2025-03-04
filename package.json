@@ -1,0 +1,40 @@
+{
+  "name": "bakemania",
+  "version": "1.0.0",
+  "main": "./app.js",
+  "scripts": {
+    "dev": "npx tsx watch ./server/app.ts",
+    "dev-watch": "tsc --watch",
+    "dev-run": "nodemon ./server-dist/app.js --watch ./server-dist",
+    "build": "tsc",
+    "start": "node ./server-dist/app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@types/uuid": "^10.0.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.9.2",
+    "uuid": "^11.1.0",
+    "web-push": "^3.6.7",
+    "ws": "^8.18.1"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/express-session": "^1.18.1",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/node": "^22.13.5",
+    "@types/web-push": "^3.6.4",
+    "@types/ws": "^8.5.14",
+    "nodemon": "^3.1.9",
+    "typescript": "^5.7.3"
+  }
+}

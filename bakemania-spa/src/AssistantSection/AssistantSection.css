@@ -1,0 +1,9 @@
+.assistantSection__scanner-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: auto;
+    align-items: stretch;
+    gap: 16px;
+}

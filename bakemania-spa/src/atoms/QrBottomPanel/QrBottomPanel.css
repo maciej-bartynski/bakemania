@@ -1,0 +1,48 @@
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    transition: opacity 250ms ease-in-out;
+}
+
+.panel__wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: auto;
+}
+
+.panel {
+    position: fixed;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 20px);
+    background: white;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    transition: top 250ms ease-in-out;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    padding: 25px;
+    gap: 20px;
+}
+
+.panel.visible {
+    top: 20px;
+}
+
+.panel.hidden {
+    top: 100%;
+}
+
+.hide-button {
+    align-self: stretch;
+}

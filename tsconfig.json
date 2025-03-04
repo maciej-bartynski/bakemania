@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "target": "ESNext", // Cel to ESNext dla nowoczesnego JS
+        "module": "CommonJS", // Moduły ECMAScript
+        "moduleResolution": "node", // Resoluowanie modułów jak w Node.js
+        "esModuleInterop": true, // Interoperacyjność z CommonJS
+        "skipLibCheck": true, // Pomija sprawdzanie typów w bibliotekach
+        "forceConsistentCasingInFileNames": true,
+        "outDir": "./server-dist", // Pliki .js obok plików .ts
+        "rootDir": "./server", // Źródłowy katalog z plikami .ts
+        "strict": true, // Tryb ścisły
+        "allowJs": true, // Pozwolenie na używanie JS
+        "resolveJsonModule": true, // Pozwolenie na importowanie plików JSON
+        "skipDefaultLibCheck": true,
+        "noEmitOnError": true
+    },
+    "include": [
+        "./server",
+    ],
+    "exclude": [
+        "node_modules",
+        "bakemania-spa",
+        "db"
+    ],
+}

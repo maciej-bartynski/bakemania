@@ -1,0 +1,43 @@
+.discount-section {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    flex: auto;
+}
+
+.discount-section__content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    padding-bottom: 60px;
+}
+
+.discount-section__track {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 30px 0px 6px 0px
+}
+
+.stamps-container {
+    overflow: auto;
+    white-space: nowrap;
+    padding: 0 0 20px 0;
+    max-width: 100%;
+}
+
+.discount-section__message {
+    width: 100%;
+    text-align: center;
+}
+
+.discount-section__no-gifts {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}

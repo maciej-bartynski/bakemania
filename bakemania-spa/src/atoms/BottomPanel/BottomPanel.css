@@ -1,0 +1,52 @@
+.BottomPanel__overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    transition: opacity 250ms ease-in-out;
+}
+
+.BottomPanel__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    flex: auto;
+    overflow: auto;
+}
+
+.BottomPanel {
+    position: fixed;
+    bottom: -100%;
+    left: 0;
+    width: 100%;
+    background: white;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: space-between;
+    transition: bottom 250ms ease-in-out;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    padding: 25px;
+    gap: 20px;
+}
+
+.BottomPanel.visible {
+    bottom: 0px;
+}
+
+.BottomPanel.hidden {
+    bottom: -100%;
+}
+
+.BottomPanel__hide-button {
+    align-self: stretch;
+}
+
+.BottomPanel__title {
+    text-align: center;
+}

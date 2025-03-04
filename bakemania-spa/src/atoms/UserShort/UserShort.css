@@ -1,0 +1,20 @@
+.UserShort {
+    border: solid 1px transparent;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.2);
+}
+
+.UserShort__row {
+    width: 100%;
+}
+
+.UserShort__row-line {
+    width: 100%;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 11px;
+}
