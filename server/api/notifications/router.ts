@@ -8,7 +8,7 @@ import webPush from 'web-push';
 const router = express.Router();
 
 router.get('/get-vapid-public-key', (req, res) => {
-    res.json({ publicKey: process.env.VAPID_PUBLIC_KEY });
+    res.json({ publicKey: 'mock-key', /* process.env.VAPID_PUBLIC_KEY */ });
 });
 
 router.put('/receive-notification/:userId', Middleware.authenticateToken, Middleware.requireAdmin, async (req, res) => {
