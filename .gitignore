@@ -8,3 +8,4 @@ server-dist
 db
 bakemania-spa/dist
 .DS_Store
+.test-test
