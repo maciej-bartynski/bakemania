@@ -7,3 +7,4 @@ key.pem
 server-dist
 db
 bakemania-spa/dist
+.DS_store
