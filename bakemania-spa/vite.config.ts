@@ -45,6 +45,11 @@ export default defineConfig({
     devOptions: {
       enabled: true, // Działa w dev
     },
+    injectManifest: {
+      // Możesz zmieniać nazwę pliku service worker w zależności od preferencji
+      swSrc: './public/iniect-to-service-worker.js',
+
+    },
     manifest: {
       name: 'bakeMAnia',
       short_name: 'MAnia!',
@@ -77,8 +82,10 @@ export default defineConfig({
           "src": "/images/gift-screen.png",
           "sizes": "696x1486",
           "type": "image/png"
-        }]
+        }],
+
     },
+
     workbox: {
       runtimeCaching: [
         {
@@ -104,22 +111,15 @@ export default defineConfig({
           },
         },
         {
-          urlPattern: '/logo-rectangle.jpg', // Obrazek z public
+          urlPattern: 'https://bakemania.ovh/logo-rectangle.jpg', // Obrazek z public
           handler: 'CacheFirst',
           options: {
             cacheName: 'banner-images',
           },
         },
         {
-          urlPattern: /^https:\/\/api\.mojadomena\.com\/.*/i, // API
-          handler: 'StaleWhileRevalidate',
-          options: {
-            cacheName: 'api-cache',
-            expiration: {
-              maxEntries: 50,
-              maxAgeSeconds: 60 * 60 * 24, // 24h
-            },
-          },
+          urlPattern: /^https:\/\/bakemania\.ovh\/api\/.*/i, // Twoje API
+          handler: 'NetworkOnly',
         },
       ],
     },
