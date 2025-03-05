@@ -103,7 +103,7 @@ if (process.env.NODE_ENV === 'production') {
      * Behind Nginx
      */
     const httpServer = http.createServer(app);
-    httpServer.listen(process.env.PORT, () => {
+    httpServer.listen(3000, () => {
         console.log(`HTTP: http://${getLocalIP()}:${process.env.PORT}`);
         console.log(`HTTP: http://localhost:${process.env.PORT}`);
     });
