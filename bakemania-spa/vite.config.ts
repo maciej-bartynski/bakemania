@@ -45,11 +45,6 @@ export default defineConfig({
     devOptions: {
       enabled: true, // Działa w dev
     },
-    injectManifest: {
-      // Możesz zmieniać nazwę pliku service worker w zależności od preferencji
-      swSrc: './public/iniect-to-service-worker.js',
-
-    },
     manifest: {
       name: 'bakeMAnia',
       short_name: 'MAnia!',
@@ -87,6 +82,8 @@ export default defineConfig({
     },
 
     workbox: {
+      clientsClaim: true,
+      skipWaiting: true,
       runtimeCaching: [
         {
           urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
@@ -109,17 +106,6 @@ export default defineConfig({
               maxAgeSeconds: 60 * 60 * 24 * 365,
             },
           },
-        },
-        {
-          urlPattern: 'https://bakemania.ovh/logo-rectangle.jpg', // Obrazek z public
-          handler: 'CacheFirst',
-          options: {
-            cacheName: 'banner-images',
-          },
-        },
-        {
-          urlPattern: /^https:\/\/bakemania\.ovh\/api\/.*/i, // Twoje API
-          handler: 'NetworkOnly',
         },
       ],
     },
