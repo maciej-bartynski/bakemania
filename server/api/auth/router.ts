@@ -152,12 +152,11 @@ router.post('/login', async (req, res): Promise<void> => {
             return;
         }
     } catch (e) {
-        console.log("e", e);
         res
             .status(500)
             .json({
                 message: 'Logowanie nie powiodło się z nieznanej przyczyny.',
-                details: e
+                details: JSON.stringify(e)
             });
         return;
 
