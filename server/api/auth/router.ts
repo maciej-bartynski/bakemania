@@ -152,6 +152,7 @@ router.post('/login', async (req, res): Promise<void> => {
             return;
         }
     } catch (e) {
+        console.log("e", e);
         res
             .status(500)
             .json({
