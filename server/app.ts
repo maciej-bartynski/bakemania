@@ -2,9 +2,18 @@
 import dotenv from 'dotenv';
 import path from 'path';
 
-const prodEnvFile = path.resolve(__dirname, '../.env.prod');
-const devEnvFile = path.resolve(__dirname, '../.env.dev');
-dotenv.config({ path: process.env.NODE_ENV === 'production' ? prodEnvFile : devEnvFile });
+if (process.env.NODE_ENV !== 'production') {
+    const prodEnvFile = path.resolve(__dirname, '../.env.prod');
+    const devEnvFile = path.resolve(__dirname, '../.env.dev');
+    dotenv.config({ path: process.env.NODE_ENV === 'production' ? prodEnvFile : devEnvFile });
+} else {
+    // const prodEnvFile = path.resolve(__dirname, '../.env.prod');
+    // dotenv.config({ path: prodEnvFile });
+    /**
+     * Docker will populate
+     * See Dockerfile
+     */
+}
 
 import express from 'express';
 import authRouter from './api/auth/router'
@@ -18,14 +27,17 @@ import appConfigRouter from './api/appConfig/router';
 import usersRouterForAdmin from './api/admin/users/router';
 import fs from 'fs';
 import https from 'https';
-import http from 'https';
+import http from 'http';
 import { WebSocketServer } from "ws";
 import jwt from 'jsonwebtoken';
 import connections from './wsConnections';
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+
+if (process.env.NODE_ENV !== 'production') {
+    app.use(cors());
+}
 
 app.use((req, res, next) => {
     /**
@@ -52,28 +64,59 @@ app.use(express.static(path.resolve(__dirname, '../bakemania-spa/dist/.')));
 
 const httpsPort = parseInt(process.env.PORT!);
 
-/**
- * **How to generate cert**
- * @domain localhost 192.168.183.252
- * `mkcert -key-file key.pem -cert-file cert.pem {domain}`
- */
-const httpsServer = https.createServer({
-    key: fs.readFileSync(process.env.KEY_PATH ?? ""),
-    cert: fs.readFileSync(process.env.CERT_PATH ?? ""),
-}, app);
+// /**
+//  * **How to generate cert**
+//  * @domain localhost 192.168.183.252
+//  * `mkcert -key-file key.pem -cert-file cert.pem {domain}`
+//  */
+// const httpsServer = https.createServer({
+//     key: fs.readFileSync(process.env.KEY_PATH ?? ""),
+//     cert: fs.readFileSync(process.env.CERT_PATH ?? ""),
+// }, app);
 
-httpsServer.listen(httpsPort, () => {
-    console.log(`HTTPS: https://${getLocalIP()}:${httpsPort}`);
-    console.log(`HTTPS: https://localhost:${httpsPort}`);
-});
+// httpsServer.listen(httpsPort, () => {
+//     console.log(`HTTPS: https://${getLocalIP()}:${httpsPort}`);
+//     console.log(`HTTPS: https://localhost:${httpsPort}`);
+// });
+
+// if (process.env.NODE_ENV === 'production') {
+//     http.createServer((req, res) => {
+//         res.writeHead(301, { "Location": `https://${req.headers.host}${req.url}` });
+//         res.end();
+//     }).listen(80, () => {
+//         console.log(`HTTP: proxy to https://`);
+//     });
+// }
+
+let wsHttpsServer: WebSocketServer;
 
 if (process.env.NODE_ENV === 'production') {
-    http.createServer((req, res) => {
-        res.writeHead(301, { "Location": `https://${req.headers.host}${req.url}` });
-        res.end();
-    }).listen(80, () => {
-        console.log(`HTTP: proxy to https://`);
+    /**
+     * Behind Nginx
+     */
+    const httpServer = http.createServer(app);
+    httpServer.listen(process.env.PORT, () => {
+        console.log(`HTTP: http://${getLocalIP()}:${process.env.PORT}`);
+        console.log(`HTTP: http://localhost:${process.env.PORT}`);
     });
+    wsHttpsServer = new WebSocketServer({ server: httpServer })
+} else {
+    /**
+     * **How to generate local cert**
+     * @domain localhost 192.168.183.252
+     * `mkcert -key-file key.pem -cert-file cert.pem {domain}`
+     */
+    const httpsServer = https.createServer({
+        key: fs.readFileSync(process.env.KEY_PATH ?? ""),
+        cert: fs.readFileSync(process.env.CERT_PATH ?? ""),
+    }, app);
+
+    httpsServer.listen(httpsPort, () => {
+        console.log(`HTTPS: https://${getLocalIP()}:${httpsPort}`);
+        console.log(`HTTPS: https://localhost:${httpsPort}`);
+    });
+
+    wsHttpsServer = new WebSocketServer({ server: httpsServer })
 }
 
 function getLocalIP() {
@@ -89,7 +132,8 @@ function getLocalIP() {
     return "localhost";
 }
 
-const wsHttpsServer = new WebSocketServer({ server: httpsServer });
+// const wsHttpsServer = new WebSocketServer({ server: httpsServer });
+
 wsHttpsServer.on("connection", (ws, req) => {
     try {
         const [token, sessionId] = req.headers["sec-websocket-protocol"]?.split(', ') ?? [];

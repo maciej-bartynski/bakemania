@@ -4,7 +4,7 @@
   "main": "./app.js",
   "scripts": {
     "dev-watch": "tsc --watch",
-    "dev-run": "NODE_ENV=development nodemon ./server-dist/app.js --watch ./server-dist",
+    "dev-run": "NODE_ENV=production nodemon ./server-dist/app.js --watch ./server-dist",
     "build": "tsc",
     "start": "NODE_ENV=production node ./server-dist/app.js"
   },
