@@ -38,11 +38,13 @@ app.use(express.json());
 if (process.env.NODE_ENV !== 'production') {
     app.use(cors());
 } else {
-    const corsOptions = {
-        origin: 'https://bakemania.ovh',  // Jeśli chcesz ograniczyć tylko do tej domeny
-        methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    };
-    app.use(cors(corsOptions));
+    // const corsOptions = {
+    //     origin: 'https://bakemania.ovh',  // Jeśli chcesz ograniczyć tylko do tej domeny
+    //     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    // };
+    app.use(cors(
+        // corsOptions
+    ));
 }
 
 app.use((req, res, next) => {
