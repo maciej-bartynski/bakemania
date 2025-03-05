@@ -21,7 +21,6 @@ export default defineConfig({
         target: `https://${getLocalIP()}:4040`,
         changeOrigin: true,
         secure: false,
-        // rewrite: (path) => path.replace(/^\/api/, ''),
       },
       '/ws': {
         target: `https://${getLocalIP()}:4040`,

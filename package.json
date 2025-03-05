@@ -3,11 +3,10 @@
   "version": "1.0.0",
   "main": "./app.js",
   "scripts": {
-    "dev": "npx tsx watch ./server/app.ts",
     "dev-watch": "tsc --watch",
-    "dev-run": "nodemon ./server-dist/app.js --watch ./server-dist",
+    "dev-run": "NODE_ENV=development nodemon ./server-dist/app.js --watch ./server-dist",
     "build": "tsc",
-    "start": "node ./server-dist/app.js"
+    "start": "NODE_ENV=production node ./server-dist/app.js"
   },
   "author": "",
   "license": "ISC",
@@ -22,7 +21,6 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.2",
     "uuid": "^11.1.0",
-    "web-push": "^3.6.7",
     "ws": "^8.18.1"
   },
   "devDependencies": {
@@ -32,7 +30,6 @@
     "@types/express-session": "^1.18.1",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^22.13.5",
-    "@types/web-push": "^3.6.4",
     "@types/ws": "^8.5.14",
     "nodemon": "^3.1.9",
     "typescript": "^5.7.3"

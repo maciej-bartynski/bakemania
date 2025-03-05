@@ -1,11 +1,19 @@
+# misc
 node_modules
+.DS_Store
+
+# builds:
+bakemania-spa/dist
+server-dist
+
+# data
+db
+
+# certs
+cert.pem
+key.pem
+
+# env
 .env
 .env.prod
 .env.dev
-cert.pem
-key.pem
-server-dist
-db
-bakemania-spa/dist
-.DS_Store
-.test-test

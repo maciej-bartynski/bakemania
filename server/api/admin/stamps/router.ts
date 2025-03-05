@@ -1,8 +1,6 @@
 import express from 'express';
 import Tools from '../../../lib/tools';
-import stampsQuery from '../../../query/stamps/stampsQuery';
 import stampsQueryForAdmin from './query';
-import webPush from 'web-push';
 import { broadcastToUser } from '../../../wsConnections';
 
 const stampsRouter = express.Router();

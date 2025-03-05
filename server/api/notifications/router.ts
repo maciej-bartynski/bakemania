@@ -3,7 +3,6 @@ import Middleware from '../../lib/middleware';
 import Tools from '../../lib/tools';
 import Models from '../../lib/models';
 import fs from 'fs';
-import webPush from 'web-push';
 
 const router = express.Router();
 
@@ -28,7 +27,7 @@ router.put('/receive-notification/:userId', Middleware.authenticateToken, Middle
                     body: `Hello, ${userToPing.email}!`,
                 });
 
-                await webPush.sendNotification(existingSubscription, payload);
+                // await webPush.sendNotification(existingSubscription, payload);
 
                 res.json({ message: 'User pinged successfully' });
             } else {

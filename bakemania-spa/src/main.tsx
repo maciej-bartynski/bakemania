@@ -9,11 +9,11 @@ import { noticesStore } from './storage/notices-store.ts';
 import NoticesManager from './NoticesManager.tsx';
 import SplashScreen from './SplashScreen/SplashScreen.tsx';
 
-// if ("serviceWorker" in navigator) {
-//   navigator.serviceWorker.register("/sw.js")
-//     .then(reg => console.log("SW zarejestrowany:", reg))
-//     .catch(err => console.error("Błąd rejestracji SW:", err));
-// }
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/sw.js")
+    .then(reg => console.log("SW zarejestrowany:", reg))
+    .catch(err => console.error("Błąd rejestracji SW:", err));
+}
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
