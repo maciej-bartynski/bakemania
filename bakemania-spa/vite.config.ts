@@ -4,8 +4,6 @@ import mkcert from 'vite-plugin-mkcert'
 import os from 'os';
 import { VitePWA } from 'vite-plugin-pwa';
 
-const useLocalhost = true;
-
 // https://vite.dev/config/
 export default defineConfig({
   server: {
@@ -17,28 +15,22 @@ export default defineConfig({
     headers: {
       "Access-Control-Allow-Origin": "*",
     },
-    host: useLocalhost ? undefined : getLocalIP(),
+    host: getLocalIP(),
     proxy: {
       '/api': {
-        target: `https://${useLocalhost ? 'localhost' : getLocalIP()}:4040`,
+        target: `https://${getLocalIP()}:4040`,
         changeOrigin: true,
         secure: false,
       },
       '/ws': {
-        target: `wss://${useLocalhost ? 'localhost' : getLocalIP()}:4040`,
+        target: `wss://${getLocalIP()}:4040`,
         changeOrigin: true,
         secure: false,
         ws: true,
       },
     }
   },
-  define: process.env.NODE_ENV === 'development' ? {
-    "import.meta.env.VITE_API_URL": `"https://${useLocalhost ? 'localhost' : getLocalIP()}:3000/api"`,
-    "import.meta.env.VITE_WS_URL": `"wss://${useLocalhost ? 'localhost' : getLocalIP()}:3000/ws"`,
-  } : {
-    "import.meta.env.VITE_API_URL": `"https://bakemania.ovh/api"`,
-    "import.meta.env.VITE_WS_URL": `"wss://bakemania.ovh/ws"`,
-  },
+
   plugins: [react(), mkcert(), VitePWA({
 
     registerType: 'autoUpdate', // Autoaktualizacja service workera

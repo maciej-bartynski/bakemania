@@ -8,6 +8,7 @@ COPY . .
 RUN npm run build
 # Budowanie frontu
 WORKDIR /app/bakemania-spa
+RUN npm install
 RUN npm run build
 # Powrót do katalogu głównego backendu
 WORKDIR /app

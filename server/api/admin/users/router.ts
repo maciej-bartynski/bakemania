@@ -19,7 +19,6 @@ usersRouterForAdmin.get('/get', async (req, res) => {
 });
 
 usersRouterForAdmin.get('/get-user/:userId', async (req, res) => {
-    console.log("ami hets")
     try {
         const userId = req.params.userId;
         const user = await tools.usersFindOne({ _id: userId, email: undefined });

@@ -21,6 +21,7 @@ const fetchMe = createAsyncThunk<Me>(
             try {
                 await apiService.fetch('auth/logout', undefined, [204]);
                 window.localStorage.removeItem('token');
+                window.localStorage.removeItem('me');
             } catch (logoutError) {
                 return rejectWithValue(anyErrorToDisplayError(logoutError));
             }
@@ -90,6 +91,8 @@ const logIn = createAsyncThunk<Me, { email: string, password: string }>(
             if (!me) {
                 return rejectWithValue('Nie udało się pobrać danych Użytkownika.');
             }
+
+            window.localStorage.setItem('me', JSON.stringify(me));
             return me;
         } catch (err) {
             function errTypeGuard(err: unknown): err is { message: string } {
@@ -118,6 +121,7 @@ const logOut = createAsyncThunk<void>(
         try {
             await apiService.fetch('auth/logout', undefined, [204]);
             window.localStorage.removeItem('token');
+            window.localStorage.removeItem('me');
         }
         catch (errorData) {
             return rejectWithValue(errorData);
@@ -131,6 +135,7 @@ const register = createAsyncThunk<Me, { email: string, password: string }>(
         try {
             const { email, password } = params;
             window.localStorage.removeItem('token');
+            window.localStorage.removeItem('me');
 
             // const vapidKey = await fetchVapidKey();
             // const permission = await Notification.requestPermission();
@@ -172,6 +177,8 @@ const register = createAsyncThunk<Me, { email: string, password: string }>(
             if (!me) {
                 return rejectWithValue('Nie udało się pobrać danych Użytkownika.');
             }
+
+            window.localStorage.setItem('me', JSON.stringify(me));
             return me;
 
         } catch (err) {
