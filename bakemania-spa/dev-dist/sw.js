@@ -67,7 +67,7 @@ if (!self.define) {
     });
   };
 }
-define(['./workbox-d38da2cf'], (function (workbox) { 'use strict';
+define(['./workbox-d9a5ed57'], (function (workbox) { 'use strict';
 
   self.skipWaiting();
   workbox.clientsClaim();
@@ -79,7 +79,7 @@ define(['./workbox-d38da2cf'], (function (workbox) { 'use strict';
    */
   workbox.precacheAndRoute([{
     "url": "index.html",
-    "revision": "0.7183c2jn2k8"
+    "revision": "0.afkil6ku8d8"
   }], {});
   workbox.cleanupOutdatedCaches();
   workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
@@ -99,10 +99,5 @@ define(['./workbox-d38da2cf'], (function (workbox) { 'use strict';
       maxAgeSeconds: 31536000
     })]
   }), 'GET');
-  workbox.registerRoute("https://bakemania.ovh/logo-rectangle.jpg", new workbox.CacheFirst({
-    "cacheName": "banner-images",
-    plugins: []
-  }), 'GET');
-  workbox.registerRoute(/^https:\/\/bakemania\.ovh\/api\/.*/i, new workbox.NetworkOnly(), 'GET');
 
 }));

@@ -1,16 +1,13 @@
 import { noticesStore } from "../storage/notices-store";
 import noticesSlice from "../storage/notices/notices-reducer";
 import * as uuid from 'uuid';
+import ClientLogsService from "./LogsService";
 
 interface ApiServiceInterface {
-    baseUrl: string;
     fetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response>;
 }
 
 class ApiService implements ApiServiceInterface {
-    baseUrl = import.meta.env.VITE_API_URL;
-
-
     fetch(input: RequestInfo | URL, init?: RequestInit, expectedStatuses = [200]) {
 
         const options = {
@@ -27,7 +24,7 @@ class ApiService implements ApiServiceInterface {
             }
         };
 
-        return window.fetch(`${this.baseUrl}/${input}`, options)
+        return window.fetch(`/api/${input}`, options)
             .then(async response => {
                 if (expectedStatuses.includes(response.status)) {
                     if (response.status === 204) {
@@ -48,7 +45,14 @@ class ApiService implements ApiServiceInterface {
                 throw rejectionData;
             })
             .catch(rejectionData => {
+                const clientLogs = new ClientLogsService();
 
+                clientLogs.report('Error on ApiService', {
+                    Url: input,
+                    'Request data': init,
+                    'Expected statuses': expectedStatuses,
+                    'What happend': rejectionData?.message || rejectionData || `${rejectionData}`
+                });
 
                 let errorMessage = "";
 
