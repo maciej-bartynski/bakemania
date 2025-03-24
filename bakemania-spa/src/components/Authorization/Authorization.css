@@ -1,0 +1,138 @@
+.authorization {
+    width: 100%;
+    max-width: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    background-color: rgba(255, 255, 255, 1);
+    border-radius: 30px;
+    box-shadow: 0 0 4px 4px rgba(10, 10, 10, .1);
+    position: relative;
+    overflow: hidden;
+}
+
+.authorization section {
+    padding: 26px 20px 30px 20px;
+    transition: transform 250ms ease-in-out;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 250ms ease-in-out;
+    position: absolute;
+    top: 0;
+    left: -100%;
+}
+
+.authorization section.--active {
+    opacity: 1;
+    position: static;
+}
+
+.authorization__login-form,
+.authorization__register-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+}
+
+.authorization__fieldset {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    align-items: stretch;
+    width: 100%;
+    position: relative;
+}
+
+.authorization__login-form label {
+    width: 100%;
+}
+
+.authorization__fieldset.--error input {
+    border-color: red;
+}
+
+.authorization__agreements {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.authorization__agreements input {
+    width: 20px;
+    height: 20px;
+}
+
+.authorization__agreements span {
+    font-size: 12px;
+    line-height: 16px;
+    color: #787676;
+}
+
+.authorization__error {
+    text-align: left;
+    font-size: 12px;
+    line-height: 18px;
+    color: red;
+    padding: 0 6px;
+    background-color: white;
+    display: inline-block;
+    max-width: calc(100% - 20px);
+}
+
+.authorization .horizontal-line {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+}
+
+.horizontal-line__question {
+    text-align: center;
+    font-size: 12px;
+    line-height: 16px;
+    color: #787676;
+    display: inline-block;
+    width: calc(100% - 12px);
+    align-self: center;
+}
+
+.horizontal-line__answer {
+    text-align: center;
+    display: inline-block;
+    width: calc(100% - 12px);
+    border-top: solid 1px #c5c1c1;
+    padding-top: 20px;
+    padding-bottom: 16px;
+    align-self: center;
+    color: black;
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.authorization__hint {
+    padding: 4px;
+    font-size: 10px;
+    line-height: 14px;
+    color: #787676;
+    display: inline-block;
+    width: calc(100% - 12px);
+    align-self: center;
+}
+
+.authorization__loader-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, .9), rgba(255, 255, 255, 1));
+    animation: global-fade-in 250ms ease-in-out forwards;
+}

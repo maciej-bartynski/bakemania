@@ -14,6 +14,8 @@ type OpenedSection = {
             title: 'card-details',
             details: {
                 cardId: string,
+                userId: string,
+                assistantId: string,
                 variant: 'spend' | 'earn'
             }
         }

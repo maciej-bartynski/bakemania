@@ -10,10 +10,12 @@ import RichNumberForm from '../RichNumberForm/RichNumberForm';
 import { OtherUser } from '../../storage/users/users-types';
 import UserShort from '../../atoms/UserShort/UserShort';
 import UpdateOverlay from '../../atoms/UpdateOverlay/UpdateOverlay';
+import useMeSelector from '../../storage/me/me-selectors';
 
 type ScannedData = {
     variant: 'spend' | 'earn',
     cardId: string,
+    userId: string,
 }
 
 const ScanningSection: FC<{
@@ -26,6 +28,7 @@ const ScanningSection: FC<{
     returnHomeView
 }) => {
         const overlayTimerRef = useRef<NodeJS.Timeout | null>(null);
+        const me = useMeSelector();
 
         useEffect(() => {
             return () => {
@@ -56,9 +59,9 @@ const ScanningSection: FC<{
 
         useEffect(() => {
             async function fetchUserToManage() {
-                if (qrData?.cardId) {
+                if (qrData?.userId) {
                     setUserLoading(true);
-                    const userToManage = await apiService.fetch(`admin/users/get-user/${qrData?.cardId}`) as OtherUser;
+                    const userToManage = await apiService.fetch(`admin/users/get-user/${qrData?.userId}`) as OtherUser;
                     if (userToManage) {
                         setUserToManage(userToManage);
                     }
@@ -66,18 +69,32 @@ const ScanningSection: FC<{
                 }
             }
 
-            if (qrData?.cardId) fetchUserToManage();
-        }, [qrData?.cardId]);
+            if (qrData?.userId) fetchUserToManage();
+        }, [qrData]);
 
         const earnStamps = useCallback(async (amount: number): Promise<void> => {
-            if (qrData) {
-                await apiService.fetch('admin/stamps/increment', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        amount,
-                        userId: qrData?.cardId
-                    })
-                });
+            if (qrData && me.me) {
+
+                if (qrData.cardId === 'change-force') {
+                    await apiService.fetch('admin/stamps/change-force', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            amount,
+                            userId: qrData?.userId,
+                            assistantId: me.me._id
+                        })
+                    });
+                } else {
+                    await apiService.fetch('admin/stamps/change', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            amount,
+                            userId: qrData?.userId,
+                            cardHash: qrData?.cardId,
+                            assistantId: me.me._id
+                        })
+                    });
+                }
 
                 setUpdateOverlayConfig({
                     title: 'Pieczątki nabite!',
@@ -86,17 +103,31 @@ const ScanningSection: FC<{
 
                 returnHomeView();
             }
-        }, [qrData, returnHomeView, setUpdateOverlayConfig]);
+        }, [qrData, returnHomeView, setUpdateOverlayConfig, me]);
 
         const spentStamps = useCallback(async (amount: number): Promise<void> => {
-            if (qrData) {
-                await apiService.fetch('admin/stamps/decrement', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        amount,
-                        userId: qrData?.cardId
-                    })
-                });
+            if (qrData && me.me) {
+                if (qrData.cardId === 'change-force') {
+                    await apiService.fetch('admin/stamps/change-force', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            amount: -amount,
+                            userId: qrData?.userId,
+                            assistantId: me.me._id
+                        })
+                    });
+                } else {
+
+                    await apiService.fetch('admin/stamps/change', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            amount: -amount,
+                            userId: qrData?.userId,
+                            cardHash: qrData?.cardId,
+                            assistantId: me.me._id
+                        })
+                    });
+                }
 
                 setUpdateOverlayConfig({
                     title: 'Rabat przyznany!',
@@ -105,7 +136,7 @@ const ScanningSection: FC<{
 
                 returnHomeView();
             }
-        }, [qrData, returnHomeView, setUpdateOverlayConfig]);
+        }, [qrData, returnHomeView, setUpdateOverlayConfig, me]);
 
         const renderActionPanel = () => {
             if (qrData && appConfig) {

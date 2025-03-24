@@ -12,14 +12,14 @@
         "allowJs": true, // Pozwolenie na używanie JS
         "resolveJsonModule": true, // Pozwolenie na importowanie plików JSON
         "skipDefaultLibCheck": true,
-        "noEmitOnError": true
+        "noEmitOnError": true,
     },
     "include": [
         "./server",
     ],
     "exclude": [
         "node_modules",
-        "bakemania-spa",
-        "db"
+        "db",
+        "bakemania-spa"
     ],
 }

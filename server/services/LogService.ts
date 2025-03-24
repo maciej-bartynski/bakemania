@@ -11,14 +11,24 @@ class LogService {
         this.location = params?.location;
     }
 
-    catchUnhandled(message: string, callback: () => (any | Promise<any>)) {
+    async catchUnhandled<T extends any>(message: string, callback: () => (T | Promise<T>), fallback?: (e: unknown) => (T | Promise<T>)) {
         try {
-            return callback()
+            return await callback()
         } catch (e) {
             console.error(`Catched error: ${e}`);
             this.report(message, (setDetails) => {
                 setDetails('What happend:', (e as any)?.message || `${e}`);
             });
+
+            if (fallback) {
+                try {
+                    return await fallback(e)
+                } catch (fallbackError) {
+                    this.report(message, (setDetails) => {
+                        setDetails('Fallback error:', (fallbackError as any)?.message || `${fallbackError}`);
+                    });
+                }
+            }
         }
     }
 
@@ -64,12 +74,14 @@ type Entry = {
 enum Locations {
     Client = 'client',
     WsServer = 'ws-server',
-    App = 'app'
+    App = 'app',
+    Email = 'email'
 }
 
 const clientLogs = new LogService({ location: Locations.Client });
 const wsLogs = new LogService({ location: Locations.WsServer });
 const appLogs = new LogService({ location: Locations.App });
+const emailLogs = new LogService({ location: Locations.Email });
 
 export type { Locations };
 
@@ -78,7 +90,8 @@ const Logs = {
     Locations,
     wsLogs,
     appLogs,
-    clientLogs
+    clientLogs,
+    emailLogs
 }
 
 export default Logs

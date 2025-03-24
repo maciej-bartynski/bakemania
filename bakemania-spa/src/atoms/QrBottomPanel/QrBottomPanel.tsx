@@ -1,13 +1,17 @@
 import { FC } from "react";
 import QRCode from "react-qr-code";
 import './QrBottomPanel.css';
+import Config from "../../config";
 
 const QrBottomPanel: FC<{
-    cardId: string,
+    userId: string,
     show: boolean,
     toggleBottomPanel: () => void,
     variant?: 'spend'
-}> = ({ cardId, show, variant, toggleBottomPanel }) => {
+}> = ({ userId, show, variant, toggleBottomPanel }) => {
+
+    const cardId = window.localStorage.getItem(Config.sessionKeys.CardId);
+
     return (
         <>
             {show && <div className="overlay" onClick={toggleBottomPanel}></div>}
@@ -23,7 +27,11 @@ const QrBottomPanel: FC<{
                 )}
                 <div className="panel__wrapper">
                     <QRCode
-                        value={JSON.stringify({ variant: variant == 'spend' ? 'spend' : 'earn', cardId })}
+                        value={JSON.stringify({
+                            variant: variant == 'spend' ? 'spend' : 'earn',
+                            cardId,
+                            userId,
+                        })}
                         size={300}
                         className="qr-code"
                     />

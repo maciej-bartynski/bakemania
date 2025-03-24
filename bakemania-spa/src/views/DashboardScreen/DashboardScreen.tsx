@@ -1,20 +1,21 @@
 import { FC, useCallback, useEffect, useState } from "react";
-import { Me } from "../storage/me/me-types";
+import { Me } from "../../storage/me/me-types";
 import './DashboardScreen.css';
-import StampsCard from "../atoms/StampsCard/StampsCard";
-import QrBottomPanel from "../atoms/QrBottomPanel/QrBottomPanel";
-import DiscountSection from "../components/DiscountSection/DiscountSection";
-import useAppDispatch from "../storage/useAppDispatch";
-import appConfigActions from "../storage/appConfig/appConfig-actions";
-import useAppConfigSelector from "../storage/appConfig/appConfig-selectors";
-import ReducerState from "../storage/types";
-import FooterNav from "../components/FooterNav/FooterNav";
-import IconName from "../icons/IconName";
-import SettingsSection from "../components/SettingsSection/SettingsSection";
-import { useLiveUpdateContext } from "../LiveUpdate/LiveUpdateContext";
-import Background from "../atoms/Background/Background";
-import Stamp from "../atoms/Stamp/Stamp";
-import iterateIcons from "../atoms/Stamp/Stamp.helper";
+import StampsCard from "../../atoms/StampsCard/StampsCard";
+import QrBottomPanel from "../../atoms/QrBottomPanel/QrBottomPanel";
+import DiscountSection from "../../components/DiscountSection/DiscountSection";
+import useAppDispatch from "../../storage/useAppDispatch";
+import appConfigActions from "../../storage/appConfig/appConfig-actions";
+import useAppConfigSelector from "../../storage/appConfig/appConfig-selectors";
+import ReducerState from "../../storage/types";
+import FooterNav from "../../components/FooterNav/FooterNav";
+import IconName from "../../icons/IconName";
+import SettingsSection from "../../components/SettingsSection/SettingsSection";
+import { useLiveUpdateContext } from "../../LiveUpdate/LiveUpdateContext";
+import Background from "../../atoms/Background/Background";
+import Stamp from "../../atoms/Stamp/Stamp";
+import iterateIcons from "../../atoms/Stamp/Stamp.helper";
+import LastHistoryEntry from "../../atoms/LastHistoryEntry/LastHistoryEntry";
 
 const DashboardScreen: FC<{
     me: Me,
@@ -26,7 +27,7 @@ const DashboardScreen: FC<{
         const [showStampQr, setShowStampQr] = useState(false);
         const [showGiftCardsSection, setShowGiftCardsSection] = useState(false);
         const [showSettingsSection, setShowSettingsSection] = useState(false);
-        const { stampsUpdated } = useLiveUpdateContext();
+        const { stampsUpdated, dismissStampsUpdated } = useLiveUpdateContext();
 
         useEffect(() => {
             if (!stampsUpdated) {
@@ -121,7 +122,7 @@ const DashboardScreen: FC<{
                     </section>
 
                     <QrBottomPanel
-                        cardId={me._id}
+                        userId={me._id}
                         show={showStampQr}
                         toggleBottomPanel={toggleStampQr}
                     />
@@ -143,6 +144,7 @@ const DashboardScreen: FC<{
                     )}
 
                     <div
+                        onClick={dismissStampsUpdated}
                         style={{
                             position: 'fixed',
                             top: 0,
@@ -153,10 +155,11 @@ const DashboardScreen: FC<{
                             alignItems: 'center',
                             justifyContent: 'center',
                             overflow: 'hidden',
+
                             ...(stampsUpdated ? {
                                 width: undefined,
                                 height: undefined,
-                                animation: 'ping-animation 1000ms linear',
+                                animation: 'ping-animation 5000ms linear',
                                 right: 0,
                                 bottom: 0,
                             } : {
@@ -169,18 +172,29 @@ const DashboardScreen: FC<{
 
                         }}
                     >
-                        <span>
-                            <Stamp stampConfig={iterateIcons(1)[0]} />
-                            <Stamp stampConfig={iterateIcons(7)[3]} />
-                            <Stamp stampConfig={iterateIcons(3)[2]} />
-                        </span>
-                        <br />
-                        <div>
-                            PING
-                        </div>
-                        <div>
-                            Coś fajnego!
-                        </div>
+                        {appConfigState.appConfig && me.stamps.history[me.stamps.history.length - 1] && (
+                            <LastHistoryEntry
+                                historyEntry={me.stamps.history[me.stamps.history.length - 1]}
+                                appConfig={appConfigState.appConfig}
+                            />
+                        )}
+
+                        {!appConfigState.appConfig && (
+                            <>
+                                <span>
+                                    <Stamp stampConfig={iterateIcons(1)[0]} />
+                                    <Stamp stampConfig={iterateIcons(7)[3]} />
+                                    <Stamp stampConfig={iterateIcons(3)[2]} />
+                                </span>
+                                <br />
+                                <div>
+                                    PING
+                                </div>
+                                <div>
+                                    Coś fajnego!
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </Background>

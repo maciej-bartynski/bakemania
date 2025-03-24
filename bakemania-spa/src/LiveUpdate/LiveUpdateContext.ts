@@ -5,6 +5,7 @@ const LiveUpdateContext = React.createContext({
     setStampsUpdated: () => {
 
     },
+    dismissStampsUpdated: () => { }
 });
 
 const useLiveUpdateContext = () => React.useContext(LiveUpdateContext);

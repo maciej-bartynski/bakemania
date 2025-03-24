@@ -7,24 +7,105 @@ import { store } from "./storage/store";
 import LiveUpdateProvider from './LiveUpdate/LiveUpdateProvider.tsx';
 import { noticesStore } from './storage/notices-store.ts';
 import NoticesManager from './NoticesManager.tsx';
-import SplashScreen from './SplashScreen/SplashScreen.tsx';
+import SplashScreen from './views/SplashScreen/SplashScreen.tsx';
 import { registerSW } from 'virtual:pwa-register';
 import ClientLogsService from './services/LogsService.ts';
+import SafeAreaView from './atoms/SafeAreaView/SafeAreaView.tsx';
+import { BrowserRouter } from 'react-router-dom';
+import Background from './atoms/Background/Background.tsx';
+import Config from './config.ts';
+import apiService from './services/ApiService.ts';
 
 registerSW();
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <Provider store={noticesStore}>
-      <Provider store={store}>
-        <LiveUpdateProvider>
-          <SplashScreen />
-        </LiveUpdateProvider>
-      </Provider>
-      <NoticesManager />
-    </Provider>
-  </StrictMode>
-)
+const getQueryParams = () => {
+  const params = new URLSearchParams(window.location.search);
+  return {
+    token: params.get('token')
+  };
+};
+
+if (window.location.pathname === '/verify-email') {
+  const { token } = getQueryParams();
+
+  createRoot(document.getElementById('root')!).render(
+    <SafeAreaView>
+      <Background>
+        <style>{`
+          .verify-email {
+            width: 100%;
+            max-width: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 30px;
+            background-color: rgba(255, 255, 255, 1);
+            border-radius: 30px;
+            box-shadow: 0 0 4px 4px rgba(10, 10, 10, .1);
+            position: relative;
+            overflow: hidden;
+            padding: 30px;
+            margin: 30px;
+          }
+
+          .verify-email-container {
+            align-self: stretch;
+          }
+
+          .verify-email-button {
+            width: 100%;
+            cursor: pointer;
+          }
+        `}</style>
+        <div className="verify-email">
+          <span>
+            Kliknij w przycisk poniżej,<br />aby zweryfikować swój email
+          </span>
+          <div className="verify-email-container">
+            <button
+              className="verify-email-button"
+              onClick={async () => {
+                if (token) {
+                  window.localStorage.setItem(Config.sessionKeys.Token, token);
+                  apiService.fetch('auth/verify-email', {
+                    method: 'GET',
+                  }).then(() => {
+                    window.localStorage.removeItem(Config.sessionKeys.Token);
+                    window.location.replace(window.location.origin);
+                  }).catch(() => {
+                    window.localStorage.removeItem(Config.sessionKeys.Token);
+                  });
+                  window.localStorage.removeItem(Config.sessionKeys.Token);
+                }
+              }}
+            >
+              Zweryfikuj email
+            </button>
+          </div>
+        </div>
+      </Background>
+    </SafeAreaView>
+  );
+} else {
+
+  createRoot(document.getElementById('root')!).render(
+    <BrowserRouter>
+      <StrictMode>
+        <Provider store={noticesStore}>
+          <Provider store={store}>
+            <LiveUpdateProvider>
+              <SafeAreaView>
+                <SplashScreen />
+              </SafeAreaView>
+            </LiveUpdateProvider>
+          </Provider>
+          <NoticesManager />
+        </Provider>
+      </StrictMode>
+    </BrowserRouter>
+  )
+}
 
 const decodeReasonAndError = (reasonOrError: string | { message: unknown, stack: unknown }): {
   message: unknown,

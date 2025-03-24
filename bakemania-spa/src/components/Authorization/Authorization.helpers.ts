@@ -1,4 +1,40 @@
-const registrationState = {
+type RegistrationState = {
+    email: {
+        value: string;
+        error: string;
+        touched: boolean;
+    };
+    password: {
+        value: string;
+        error: string;
+        touched: boolean;
+    };
+    confirmPassword: {
+        value: string;
+        error: string;
+        touched: boolean;
+    };
+    agreements: {
+        value: boolean;
+        error: string;
+        touched: boolean;
+    };
+};
+
+type RegistrationAction = {
+    type: 'email' | 'password' | 'touch-email' | 'touch-password' | 'confirm' | 'touch-confirm' | 'agreements',
+    value: string | boolean
+} & (
+        {
+            type: 'agreements',
+            value: boolean
+        } | {
+            type: 'email' | 'password' | 'touch-email' | 'touch-password' | 'confirm' | 'touch-confirm',
+            value: string
+        }
+    );
+
+const registrationState: RegistrationState = {
     email: {
         value: '',
         error: 'Email jest wymagany.',
@@ -8,17 +44,64 @@ const registrationState = {
         value: '',
         error: 'Hasło jest wymagane.',
         touched: false
+    },
+    confirmPassword: {
+        value: '',
+        error: 'Potwierdź swoje hasło.',
+        touched: false
+    },
+    agreements: {
+        value: false,
+        error: 'Musisz zaakceptować regulamin i politykę prywatności.',
+        touched: false
     }
 };
 
 function registrationReducer(
     state: typeof registrationState,
-    action: {
-        type: 'email' | 'password' | 'touch-email' | 'touch-password',
-        value: string
-    }
+    action: RegistrationAction
 ) {
     switch (action.type) {
+        case 'agreements': {
+            return {
+                ...state,
+                agreements: {
+                    ...state.agreements,
+                    touched: true,
+                    value: action.value,
+                    error: action.value ? '' : 'Musisz zaakceptować regulamin i politykę prywatności.',
+                }
+            };
+        }
+        case 'touch-confirm': {
+            return {
+                ...state,
+                confirmPassword: {
+                    ...state.confirmPassword,
+                    touched: true,
+                }
+            }
+        }
+        case 'confirm': {
+            if (action.value !== state.password.value) {
+                return {
+                    ...state,
+                    confirmPassword: {
+                        ...state.confirmPassword,
+                        value: action.value,
+                        error: 'Hasła nie pasują do siebie.',
+                    }
+                }
+            }
+            return {
+                ...state,
+                confirmPassword: {
+                    ...state.confirmPassword,
+                    value: action.value,
+                    error: '',
+                }
+            }
+        }
         case 'touch-email': {
             return {
                 ...state,
@@ -66,8 +149,8 @@ function registrationReducer(
 
             const errors = [];
 
-            if (password.length < 8 || password.length > 16) {
-                errors.push("mieć od 8 do 16 znaków");
+            if (password.length < 8 || password.length > 50) {
+                errors.push("mieć od 8 do 50 znaków");
             }
             if (!/[A-Z]/.test(password)) {
                 errors.push("zawierać przynajmniej jedną wielką literę");
@@ -85,9 +168,18 @@ function registrationReducer(
                 errors.push("być bez spacji");
             }
 
+            const confirmField = state.confirmPassword;
+
+            if (confirmField.value !== password) {
+                confirmField.error = 'Hasła nie pasują do siebie.';
+            } else {
+                confirmField.error = '';
+            }
+
             if (errors.length === 0) {
                 return {
                     ...state,
+                    confirmPassword: confirmField,
                     password: {
                         ...state.password,
                         value: password,
@@ -97,6 +189,7 @@ function registrationReducer(
             } else {
                 return {
                     ...state,
+                    confirmPassword: confirmField,
                     password: {
                         ...state.password,
                         value: password,

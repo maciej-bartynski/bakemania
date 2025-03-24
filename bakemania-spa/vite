@@ -1,0 +1,28 @@
+
+The list of generated files:
+/Users/maciejbartynski/.vite-plugin-mkcert/dev.pem
+/Users/maciejbartynski/.vite-plugin-mkcert/cert.pem
+
+  VITE v6.0.11  ready in 250 ms
+
+  ➜  Network: https://192.168.1.150:3000/
+  ➜  press h + enter to show help
+
+PWA v0.21.1
+mode      generateSW
+precache  1 entries (0.00 KiB)
+files generated
+  dev-dist/sw.js
+  dev-dist/workbox-fc76d6c3.js
+warnings
+  One of the glob patterns doesn't match any files. Please remove or fix the following: {
+  "globDirectory": "/Users/maciejbartynski/Desktop/projekty/bakemania-web-app/bakemania-spa/dev-dist
+  "globDirectory": "/Users/maciejbartynski/Desktop/projekty/bakemania-web-app/bakemania-spa/dev-dist",
+  "globPattern": "**/*.{js,wasm,css,html}",
+  "globIgnores": [
+    "**/node_modules/**/*",
+    "sw.js",
+    "workbox-*.js"
+  ]
+}
+

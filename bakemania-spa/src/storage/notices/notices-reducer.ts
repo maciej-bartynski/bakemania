@@ -13,6 +13,11 @@ const noticesSlice = createSlice({
     initialState,
     reducers: {
         addNotice(state, action: PayloadAction<NoticeItem>) {
+
+            if (state.notices.length > 4) {
+                state.notices.shift();
+            }
+
             state.notices.push(action.payload);
         },
 

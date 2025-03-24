@@ -76,7 +76,7 @@ const DiscountSection: FC<{
                                 }) as NavAction[]}
                             />
                             <QrBottomPanel
-                                cardId={me._id}
+                                userId={me._id}
                                 variant="spend"
                                 show={showGiftQr}
                                 toggleBottomPanel={toggleGiftQr}

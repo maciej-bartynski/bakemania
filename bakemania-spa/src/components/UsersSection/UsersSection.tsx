@@ -12,8 +12,8 @@ const UsersSection: FC<{
     active: boolean;
     toggleActive: () => void;
     toggleCardDetailsView: (details?: {
-        cardId: string;
         variant: "spend" | "earn";
+        userId: string,
     }) => void
 }> = ({
     active,
@@ -50,10 +50,10 @@ const UsersSection: FC<{
                     )}
                 >
                     <UsersList
-                        setUserEditId={(cardId: string) => {
+                        setUserEditId={(userId: string) => {
                             toggleCardDetailsView({
-                                cardId,
-                                variant: 'earn'
+                                variant: 'earn',
+                                userId,
                             })
                         }}
                     />

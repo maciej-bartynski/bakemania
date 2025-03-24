@@ -1,0 +1,11 @@
+{
+  "_id": "510a3d8a-5159-4b72-91ce-a12bd1902f0c",
+  "email": "papiesz3@gmail.com",
+  "password": "$2a$10$Zg546kDrtPVCLzOV0MBTouN6XSI9d55hnNWxu8l3QWiOKuktz6dZG",
+  "role": "manager",
+  "history": [],
+  "agreements": true,
+  "metadata": {
+    "createdAt": "23.03.2025 11:24:05"
+  }
+}

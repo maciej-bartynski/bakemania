@@ -14,8 +14,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 import express from 'express';
-import authRouter from './api/auth/router'
-import notificationsRouter from './api/notifications/router';
+import authRouter from './api/auth/router';
 import userRouter from './api/user/router';
 import Middleware from './lib/middleware';
 import stampsRouter from './api/admin/stamps/router';
@@ -53,9 +52,8 @@ const limiter = rateLimit({
     message: "Too many requests from this IP, please try again later.",
     windowMs: 1, // 1 sec
     limit: 1, // Limit each IP to 1 requests per `window` (here, per 1 sec).
-    standardHeaders: 'draft-8', // draft-6: `RateLimit-*` headers; draft-7 & draft-8: combined `RateLimit` header
-    legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
-    // store: ... , // Redis, Memcached, etc. See below.
+    standardHeaders: 'draft-8',
+    legacyHeaders: false,
 })
 
 app.post('/api/client-logs', limiter, Middleware.authenticateToken, (req, res) => {
@@ -66,7 +64,6 @@ app.post('/api/client-logs', limiter, Middleware.authenticateToken, (req, res) =
 });
 
 app.use('/api/auth', authRouter);
-app.use('/api/notifications', notificationsRouter);
 app.use('/api/user', Middleware.authenticateToken, userRouter);
 app.use('/api/admin/stamps', Middleware.authenticateToken, Middleware.requireAdmin, stampsRouter);
 app.use('/api/admin/users', Middleware.authenticateToken, Middleware.requireAdmin, usersRouterForAdmin);
@@ -161,7 +158,7 @@ wsServer.on("connection", (ws, req) => {
 
                     if (connections.wss.has(userId)) {
                         connections.wss.set(userId,
-                            connections.wss.get(userId).push(ws)
+                            [...connections.wss.get(userId), (ws)]
                         );
                     } else {
                         connections.wss.set(userId, [ws]);

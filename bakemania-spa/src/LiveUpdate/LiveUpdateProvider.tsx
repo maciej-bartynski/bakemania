@@ -18,7 +18,15 @@ const LiveUpdateProvider: FC<PropsWithChildren> = ({ children }) => {
         _setStampsUpdated(true);
         stampsUpdationRef.current = setTimeout(() => {
             _setStampsUpdated(false);
-        }, 1000);
+        }, 5000);
+    }, []);
+
+    const dismissStampsUpdated = useCallback(() => {
+        if (stampsUpdationRef.current) {
+            clearTimeout(stampsUpdationRef.current)
+        }
+        _setStampsUpdated(false);
+
     }, []);
 
     useEffect(() => {
@@ -83,10 +91,12 @@ const LiveUpdateProvider: FC<PropsWithChildren> = ({ children }) => {
 
     const context = useMemo(() => ({
         stampsUpdated,
-        setStampsUpdated
+        setStampsUpdated,
+        dismissStampsUpdated
     }), [
         stampsUpdated,
-        setStampsUpdated
+        setStampsUpdated,
+        dismissStampsUpdated
     ])
 
     return (

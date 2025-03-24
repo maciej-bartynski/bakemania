@@ -2,6 +2,9 @@ import { noticesStore } from "../storage/notices-store";
 import noticesSlice from "../storage/notices/notices-reducer";
 import * as uuid from 'uuid';
 import ClientLogsService from "./LogsService";
+import getConsole from "../tools/getConsole";
+import clearSession from "../tools/clearSession";
+import Config from "../config";
 
 interface ApiServiceInterface {
     fetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response>;
@@ -15,12 +18,12 @@ class ApiService implements ApiServiceInterface {
             method: init?.method ?? 'get',
             body: init?.body ?? undefined,
             headers: init?.headers ? {
-                ...init.headers,
                 'content-type': 'application/json',
-                'Authorization': `Bearer ${window.localStorage.getItem('token')}`
+                'Authorization': `Bearer ${window.localStorage.getItem(Config.sessionKeys.Token)}`,
+                ...init.headers,
             } : {
                 'content-type': 'application/json',
-                'Authorization': `Bearer ${window.localStorage.getItem('token')}`
+                'Authorization': `Bearer ${window.localStorage.getItem(Config.sessionKeys.Token)}`
             }
         };
 
@@ -41,48 +44,68 @@ class ApiService implements ApiServiceInterface {
                 /** 
                  * Rejection status code, body expected 
                  * */
-                const rejectionData = await response.json();
-                throw rejectionData;
+
+                if (response.status === 401) {
+                    try {
+                        const rejectionData = await response.json();
+                        noticesStore.dispatch(noticesSlice.actions.addNotice({
+                            _id: uuid.v4(),
+                            header: 'Aby kontynuować zaloguj się (ponownie).',
+                            body: rejectionData.message,
+                        }))
+                    } catch (e) {
+                        getConsole().error('Something wrong when parsing 401: ', e);
+                        noticesStore.dispatch(noticesSlice.actions.addNotice({
+                            _id: uuid.v4(),
+                            header: 'Aby kontynuować zaloguj się (ponownie).',
+                            body: 'Obecna sesja wygasła.',
+                        }));
+                        clearSession();
+                    }
+                } else {
+                    try {
+                        const rejectionData = await response.json();
+                        const clientLogs = new ClientLogsService();
+                        clientLogs.report('Rejection on ApiService', {
+                            Url: input,
+                            'Request data': init,
+                            'Expected statuses': expectedStatuses,
+                            'Response status': response.status,
+                            'Response status text': response.statusText,
+                            'What happend': rejectionData?.message || rejectionData || `${rejectionData}`
+                        });
+                        noticesStore.dispatch(noticesSlice.actions.addNotice({
+                            _id: uuid.v4(),
+                            header: `${response.status}: ${input}`,
+                            body: rejectionData?.message || rejectionData || `${rejectionData}`,
+                        }))
+                    } catch (err) {
+                        getConsole().error('Something wrong when parsing rejection: ', err);
+                        const clientLogs = new ClientLogsService();
+                        clientLogs.report('Rejection on ApiService, error on parsing rejection', {
+                            Url: input,
+                            'Request data': init,
+                            'Expected statuses': expectedStatuses,
+                            'Response status': response.status,
+                            'Response status text': response.statusText,
+                            // eslint-disable-next-line
+                            'Catched error': `${(err as any)?.message ?? err}`
+                        });
+                        noticesStore.dispatch(noticesSlice.actions.addNotice({
+                            _id: uuid.v4(),
+                            header: `${response.status}: ${input}`,
+                            body: 'Coś poszło źle',
+                        }))
+                    }
+                }
             })
             .catch(rejectionData => {
-                const clientLogs = new ClientLogsService();
-
-                clientLogs.report('Error on ApiService', {
-                    Url: input,
-                    'Request data': init,
-                    'Expected statuses': expectedStatuses,
-                    'What happend': rejectionData?.message || rejectionData || `${rejectionData}`
-                });
-
-                let errorMessage = "";
-
-                if (typeof rejectionData === 'string') {
-                    /**
-                     * Api error with status text only
-                     */
-                    errorMessage += `${rejectionData}`;
-                } else if (rejectionData && rejectionData.message) {
-                    /**
-                     * Api error with data
-                     */
-                    errorMessage += `${rejectionData.message}`;
-                } else {
-                    /**
-                     * Parsing errors, network errors etc
-                     */
-                    errorMessage += `${rejectionData}`;
-                }
-
-                console.error(errorMessage);
-
-                try {
-                    noticesStore.dispatch(noticesSlice.actions.addNotice({
-                        _id: uuid.v4(),
-                        body: errorMessage,
-                    }))
-                } catch (e) {
-                    console.warn(e);
-                }
+                getConsole().error('Unexpected catch: ', rejectionData?.message ?? rejectionData);
+                noticesStore.dispatch(noticesSlice.actions.addNotice({
+                    _id: uuid.v4(),
+                    header: 'Nieokreślony błąd',
+                    body: rejectionData?.message ?? rejectionData,
+                }))
 
             });
     }
