@@ -7,7 +7,7 @@ import UserShort from "../UserShort/UserShort";
 import useAppConfigSelector from "../../storage/appConfig/appConfig-selectors";
 
 const UsersList: FC<{
-    setUserEditId: (cardId: string) => void
+    setUserEditId: (userId: string) => void
 }> = ({
     setUserEditId
 }) => {
@@ -36,7 +36,7 @@ const UsersList: FC<{
                             <button
                                 className="users-list__item-button"
                                 onClick={() => {
-                                    setUserEditId(user._id,)
+                                    setUserEditId(user._id);
                                 }}
                             >
                                 Edytuj

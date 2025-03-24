@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs';
-import { UserModel } from '../../auth/user.types';
+import { UserModel } from '../../../services/DbService/instances/UsersDb.types';
 
 const dbPath = 'db/users';
 

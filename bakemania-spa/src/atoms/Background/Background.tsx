@@ -9,7 +9,7 @@ const Background: FC<PropsWithChildren<{
     children,
     appBar = null,
 }) => {
-        console.log("app", appBar)
+
         const titleRef = useRef<HTMLTitleElement | null>(null);
         return (
             <main className="appBackground">

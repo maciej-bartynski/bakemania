@@ -16,6 +16,7 @@ export default defineConfig({
       "Access-Control-Allow-Origin": "*",
     },
     host: getLocalIP(),
+
     proxy: {
       '/api': {
         target: `https://${getLocalIP()}:4040`,
@@ -32,7 +33,6 @@ export default defineConfig({
   },
 
   plugins: [react(), mkcert(), VitePWA({
-
     registerType: 'autoUpdate', // Autoaktualizacja service workera
     devOptions: {
       enabled: true, // Działa w dev
@@ -73,10 +73,28 @@ export default defineConfig({
 
     },
 
+
     workbox: {
       clientsClaim: true,
       skipWaiting: true,
+      cleanupOutdatedCaches: true,
+      disableDevLogs: false,
+      // globPatterns: ['**/*.{ico,png,svg}'],
       runtimeCaching: [
+        {
+          urlPattern: /^https:\/\/.*\.(js|css)$/,
+          handler: 'NetworkOnly',
+        },
+        {
+          // Dla plików HTML zawsze pobieraj świeżą wersję
+          urlPattern: /.*\.html$/,
+          handler: 'NetworkOnly'
+        },
+        {
+          // Dla API zawsze pobieraj świeżą wersję
+          urlPattern: /^https:\/\/api\..*/,
+          handler: 'NetworkOnly'
+        },
         {
           urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
           handler: 'CacheFirst',

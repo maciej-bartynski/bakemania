@@ -2,20 +2,22 @@ import { FC, useCallback, useMemo } from "react";
 import { useState, useRef, useEffect } from 'react';
 import QrScanner from 'qr-scanner';
 import "./AssistantSection.css";
-import Background from "../atoms/Background/Background";
-import FooterNav from "../components/FooterNav/FooterNav";
-import IconName from "../icons/IconName";
-import ScanningSection from "../components/ScanningSection/ScanningSection";
-import SettingsSection from "../components/SettingsSection/SettingsSection";
-import UsersSection from "../components/UsersSection/UsersSection";
-import Icon from "../icons/Icon";
-import useAppDispatch from "../storage/useAppDispatch";
-import appConfigActions from "../storage/appConfig/appConfig-actions";
+import Background from "../../atoms/Background/Background";
+import FooterNav from "../../components/FooterNav/FooterNav";
+import IconName from "../../icons/IconName";
+import ScanningSection from "../../components/ScanningSection/ScanningSection";
+import SettingsSection from "../../components/SettingsSection/SettingsSection";
+import UsersSection from "../../components/UsersSection/UsersSection";
+import Icon from "../../icons/Icon";
+import useAppDispatch from "../../storage/useAppDispatch";
+import appConfigActions from "../../storage/appConfig/appConfig-actions";
 import AssistanContext, { AssistantContextType, OpenedSection } from "./AssistantContext";
-import { Me } from "../storage/me/me-types";
+import { Me } from "../../storage/me/me-types";
+import useMeSelector from "../../storage/me/me-selectors";
 
 type ScannedData = {
     variant: 'spend' | 'earn',
+    userId: string,
     cardId: string,
 }
 
@@ -29,6 +31,7 @@ const AssistantSection: FC<{
         const [isScanning, setIsScanning] = useState(false);
         const videoRef = useRef<HTMLVideoElement | null>(null);
         const scannerRef = useRef<QrScanner | null>(null);
+        const me = useMeSelector();
 
         const [openedSection, setOpenedSection] = useState<OpenedSection>({ title: 'home' })
 
@@ -57,7 +60,9 @@ const AssistantSection: FC<{
 
         const toggleCardDetailsView = useCallback((details?: {
             cardId: string,
-            variant: 'spend' | 'earn'
+            variant: 'spend' | 'earn',
+            userId: string,
+            assistantId: string,
         }) => {
             setOpenedSection(state => {
                 if (state.title === 'card-details') {
@@ -70,7 +75,9 @@ const AssistantSection: FC<{
                             title: 'card-details',
                             details: {
                                 cardId: details.cardId,
-                                variant: details.variant
+                                variant: details.variant,
+                                userId: details.userId,
+                                assistantId: details.assistantId,
                             }
                         }
                     } else {
@@ -113,6 +120,8 @@ const AssistantSection: FC<{
                         toggleCardDetailsView({
                             cardId: scannedData.cardId,
                             variant: scannedData.variant,
+                            userId: scannedData.userId,
+                            assistantId: me.me!._id,
                         });
                         stopScanning();
                     } catch (e) {
@@ -133,7 +142,7 @@ const AssistantSection: FC<{
                     scannerRef.current.destroy();
                 }
             }
-        }, [toggleCardDetailsView]);
+        }, [toggleCardDetailsView, me]);
 
         const dispatch = useAppDispatch();
 
@@ -218,7 +227,16 @@ const AssistantSection: FC<{
                     <UsersSection
                         active={assistantContext.openedSection.title === 'card-list'}
                         toggleActive={toggleCardListView}
-                        toggleCardDetailsView={toggleCardDetailsView}
+                        toggleCardDetailsView={async (details) => {
+                            if (details) {
+                                toggleCardDetailsView({
+                                    userId: details.userId,
+                                    variant: details.variant,
+                                    assistantId: me.me!._id,
+                                    cardId: 'change-force',
+                                })
+                            }
+                        }}
                     />
 
                 </Background>
