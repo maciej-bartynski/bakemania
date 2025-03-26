@@ -298,7 +298,7 @@ const Authorization: FC = () => {
                         </div>
                     </div>
                     <button
-                        disabled={!isIdle || !!registrationFormState.email.error || !!registrationFormState.password.error || !!registrationFormState.confirmPassword.error || !!registrationFormState.agreements.error || missingCaptchaAlert}
+                        disabled={!isIdle || !!registrationFormState.email.error || !!registrationFormState.password.error || !!registrationFormState.confirmPassword.error || !!registrationFormState.agreements.error}
                         type="submit"
                     >
                         Rejestruję się
