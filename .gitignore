@@ -9,6 +9,7 @@ server-dist
 
 # data
 db
+defaults
 
 # certs
 cert.pem

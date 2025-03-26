@@ -2,11 +2,11 @@ import fs from 'fs';
 import path from 'path';
 
 class LogService {
-    logPath = path.resolve(__dirname, '../../db/logs/');
-    location?: Locations;
+    logPath = path.join(process.cwd(), "logs");
+    location?: LogLocations;
 
     constructor(params?: {
-        location?: Locations,
+        location?: LogLocations,
     }) {
         this.location = params?.location;
     }
@@ -71,23 +71,23 @@ type Entry = {
     details: Record<string, string>;
 }
 
-enum Locations {
+enum LogLocations {
     Client = 'client',
     WsServer = 'ws-server',
     App = 'app',
     Email = 'email'
 }
 
-const clientLogs = new LogService({ location: Locations.Client });
-const wsLogs = new LogService({ location: Locations.WsServer });
-const appLogs = new LogService({ location: Locations.App });
-const emailLogs = new LogService({ location: Locations.Email });
+const clientLogs = new LogService({ location: LogLocations.Client });
+const wsLogs = new LogService({ location: LogLocations.WsServer });
+const appLogs = new LogService({ location: LogLocations.App });
+const emailLogs = new LogService({ location: LogLocations.Email });
 
-export type { Locations };
+export type { LogLocations };
 
 const Logs = {
     Service: LogService,
-    Locations,
+    LogLocations,
     wsLogs,
     appLogs,
     clientLogs,

@@ -6,6 +6,7 @@ start:
 	--env-file .env \
 	-p 3000:3000 \
 	-v ./db:/app/db \
+	-v ./logs:/app/logs \
 	--name bakemania-container bakemania-app
 
 get-in:
@@ -19,6 +20,7 @@ dev:
 	--env-file .env \
 	-p 3000:3000 \
 	-v ./db:/app/db \
+	-v ./logs:/app/logs \
 	--name bakemania-container bakemania-app
 
 reset-db: 
