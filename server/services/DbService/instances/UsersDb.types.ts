@@ -17,6 +17,20 @@ type StampsHistoryEntry = {
     assistantId: string,
 }
 
+type VerificationData = {
+    isVerified: boolean,
+    token?: string | undefined,
+} & ({
+    isVerified: true,
+} | {
+    isVerified: false,
+    token: string,
+});
+
+type ChangePasswordData = {
+    emailSent: boolean,
+};
+
 type UserModel = {
     _id: string,
     email: string,
@@ -28,15 +42,8 @@ type UserModel = {
         history: StampsHistoryEntry[]
     },
     agreements: true,
-    verification: {
-        isVerified: boolean,
-        token?: string | undefined,
-    } & ({
-        isVerified: true,
-    } | {
-        isVerified: false,
-        token: string,
-    })
+    verification: VerificationData,
+    changePassword?: ChangePasswordData,
 };
 
 type SanitizedUserModel = {
@@ -50,7 +57,8 @@ type SanitizedUserModel = {
     agreements: true,
     verification: {
         isVerified: boolean,
-    }
+    },
+    changePassword?: undefined,
 };
 
 export default UserRole;
@@ -61,4 +69,6 @@ export type {
     UserRole,
     SanitizedUserModel,
     StampsHistoryEntry,
+    VerificationData,
+    ChangePasswordData
 }

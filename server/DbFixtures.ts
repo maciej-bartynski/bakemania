@@ -118,6 +118,9 @@ async function dbFixtures() {
                 role: UserRole.Manager,
                 history: [],
                 agreements: true,
+                verification: {
+                    isVerified: true,
+                }
             });
 
             await fixtureManagersDb.setById<ManagerModel>(ids[1], {
@@ -127,6 +130,9 @@ async function dbFixtures() {
                 role: UserRole.Manager,
                 history: [],
                 agreements: true,
+                verification: {
+                    isVerified: true,
+                }
             });
 
             await fixtureManagersDb.setById<ManagerModel>(ids[2], {
@@ -136,6 +142,9 @@ async function dbFixtures() {
                 role: UserRole.Manager,
                 history: [],
                 agreements: true,
+                verification: {
+                    isVerified: true,
+                }
             });
 
         }
@@ -155,6 +164,9 @@ async function dbFixtures() {
                 role: UserRole.Admin,
                 history: [],
                 agreements: true,
+                verification: {
+                    isVerified: true,
+                }
             });
 
             await fixtureAdminsDb.setById<AdminModel>(ids[1], {
@@ -164,6 +176,9 @@ async function dbFixtures() {
                 role: UserRole.Admin,
                 history: [],
                 agreements: true,
+                verification: {
+                    isVerified: true,
+                }
             });
 
             await fixtureAdminsDb.setById<AdminModel>(ids[2], {
@@ -173,6 +188,9 @@ async function dbFixtures() {
                 role: UserRole.Admin,
                 history: [],
                 agreements: true,
+                verification: {
+                    isVerified: true,
+                }
             });
 
         }

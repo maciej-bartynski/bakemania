@@ -1,34 +1,10 @@
-import fs from "fs";
-import path from "path";
-import { SanitizedUserModel, UserCard, UserModel } from "../services/DbService/instances/UsersDb.types";
+import UserRole, { SanitizedUserModel, UserCard, UserModel } from "../services/DbService/instances/UsersDb.types";
 import bcrypt from 'bcryptjs';
 import usersDb from "../services/DbService/instances/UsersDb";
 import managersDb from "../services/DbService/instances/ManagersDb";
 import { ManagerModel, SanitizedManagerModel } from "../services/DbService/instances/ManagersDb.types";
 import adminsDb from "../services/DbService/instances/AdminsDb";
 import { AdminModel, SanitizedAdminModel } from "../services/DbService/instances/AdminsDb.types";
-
-
-const usersFindOne = async (fields: {
-    _id?: string,
-    email?: string
-}): Promise<UserModel | void> => {
-
-    const directoryPath = 'db/users';
-    const files = fs.readdirSync(directoryPath);
-
-    for (const file of files) {
-        const filePath = path.join(directoryPath, file);
-        if (fs.statSync(filePath).isFile() && file.endsWith('.json')) {
-            const fileContent = fs.readFileSync(filePath, 'utf8');
-            const jsonData = JSON.parse(fileContent);
-            if (jsonData.email === fields.email || jsonData._id === fields._id) {
-                return jsonData as UserModel;
-            }
-        }
-    }
-
-}
 
 const createCardId = async (): Promise<UserCard> => {
     const cardIssueTimestamp = new Date().getTime();
@@ -114,12 +90,47 @@ const getUserOrAssistantByEmail = async (email: string): Promise<ManagerModel | 
     return null;
 }
 
+const removeUserOrAssistangById = async (id: string) => {
+    const user = await getUserOrAssistantById(id);
+    if (user?.role === UserRole.User) {
+        return usersDb.removeItemById(id);
+    }
+
+    if (user?.role === UserRole.Manager) {
+        return managersDb.removeItemById(id);
+    }
+
+    if (user?.role === UserRole.Admin) {
+        return adminsDb.removeItemById(id);
+    }
+
+    return null;
+}
+
+const updarteUserOrAssistangById = async (id: string, fields: Partial<UserModel | ManagerModel | AdminModel>) => {
+    const user = await getUserOrAssistantById(id);
+    if (user?.role === UserRole.User) {
+        return usersDb.updateById<UserModel>(id, fields as Partial<UserModel>);
+    }
+
+    if (user?.role === UserRole.Manager) {
+        return managersDb.updateById<ManagerModel>(id, fields as Partial<ManagerModel>);
+    }
+
+    if (user?.role === UserRole.Admin) {
+        return adminsDb.updateById<AdminModel>(id, fields as Partial<AdminModel>);
+    }
+
+    return null;
+}
+
 export default {
-    usersFindOne,
     validateCard,
     createCardId,
     validateCardIssuedDate,
     getSanitizedUserOrAssistantById,
     getUserOrAssistantById,
-    getUserOrAssistantByEmail
+    getUserOrAssistantByEmail,
+    removeUserOrAssistangById,
+    updarteUserOrAssistangById
 }

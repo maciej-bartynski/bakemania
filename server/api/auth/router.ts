@@ -2,7 +2,7 @@ import express from 'express';
 import Tools from '../../lib/tools';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import userValidator from './user.validator';
+import userValidatorsModule from './user.validator';
 import * as uuid from 'uuid';
 import UserRole, { StampsHistoryEntry, UserModel } from '../../services/DbService/instances/UsersDb.types';
 import usersDb from '../../services/DbService/instances/UsersDb';
@@ -10,9 +10,11 @@ import Logs from '../../services/LogService';
 import { ManagerModel } from '../../services/DbService/instances/ManagersDb.types';
 import { AdminModel } from '../../services/DbService/instances/AdminsDb.types';
 import rateLimit from 'express-rate-limit';
-import nodemailer from 'nodemailer';
 import EmailService from '../../services/EmailService/EmailService';
 import middleware from '../../lib/middleware';
+import tools from '../../lib/tools';
+
+const { userValidator, passwordValidator } = userValidatorsModule;
 
 
 const router = express.Router();
@@ -35,7 +37,125 @@ const limiterForAccountsCreated = rateLimit({
     limit: 2, // Limit each IP to e requests per `window` (here, per 1 day).
     standardHeaders: 'draft-8',
     legacyHeaders: false,
-})
+});
+
+const limiterForPasswordChangeRequests = rateLimit({
+    message: {
+        message: "Hola, skup się! Spróbuj ponownie za 1 godzinę.",
+    },
+    windowMs: 60000 * 60 * 1, // 1 godzina
+    limit: 3, // Limit each IP to e requests per `window` (here, per 1 day).
+    standardHeaders: 'draft-8',
+    legacyHeaders: false,
+});
+
+router.post('/change-password', middleware.authenticateChangePasswordToken, async (req, res) => {
+    return Logs.appLogs.catchUnhandled('Handler "/change-password" error', async () => {
+        const { password } = (req as any).body;
+        const user = (req as any).user;
+
+        if (!password) {
+            try {
+                await tools.updarteUserOrAssistangById((user as any)._id, { changePassword: undefined });
+            } catch (e) {
+                Logs.appLogs.report('Error on removing changePassword field', (setData) => {
+                    setData('What happend', (e as any).message ?? e);
+                });
+            }
+            res.status(400).json({
+                message: 'Nie podano nowego hasła'
+            });
+            return;
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const errorMessage = passwordValidator(password);
+
+        if (typeof errorMessage === 'string') {
+            try {
+                await tools.updarteUserOrAssistangById((user as any)._id, { changePassword: undefined });
+            } catch (e) {
+                Logs.appLogs.report('Error on removing changePassword field', (setData) => {
+                    setData('What happend', (e as any).message ?? e);
+                });
+            }
+            res.status(400).json({ message: errorMessage });
+            return;
+        }
+
+        await tools.updarteUserOrAssistangById(user._id, {
+            password: hashedPassword,
+            changePassword: undefined
+        });
+        res.status(204).send();
+    }, (e) => {
+        res.status(500).json({
+            message: 'Coś poszło nie tak podczas zmiany hasła.',
+            details: JSON.stringify((e as any)?.message ?? e)
+        });
+        return;
+    });
+});
+
+router.post('/change-password-request', limiterForPasswordChangeRequests, async (req, res) => {
+    Logs.appLogs.catchUnhandled('Handler "/change-password-request" error', async () => {
+        const { email } = (req as any).body;
+        if (!email) {
+            res.status(400).json({
+                message: 'Nie podano adresu email'
+            });
+            return;
+        }
+        const user = await tools.getUserOrAssistantByEmail(email);
+        if (!user) {
+            res.status(403).json({
+                message: 'Ta operacja nie jest dostępna'
+            });
+            return;
+        }
+
+        if (user.changePassword?.emailSent) {
+            res.status(403).json({
+                message: 'Email z linkiem do zmiany hasła został już wysłany'
+            });
+            return;
+        }
+
+        const JWT_SECRET = process.env.JWT_SECRET;
+
+        if (!JWT_SECRET) {
+            throw 'Missing secret.';
+        }
+
+        const changePasswordToken = jwt.sign({
+            _id: user._id,
+            reason: 'CHANGE_PASSWORD',
+        }, JWT_SECRET, { expiresIn: process.env.EMAIL_VERIFICATION_TOKEN_EXPIRATION_TIME });
+
+        await EmailService.sendChangePasswordEmail(user, changePasswordToken);
+        const createdId = await tools.updarteUserOrAssistangById(user._id, {
+            changePassword: {
+                emailSent: true
+            }
+        });
+        if (createdId) {
+            res.status(204).send();
+            return;
+        } else {
+            res.status(500).json({
+                message: 'Błąd podczas wysyłania emaila weryfikacyjnego [1].',
+            });
+            return;
+        }
+    }, (e) => {
+        res.status(500).json({
+            message: 'Coś poszło nie tak podczas próby wysłąnia emaila z linkiem do zmiany hasła.',
+            details: JSON.stringify((e as any)?.message ?? e)
+        });
+        return;
+    });
+});
 
 router.get('/verify-email', middleware.authenticateEmailVerificationToken, async (req, res) => {
     Logs.appLogs.catchUnhandled('Handler "/verify-email" error', async () => {
@@ -112,7 +232,7 @@ router.post('/register', limiterForApiCalls, async (req, res, next): Promise<voi
     const emailVerificationToken = jwt.sign({
         _id: newUserId,
         stamp: uuid.v4(),
-    }, JWT_SECRET, { expiresIn: '365d' });
+    }, JWT_SECRET, { expiresIn: process.env.EMAIL_VERIFICATION_TOKEN_EXPIRATION_TIME });
 
     const notSanitizedUser: UserModel = {
         _id: newUserId,
@@ -215,9 +335,9 @@ router.post('/register', limiterForApiCalls, async (req, res, next): Promise<voi
 }, limiterForAccountsCreated, async (req, res) => {
     Logs.appLogs.catchUnhandled('Handler "/register" error', async () => {
         const sanitizedUser = (req as any).creationData;
+        await EmailService.sendVerificationEmail(sanitizedUser);
         const createdId = await usersDb.setById<UserModel>(sanitizedUser._id, sanitizedUser);
         if (createdId) {
-            EmailService.sendVerificationEmail(sanitizedUser);
             res.status(201).json({
                 id: sanitizedUser._id
             });
@@ -271,11 +391,18 @@ router.post('/login', async (req, res) => {
                 throw 'Missing secret.';
             }
 
+            if (userOrAssistan && !userOrAssistan.verification.isVerified) {
+                res.status(403).json({
+                    message: 'Konto nie zostało jeszcze zweryfikowane',
+                });
+                return;
+            }
+
             const token = jwt.sign({
                 role: userOrAssistan.role,
                 email: userOrAssistan.email,
                 _id: userOrAssistan._id
-            }, JWT_SECRET, { expiresIn: '365d' });
+            }, JWT_SECRET, { expiresIn: process.env.AUTH_TOKEN_EXPIRATION_TIME });
 
             if (userOrAssistan.role === UserRole.User) {
                 const newUserCard = await Tools.createCardId();

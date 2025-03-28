@@ -19,7 +19,6 @@ import LastHistoryEntry from "../../atoms/LastHistoryEntry/LastHistoryEntry";
 
 const DashboardScreen: FC<{
     me: Me,
-    logOut: () => Promise<void>
 }> = ({
     me,
 }) => {

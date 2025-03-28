@@ -1,5 +1,39 @@
 import UserRole, { UserModel } from "../../services/DbService/instances/UsersDb.types";
 
+const passwordValidator = (password: string): void | string => {
+
+    try {
+        if (typeof password !== 'string') {
+            throw 'Hasło jest wymagane';
+        }
+        if (password.length < 8 || password.length > 50) {
+            console.log('Hasło musi mieć od 8 do 50 znaków', password);
+            throw "Hasło musi mieć od 8 do 50 znaków";
+        }
+        if (!/[A-Z]/.test(password)) {
+            throw "Hasło musi zawierać przynajmniej jedną wielką literę";
+        }
+        if (!/[a-z]/.test(password)) {
+            throw "Hasło musi zawierać przynajmniej jedną małą literę";
+        }
+        if (!/\d/.test(password)) {
+            throw "Hasło musi zawierać przynajmniej jedną cyfrę";
+        }
+        if (!/[\W_]/.test(password)) {
+            throw "Hasło musi zawierać przynajmniej jeden znak specjalny";
+        }
+        if (/\s/.test(password)) {
+            throw "Hasło nie może zawierać spacji";
+        }
+
+    } catch (e) {
+        if (typeof e === 'string') {
+            return e;
+        } else {
+            return 'Walidacja danych użytkownika nie powiodła się';
+        }
+    }
+}
 const userValidator = (fields: Partial<UserModel>): void | string => {
     const fieldsData = fields;
 
@@ -136,4 +170,7 @@ const userValidator = (fields: Partial<UserModel>): void | string => {
     }
 }
 
-export default userValidator
+export default {
+    userValidator,
+    passwordValidator
+}

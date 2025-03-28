@@ -3,11 +3,12 @@ import AsidePanel from "../../atoms/AsidePanel/AsidePanel";
 import FooterNav from "../FooterNav/FooterNav";
 import IconName from "../../icons/IconName";
 import IconButton from "../../atoms/IconButton/IconButton";
-import useAppDispatch from "../../storage/useAppDispatch";
-import meActions from "../../storage/me/me-actions";
 import './SettingsSection.css';
 import PanelViewTemplate from "../../atoms/PanelViewTemplate/PanelViewTemplate";
 import BottomPanel from "../../atoms/BottomPanel/BottomPanel";
+import clearSession from "../../tools/clearSession";
+import apiService from "../../services/ApiService";
+import Config from "../../config";
 
 const SettingsSection: FC<{
     active: boolean;
@@ -16,8 +17,6 @@ const SettingsSection: FC<{
     active,
     toggleActive
 }) => {
-        const dispatch = useAppDispatch();
-
         const [showLogoutPanel, setShowLogoutPanel] = useState(false);
         const [showDestroyPanel, setShowDestroyPanel] = useState(false);
 
@@ -64,7 +63,8 @@ const SettingsSection: FC<{
 
                                     <button
                                         onClick={() => {
-                                            dispatch(meActions.logOut());
+                                            clearSession();
+                                            window.location.reload();
                                         }}
                                         className="secondary"
                                         style={{
@@ -87,7 +87,7 @@ const SettingsSection: FC<{
                             </BottomPanel>
 
                             <BottomPanel
-                                title="Ta opcja nie jest dostępna"
+                                title="Usuwanie konta - ta opcja jest nieodwracalna"
                                 show={showDestroyPanel}
                                 toggleBottomPanel={toggleDestroyPanel}
                             >
@@ -99,13 +99,26 @@ const SettingsSection: FC<{
                                     }}>
 
                                     <button
+                                        type="button"
                                         className="secondary"
-                                        onClick={() => { }}
+                                        onClick={() => {
+                                            apiService.fetch('/user/remove-account', {
+                                                method: 'DELETE',
+                                                headers: {
+                                                    'Authorization': `Bearer ${window.localStorage.getItem(Config.sessionKeys.Token)}`
+                                                }
+                                            }, [204]).then(() => {
+                                                clearSession();
+                                                window.location.reload();
+                                            }).catch(() => {
+                                                alert('Nie udało się usunąć konta');
+                                            });
+                                        }}
                                         style={{
                                             flex: 1,
                                         }}
                                     >
-                                        Tap
+                                        Usuwam konto!
                                     </button>
 
                                     <button

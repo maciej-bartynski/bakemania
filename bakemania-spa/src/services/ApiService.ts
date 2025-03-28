@@ -5,6 +5,7 @@ import ClientLogsService from "./LogsService";
 import getConsole from "../tools/getConsole";
 import clearSession from "../tools/clearSession";
 import Config from "../config";
+import PathsModule from "../tools/paths";
 
 interface ApiServiceInterface {
     fetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response>;
@@ -53,6 +54,11 @@ class ApiService implements ApiServiceInterface {
                             header: 'Aby kontynuować zaloguj się (ponownie).',
                             body: rejectionData.message,
                         }))
+
+                        if (rejectionData.code === 'TOKEN_EXPIRED') {
+                            clearSession();
+                            PathsModule.redirect(PathsModule.Paths.SessionExpired);
+                        }
                     } catch (e) {
                         getConsole().error('Something wrong when parsing 401: ', e);
                         noticesStore.dispatch(noticesSlice.actions.addNotice({
@@ -60,6 +66,8 @@ class ApiService implements ApiServiceInterface {
                             header: 'Aby kontynuować zaloguj się (ponownie).',
                             body: 'Obecna sesja wygasła.',
                         }));
+                        clearSession();
+                    } finally {
                         clearSession();
                     }
                 } else {

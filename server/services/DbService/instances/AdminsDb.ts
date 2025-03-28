@@ -18,6 +18,7 @@ class AdminsDb extends ManagersDb {
                     role: manager.role,
                     history: manager.history,
                     agreements: manager.agreements,
+                    verification: manager.verification
                 }
 
                 return sanitizedUser;

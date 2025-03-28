@@ -1,9 +1,5 @@
 type RegistrationState = {
-    email: {
-        value: string;
-        error: string;
-        touched: boolean;
-    };
+
     password: {
         value: string;
         error: string;
@@ -14,32 +10,23 @@ type RegistrationState = {
         error: string;
         touched: boolean;
     };
-    agreements: {
-        value: boolean;
-        error: string;
-        touched: boolean;
-    };
+
 };
 
 type RegistrationAction = {
-    type: 'email' | 'password' | 'touch-email' | 'touch-password' | 'confirm' | 'touch-confirm' | 'agreements',
-    value: string | boolean
+    type: 'password' | 'touch-password' | 'confirm' | 'touch-confirm' | 'reset',
+    value: string | undefined
 } & (
         {
-            type: 'agreements',
-            value: boolean
-        } | {
-            type: 'email' | 'password' | 'touch-email' | 'touch-password' | 'confirm' | 'touch-confirm',
+            type: 'password' | 'touch-password' | 'confirm' | 'touch-confirm',
             value: string
+        } | {
+            type: 'reset',
+            value: undefined
         }
     );
 
 const registrationState: RegistrationState = {
-    email: {
-        value: '',
-        error: 'Email jest wymagany.',
-        touched: false,
-    },
     password: {
         value: '',
         error: 'Hasło jest wymagane.',
@@ -50,11 +37,6 @@ const registrationState: RegistrationState = {
         error: 'Potwierdź swoje hasło.',
         touched: false
     },
-    agreements: {
-        value: false,
-        error: 'Musisz zaakceptować regulamin i politykę prywatności.',
-        touched: false
-    }
 };
 
 function registrationReducer(
@@ -62,16 +44,8 @@ function registrationReducer(
     action: RegistrationAction
 ) {
     switch (action.type) {
-        case 'agreements': {
-            return {
-                ...state,
-                agreements: {
-                    ...state.agreements,
-                    touched: true,
-                    value: action.value,
-                    error: action.value ? '' : 'Musisz zaakceptować regulamin i politykę prywatności.',
-                }
-            };
+        case 'reset': {
+            return registrationState;
         }
         case 'touch-confirm': {
             return {
@@ -102,45 +76,12 @@ function registrationReducer(
                 }
             }
         }
-        case 'touch-email': {
-            return {
-                ...state,
-                email: {
-                    ...state.email,
-                    touched: true,
-                }
-            }
-        }
         case 'touch-password': {
             return {
                 ...state,
                 password: {
                     ...state.password,
                     touched: true,
-                }
-            }
-        }
-        case 'email': {
-            const { value: email } = action;
-            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            const isEmail = regex.test(email);
-            if (isEmail) {
-                return {
-                    ...state,
-                    email: {
-                        ...state.email,
-                        value: email,
-                        error: ''
-                    }
-                }
-            } else {
-                return {
-                    ...state,
-                    email: {
-                        ...state.email,
-                        value: email,
-                        error: 'Format e-maila powinen przypominać: uzytkownik@domena.pl'
-                    }
                 }
             }
         }

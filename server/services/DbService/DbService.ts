@@ -234,6 +234,14 @@ class DbService {
         }) ?? [] as Document<T>[];
     }
 
+    async removeItemById(id: string) {
+        return await Logs.appLogs.catchUnhandled('DbService error on removeItemById', async () => {
+            const filePath = path.join(this.route, `/${id}.json`);
+            await fsPromises.unlink(filePath);
+            await this.__refreshCacheItemById(id);
+        });
+    }
+
     getFormattedDateString(date: Date): string {
         const pad = (num: number) => String(num).padStart(2, '0');
         const day = pad(date.getDate());
