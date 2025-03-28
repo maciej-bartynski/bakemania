@@ -5,7 +5,7 @@ const Config = Object.freeze({
     sessionKeys: {
         Token: 'token',
         Me: 'me',
-        CardId: 'cardIc'
+        CardId: 'cardId'
     }
 })
 

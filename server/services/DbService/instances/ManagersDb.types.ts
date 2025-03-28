@@ -1,4 +1,5 @@
-import UserRole from "./UsersDb.types"
+import UserRole, { ChangePasswordData } from "./UsersDb.types";
+import { VerificationData } from "./UsersDb.types";
 
 type ManagerModel = {
     _id: string,
@@ -7,6 +8,8 @@ type ManagerModel = {
     role: UserRole.Manager,
     history: string[],
     agreements: true,
+    verification: VerificationData,
+    changePassword?: ChangePasswordData,
 }
 
 type SanitizedManagerModel = {
@@ -15,6 +18,10 @@ type SanitizedManagerModel = {
     role: UserRole.Manager,
     history: string[],
     agreements: true,
+    verification: {
+        isVerified: boolean,
+    },
+    changePassword?: undefined,
 };
 
 

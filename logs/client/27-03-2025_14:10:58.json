@@ -1,0 +1,28 @@
+{
+  "message": "Bakemania-spa error",
+  "details": {
+    "User": {
+      "_id": "2f782c31-a5e4-4bb7-b7d9-ebc2c54e4328",
+      "email": "maciek.bartynski@gmail.com",
+      "stamps": {
+        "amount": 0,
+        "history": []
+      },
+      "role": "user",
+      "agreements": true,
+      "verification": {
+        "isVerified": false
+      }
+    },
+    "What happend": {
+      "message": "Uncaught TypeError: callback is not a function",
+      "error": {
+        "message": "callback is not a function",
+        "stack": "TypeError: callback is not a function\n    at https://192.168.0.164:3000/src/tools/useDebouncedCallback.ts?t=1743081057805:6:7"
+      },
+      "filename": "https://192.168.0.164:3000/src/tools/useDebouncedCallback.ts?t=1743081057805",
+      "line": 6,
+      "column": 7
+    }
+  }
+}

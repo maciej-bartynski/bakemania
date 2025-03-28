@@ -8,6 +8,79 @@ import { AdminModel } from '../services/DbService/instances/AdminsDb.types';
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
+async function authenticateChangePasswordToken(req: Request, res: Response, next: NextFunction) {
+    return await Logs.appLogs.catchUnhandled('[Middleware] authenticateChangePasswordToken()', async () => {
+        const token = req.header('Authorization')?.split(' ')[1];
+
+        if (!token) {
+            res.status(401).json({
+                message: 'Brak tokenu.'
+            });
+            return;
+        }
+
+        jwt.verify(token, JWT_SECRET, async (err, user) => {
+            return await Logs.appLogs.catchUnhandled('Middleware error on authenticateChangePasswordToken', async () => {
+
+                if (err) {
+                    try {
+                        const expiredTokenData = jwt.decode(token);
+                        await tools.updarteUserOrAssistangById((expiredTokenData as any)._id, { changePassword: undefined });
+                    } catch (e) {
+                        Logs.appLogs.report('Error on removing expired changePassword field', (setData) => {
+                            setData('What happend', (e as any).message ?? e);
+                        });
+                    }
+                    res.status(401).json({
+                        message: 'Token jest już nieważny. Spróbuj ponownie.'
+                    });
+                    return;
+                }
+
+                const tokenizedUser = user as (UserModel | ManagerModel | AdminModel) & {
+                    reason?: string;
+                };
+
+                if (tokenizedUser?.reason !== 'CHANGE_PASSWORD') {
+                    res.status(401).json({
+                        message: 'Niewłaściwy token. Użyj tokenu wysłanego na emailem.'
+                    });
+                    return;
+                }
+                delete tokenizedUser.reason;
+                const currentUserOrAssistant = await tools.getUserOrAssistantById(tokenizedUser._id);
+
+                if (!currentUserOrAssistant) {
+                    res.status(401).json({
+                        message: 'Tej operacji nie można wykonać.'
+                    });
+                    return;
+                }
+
+                if (currentUserOrAssistant.role === UserRole.User) {
+                    const currentUser = currentUserOrAssistant as UserModel;
+                    (req as any).user = currentUser;
+                    next();
+                } else if (currentUserOrAssistant.role === UserRole.Manager) {
+                    const currentUser = currentUserOrAssistant as ManagerModel;
+                    (req as any).user = currentUser;
+                    next();
+                } else if (currentUserOrAssistant.role === UserRole.Admin) {
+                    const currentUser = currentUserOrAssistant as AdminModel;
+                    (req as any).user = currentUser;
+                    next();
+                }
+            });
+        });
+    }, (e) => {
+        res.status(500).json({
+            message: 'Nie udało się zmienić hasła za pomocą tokenu wysłanego na adres email.',
+            details: JSON.stringify((e as any)?.message ?? e)
+        });
+        return;
+    });
+}
+
 async function authenticateEmailVerificationToken(req: Request, res: Response, next: NextFunction) {
     return await Logs.appLogs.catchUnhandled('[Middleware] authenticateEmailVerificationToken()', async () => {
 
@@ -24,8 +97,16 @@ async function authenticateEmailVerificationToken(req: Request, res: Response, n
             return await Logs.appLogs.catchUnhandled('Middleware error on authenticateToken', async () => {
 
                 if (err) {
+                    try {
+                        const expiredTokenData = jwt.decode(token);
+                        await tools.removeUserOrAssistangById((expiredTokenData as any)._id);
+                    } catch (e) {
+                        Logs.appLogs.report('Error on removing expired user by id', (setData) => {
+                            setData('What happend', (e as any).message ?? e);
+                        });
+                    }
                     res.status(401).json({
-                        message: 'Token jest już nieważny. Zweryfikuj adres email używając swojej karty podczas transakcji w lokalu.'
+                        message: 'Token jest już nieważny. Załóż nowe konto.'
                     });
                     return;
                 }
@@ -91,7 +172,8 @@ async function authenticateToken(req: Request, res: Response, next: NextFunction
 
                 if (err) {
                     res.status(401).json({
-                        message: 'Sesja wygasła.'
+                        message: 'Sesja wygasła.',
+                        code: 'TOKEN_EXPIRED'
                     });
                     return;
                 }
@@ -172,5 +254,6 @@ function requireAdmin(req: Request, res: Response, next: NextFunction) {
 export default {
     authenticateToken,
     requireAdmin,
-    authenticateEmailVerificationToken
+    authenticateEmailVerificationToken,
+    authenticateChangePasswordToken
 }

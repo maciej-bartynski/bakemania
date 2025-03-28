@@ -1,0 +1,6 @@
+{
+  "message": "Error on removing expired user by id",
+  "details": {
+    "What happend": "\"Cannot read properties of undefined (reading '_id')\""
+  }
+}

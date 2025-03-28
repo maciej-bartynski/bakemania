@@ -1,0 +1,22 @@
+{
+  "message": "Bakemania-spa unhandled rejection",
+  "details": {
+    "User": {
+      "_id": "2f782c31-a5e4-4bb7-b7d9-ebc2c54e4328",
+      "email": "maciek.bartynski@gmail.com",
+      "stamps": {
+        "amount": 0,
+        "history": []
+      },
+      "role": "user",
+      "agreements": true,
+      "verification": {
+        "isVerified": false
+      }
+    },
+    "What happend": {
+      "message": "Timeout",
+      "stack": "-"
+    }
+  }
+}

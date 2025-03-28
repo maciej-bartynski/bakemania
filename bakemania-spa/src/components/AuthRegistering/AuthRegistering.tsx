@@ -1,50 +1,19 @@
 import { FC, useCallback, useEffect, useReducer, useRef, useState } from "react"
-import './Authorization.css'
-import authHelpers from "./Authorization.helpers";
-import meActions from "../../storage/me/me-actions";
-import useAppDispatch from "../../storage/useAppDispatch";
-import ReducerState from "../../storage/types";
-import useMeSelector from "../../storage/me/me-selectors";
+import './AuthRegistering.css'
+import authHelpers from "./AuthRegistering.helpers";
+import PathsModule from "../../tools/paths";
+import ClientLogsService from "../../services/LogsService";
+import { RegisterRequestBody } from "../../shared-types/Register";
+import apiService from "../../services/ApiService";
 
-const Authorization: FC = () => {
-    const dispatch = useAppDispatch();
-    const { status } = useMeSelector();
-    const [activeSection, setActiveSection] = useState('login');
-    const isIdle = (status !== ReducerState.Fetching);
+const AuthRegistering: FC = () => {
 
-    /**
-    * Login form
-    */
-    const [email, setEmail] = useState('');
-    const [emailError, setEmailError] = useState('');
-    const [emailTouched, setEmailTouched] = useState(false);
-    const [password, setPassword] = useState('');
-    const [passwordError, setPasswordError] = useState('');
-    const [passwordTouched, setPasswordTouched] = useState(false);
+    useEffect(() => {
+        PathsModule.globalCheckIsTokenAndRedirectRoot();
+    });
 
-    const onSetEmail = useCallback((emailInput: HTMLInputElement) => {
-        setEmail(emailInput.value.trim());
-        const isValid = emailInput.checkValidity();
-        setEmailError(isValid ? "" : 'Niepoprawny adres e-mail.');
-    }, [setEmail]);
-
-    const onSetPassword = useCallback((passwordInput: HTMLInputElement) => {
-        const password = passwordInput.value;
-        setPassword(password);
-        if (password.trim() !== password) {
-            setPasswordError('Hasło nie może zawierać spacji.')
-        } else {
-            setPasswordError("");
-        }
-    }, [setPassword]);
-
-    const logIn = useCallback(async () => {
-        dispatch(meActions.logIn({ email, password }));
-    }, [email, password, dispatch]);
-
-    /**
-     * Register form
-     */
+    const [isLoading, setIsLoading] = useState(false);
+    const [isRegistered, setIsRegistered] = useState(false);
 
     const [registrationFormState, registrationFormDispatch] = useReducer(
         authHelpers.registrationReducer,
@@ -84,33 +53,58 @@ const Authorization: FC = () => {
 
     const register = useCallback(async () => {
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const captchaToken = (window as any).grecaptcha?.getResponse();
+        setIsLoading(true);
 
-        if (!captchaToken) {
-            setMissingCaptchaAlert(true);
-            alert('Proszę zaznaczyć weryfikację reCaptcha');
-            return;
-        } else {
-            setMissingCaptchaAlert(false);
+        try {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const captchaToken = (window as any).grecaptcha?.getResponse();
+
+            if (!captchaToken) {
+                setMissingCaptchaAlert(true);
+                setIsLoading(false);
+                alert('Proszę zaznaczyć weryfikację reCaptcha');
+                return;
+            } else {
+                setMissingCaptchaAlert(false);
+            }
+
+            if (registrationFormState.password.value !== registrationFormState.confirmPassword.value) {
+                setIsLoading(false);
+                alert('Hasła nie pasują do siebie!');
+                return;
+            }
+
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (window as any).grecaptcha?.reset();
+
+            const registrationRequestBody: RegisterRequestBody = {
+                email: registrationFormState.email.value,
+                password: registrationFormState.password.value,
+                captchaToken,
+                agreements: registrationFormState.agreements.value,
+            }
+
+            await apiService.fetch('auth/register', {
+                method: 'POST',
+                body: JSON.stringify(registrationRequestBody)
+            }, [201]);
+
+            setIsRegistered(true);
+
+        } catch (er) {
+            const dataToPass = JSON.parse(JSON.stringify(registrationFormState));
+            delete dataToPass.password.value;
+            delete dataToPass.confirmPassword.value;
+            new ClientLogsService().report('Error on AuthRegistering', {
+                'What happened': er,
+                RegistrationFormState: registrationFormState,
+            });
+        } finally {
+            registrationFormDispatch({ type: 'reset', value: undefined });
+            setIsLoading(false);
         }
 
-        if (registrationFormState.password.value !== registrationFormState.confirmPassword.value) {
-            alert('Hasła nie pasują do siebie!');
-            return;
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (window as any).grecaptcha?.reset();
-
-        await dispatch(meActions.register({
-            email: registrationFormState.email.value,
-            password: registrationFormState.password.value,
-            agreements: registrationFormState.agreements.value,
-            captchaToken,
-        }));
-
-    }, [registrationFormState, dispatch]);
+    }, [registrationFormState]);
 
     const [captchaLoaded, setCaptchaLoaded] = useState(false);
 
@@ -161,9 +155,51 @@ const Authorization: FC = () => {
         }
     }, []);
 
+    if (isRegistered) {
+        return (
+            <div className="auth-registering">
+                <section>
+                    <div>
+                        <div className="horizontal-line">
+                            <span className="horizontal-line__question">
+                                <strong>Udało się!</strong> 💪<br /><br />
+
+                                <span
+                                    className="horizontal-line__question"
+                                    style={{
+                                        textAlign: 'left',
+                                    }}
+                                >
+                                    📩 Wysłaliśmy Ci email weryfikacyjny.<br />
+                                    📨 Zanim się zalogujesz, sprawdź pocztę!<br />
+                                    🔓 Po kliknięciu w link weryfikacyjny, możesz się zalogować.
+                                </span>
+                            </span>
+                            <br />
+                            <button
+                                disabled={isLoading}
+                                type="button"
+                                onClick={() => {
+                                    PathsModule.redirect(PathsModule.Paths.Login);
+                                }}
+                                style={{
+                                    height: 'unset',
+                                    padding: '10px 20px',
+                                }}
+                            >
+                                🔑 Sprawdziłem pocztę, loguję się!
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        )
+    }
+
     if (!captchaLoaded) {
         return (
-            <div className="authorization">
+            <div className="auth-registering">
                 <div style={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -180,17 +216,19 @@ const Authorization: FC = () => {
     }
 
     return (
-        <div className="authorization">
-            <section className={activeSection === 'register' ? '--active' : ''}>
+        <div className="auth-registering">
+            <section>
                 <div className="horizontal-line">
                     <span className="horizontal-line__question">
                         Masz już konto <strong>bakeMAnia</strong>?
                     </span>
                     <button
                         className='secondary'
-                        disabled={!isIdle}
+                        disabled={isLoading}
                         type="button"
-                        onClick={() => setActiveSection('login')}
+                        onClick={() => {
+                            PathsModule.redirect(PathsModule.Paths.Login);
+                        }}
                     >
                         Przejdź do logowania
                     </button>
@@ -200,56 +238,58 @@ const Authorization: FC = () => {
 
                 </div>
                 <form
-                    className="authorization__register-form"
+                    className="auth-registering__register-form"
                     onSubmit={(e) => {
                         e.stopPropagation();
                         e.preventDefault();
                         register();
                     }}
                 >
-                    <div className={`authorization__fieldset ${registrationFormState.email.touched && registrationFormState.email.error ? "--error" : ""}`}>
+                    <div className={`auth-registering__fieldset ${registrationFormState.email.touched && registrationFormState.email.error ? "--error" : ""}`}>
                         <label>
                             <input
                                 type="email"
                                 placeholder="Wpisz swój e-mail"
                                 onChange={setRegistrationEmail}
-                                disabled={!isIdle}
+                                disabled={isLoading}
                                 onBlur={setRegistrationEmailTouched}
                                 autoComplete="off"
+                                value={registrationFormState.email.value}
                             />
-                            <span className="authorization__hint">Błędny adres może uniemoliwić użycie rabatów.</span>
+                            <span className="auth-registering__hint">Błędny adres może uniemoliwić użycie rabatów.</span>
                         </label>
 
-                        <div className="authorization__error">
+                        <div className="auth-registering__error">
                             {registrationFormState.email.touched && (
                                 registrationFormState.email.error
                             )}
                         </div>
                     </div>
 
-                    <div className={`authorization__fieldset ${registrationFormState.password.touched && registrationFormState.password.error ? "--error" : ""}`}>
+                    <div className={`auth-registering__fieldset ${registrationFormState.password.touched && registrationFormState.password.error ? "--error" : ""}`}>
                         <label>
                             <input
                                 type="password"
                                 placeholder="Wpisz hasło"
                                 onChange={setRegistrationPassword}
-                                disabled={!isIdle}
+                                disabled={isLoading}
                                 onBlur={setRegistrationPasswordTouched}
                                 autoComplete="new-password"
                                 minLength={8}
                                 maxLength={50}
                                 required
+                                value={registrationFormState.password.value}
                             />
-                            <span className="authorization__hint">8-50 znaków: min. 1 wielka i mała litera, cyfra i symbol.</span>
+                            <span className="auth-registering__hint">8-50 znaków: min. 1 wielka i mała litera, cyfra i symbol.</span>
                         </label>
-                        <div className="authorization__error">
+                        <div className="auth-registering__error">
                             {registrationFormState.password.touched && (
                                 registrationFormState.password.error
                             )}
                         </div>
                     </div>
 
-                    <div className={`authorization__fieldset ${registrationFormState.confirmPassword.touched && registrationFormState.confirmPassword.error ? "--error" : ""}`}>
+                    <div className={`auth-registering__fieldset ${registrationFormState.confirmPassword.touched && registrationFormState.confirmPassword.error ? "--error" : ""}`}>
                         <label>
                             <input
                                 type="password"
@@ -257,48 +297,50 @@ const Authorization: FC = () => {
                                 autoComplete="new-password"
                                 placeholder="Potwierdź hasło"
                                 onChange={setRegistrationConfirmPassword}
-                                disabled={!isIdle}
+                                disabled={isLoading}
                                 onBlur={setRegistrationConfirmPasswordTouched}
                                 minLength={8}
                                 maxLength={50}
                                 required
+                                value={registrationFormState.confirmPassword.value}
                             />
                         </label>
-                        <div className="authorization__error">
+                        <div className="auth-registering__error">
                             {registrationFormState.confirmPassword.touched && (
                                 registrationFormState.confirmPassword.error
                             )}
                         </div>
                     </div>
 
-                    <div className={`authorization__fieldset ${registrationFormState.agreements.touched && registrationFormState.agreements.error ? "--error" : ""}`}>
-                        <label className="authorization__agreements">
+                    <div className={`auth-registering__fieldset ${registrationFormState.agreements.touched && registrationFormState.agreements.error ? "--error" : ""}`}>
+                        <label className="auth-registering__agreements">
                             <input
                                 type="checkbox"
                                 name="agreements"
                                 onChange={setAgreements}
-                                disabled={!isIdle}
+                                disabled={isLoading}
                                 required
+                                checked={registrationFormState.agreements.value}
                             />
                             <span>
                                 Akceptuję regulamin i politykę prywatności
                             </span>
                         </label>
-                        <div className="authorization__error">
+                        <div className="auth-registering__error">
                             {registrationFormState.agreements.touched && (
                                 registrationFormState.agreements.error
                             )}
                         </div>
                     </div>
 
-                    <div className={`authorization__fieldset ${missingCaptchaAlert ? "--error" : ""}`}>
+                    <div className={`auth-registering__fieldset ${missingCaptchaAlert ? "--error" : ""}`}>
                         <div id="g-recaptcha" ref={captchaRenderingWrapperRef} />
-                        <div className="authorization__error">
+                        <div className="auth-registering__error">
                             {missingCaptchaAlert && 'Proszę zaznaczyć weryfikację reCaptcha'}
                         </div>
                     </div>
                     <button
-                        disabled={!isIdle || !!registrationFormState.email.error || !!registrationFormState.password.error || !!registrationFormState.confirmPassword.error || !!registrationFormState.agreements.error}
+                        disabled={isLoading || !!registrationFormState.email.error || !!registrationFormState.password.error || !!registrationFormState.confirmPassword.error || !!registrationFormState.agreements.error}
                         type="submit"
                     >
                         Rejestruję się
@@ -306,84 +348,13 @@ const Authorization: FC = () => {
                 </form>
             </section>
 
-            <section className={activeSection === 'login' ? '--active' : ''}>
-                <div className="horizontal-line">
-                    <span className="horizontal-line__question">
-                        Dołącz do klubu <strong>bakeMAnia</strong>
-                    </span>
-                    <button
-                        className='secondary'
-                        disabled={!isIdle}
-                        type="button"
-                        onClick={() => setActiveSection('register')}
-                    >
-                        Załóż konto
-                    </button>
-                    <span className="horizontal-line__answer">
-                        Lub zaloguj się:
-                    </span>
+            {isLoading && (
+                <div className="global-loader-wrapper">
+                    <div className={`global-loader-spinner --active`} />
                 </div>
-                <form
-                    className="authorization__login-form"
-                    onSubmit={(e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        logIn();
-                    }}
-                >
-                    <div className={`authorization__fieldset ${emailTouched && emailError ? "--error" : ""}`}>
-                        <label>
-                            <input
-                                type="email"
-                                autoComplete="username"
-                                placeholder="E-mail"
-                                onChange={(e) => {
-                                    onSetEmail(e.target);
-                                }}
-                                disabled={!isIdle}
-                                onBlur={() => setEmailTouched(true)}
-                            />
-                        </label>
-
-                        <div className="authorization__error">
-                            {emailTouched && emailError && (
-                                emailError
-                            )}
-                        </div>
-                    </div>
-
-                    <div className={`authorization__fieldset ${passwordTouched && passwordError ? "--error" : ""}`}>
-                        <label>
-
-                            <input
-                                type="password"
-                                autoComplete="current-password"
-                                placeholder="Hasło"
-                                onChange={(e) => {
-                                    onSetPassword(e.target);
-                                }}
-                                disabled={!isIdle}
-                                onBlur={() => setPasswordTouched(true)}
-                            />
-                        </label>
-                        <div className="authorization__error">
-                            {passwordTouched && passwordError && (
-                                passwordError
-                            )}
-                        </div>
-                    </div>
-
-                    <button
-                        disabled={!isIdle || !email || !password || !!emailError || !!passwordError}
-                        type="submit"
-                    >
-                        Zaloguj się
-                    </button>
-
-                </form>
-            </section>
+            )}
         </div>
     )
 }
 
-export default Authorization;
+export default AuthRegistering;

@@ -1,0 +1,27 @@
+{
+  "message": "Rejection on ApiService, error on parsing rejection",
+  "details": {
+    "User": {
+      "_id": "2f782c31-a5e4-4bb7-b7d9-ebc2c54e4328",
+      "email": "maciek.bartynski@gmail.com",
+      "stamps": {
+        "amount": 0,
+        "history": []
+      },
+      "role": "user",
+      "agreements": true,
+      "verification": {
+        "isVerified": false
+      }
+    },
+    "What happend": {
+      "Url": "user/me",
+      "Expected statuses": [
+        200
+      ],
+      "Response status": 500,
+      "Response status text": "Internal Server Error",
+      "Catched error": "Failed to execute 'json' on 'Response': Unexpected end of JSON input"
+    }
+  }
+}
