@@ -96,11 +96,11 @@ class DbService {
     }
 
     async updateById<T extends Record<string, any>>(id: string, data: Partial<T>): Promise<string | null> {
+        if (this.__lock[id]) {
+            return null;
+        }
+        this.__lock[id] = true;
         return await Logs.appLogs.catchUnhandled('DbService error on updateById', async () => {
-            if (this.__lock[id]) {
-                throw new Error("File is locked");
-            }
-            this.__lock[id] = true;
             const filePath = path.join(this.route, `/${id}.json`);
             const record = await fsPromises.readFile(filePath, 'utf8');
             const doc: Document<T> = await JSON.parse(record);
@@ -123,11 +123,11 @@ class DbService {
     }
 
     async setById<T extends Record<string, any>>(id: string, data: T): Promise<string | null> {
+        if (this.__lock[id]) {
+            return null;
+        }
+        this.__lock[id] = true;
         return await Logs.appLogs.catchUnhandled('DbService error on setById', async () => {
-            if (this.__lock[id]) {
-                throw new Error("File is locked");
-            }
-            this.__lock[id] = true;
             const resolvedOperation = await new Promise<string | void>(async (resolve, reject) => {
                 const createFilePath = path.join(this.route, `/${id}.json`);
                 const fileExits = await fsPromises.access(createFilePath, fsPromises.constants.F_OK).then(() => true).catch(() => false);
@@ -155,27 +155,38 @@ class DbService {
             delete this.__lock[id];
             return resolvedOperation;
         }, async () => {
-            await this.__refreshCacheItemById(id);
+            try {
+                await this.__refreshCacheItemById(id);
+            } catch (e) {
+                delete this.__lock[id];
+                return this.__cache[id] ? id : null;
+            }
             delete this.__lock[id];
             return this.__cache[id] ? id : null;
         }) ?? null;
     }
 
-    async removeItemById(id: string): Promise<boolean> {
+    async removeItemById(id: string): Promise<boolean | null> {
+        if (this.__lock[id]) {
+            return null;
+        }
+        this.__lock[id] = true;
+
         return await Logs.appLogs.catchUnhandled('DbService error on removeItemById', async () => {
-            if (this.__lock[id]) {
-                throw new Error("File is locked");
-            }
-            this.__lock[id] = true;
             const filePath = path.join(this.route, `/${id}.json`);
             await fsPromises.unlink(filePath);
             await this.__refreshCacheItemById(id);
             delete this.__lock[id];
             return true;
         }, async () => {
-            await this.__refreshCacheItemById(id);
-            delete this.__lock[id];
-            return false;
+            try {
+                await this.__refreshCacheItemById(id);
+                delete this.__lock[id];
+                return false;
+            } catch (e) {
+                delete this.__lock[id];
+                return false;
+            }
         }) ?? false;
     }
 

@@ -13,7 +13,7 @@ const AuthRegistering: FC = () => {
     });
 
     const [isLoading, setIsLoading] = useState(false);
-    const [isRegistered, setIsRegistered] = useState(false);
+    const [isRegistered, setIsRegistered] = useState<'pristine' | 'success' | 'fail'>('pristine');
 
     const [registrationFormState, registrationFormDispatch] = useReducer(
         authHelpers.registrationReducer,
@@ -89,7 +89,7 @@ const AuthRegistering: FC = () => {
                 body: JSON.stringify(registrationRequestBody)
             }, [201]);
 
-            setIsRegistered(true);
+            setIsRegistered('success');
 
         } catch (er) {
             const dataToPass = JSON.parse(JSON.stringify(registrationFormState));
@@ -99,6 +99,7 @@ const AuthRegistering: FC = () => {
                 'What happened': er,
                 RegistrationFormState: registrationFormState,
             });
+            setIsRegistered('fail');
         } finally {
             registrationFormDispatch({ type: 'reset', value: undefined });
             setIsLoading(false);
@@ -155,7 +156,7 @@ const AuthRegistering: FC = () => {
         }
     }, []);
 
-    if (isRegistered) {
+    if (isRegistered === 'success') {
         return (
             <div className="auth-registering">
                 <section>
@@ -188,6 +189,48 @@ const AuthRegistering: FC = () => {
                                 }}
                             >
                                 🔑 Sprawdziłem pocztę, loguję się!
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        )
+    }
+
+    if (isRegistered === 'fail') {
+        return (
+            <div className="auth-registering">
+                <section>
+                    <div>
+                        <div className="horizontal-line">
+                            <span className="horizontal-line__question">
+                                <strong>Uups...</strong><br /><br />
+
+                                <span
+                                    className="horizontal-line__question"
+                                    style={{
+                                        textAlign: 'center',
+                                    }}
+                                >
+                                    <span style={{ fontSize: '20px' }}>❗</span><br /><br />
+                                    Coś poszło nie tak. Niestety, twoje<br />
+                                    konto <strong style={{ color: 'red' }}>nie zostało utworzone</strong>.
+                                </span>
+                            </span>
+                            <br />
+                            <button
+                                disabled={isLoading}
+                                type="button"
+                                onClick={() => {
+                                    window.location.reload();
+                                }}
+                                style={{
+                                    height: 'unset',
+                                    padding: '10px 20px',
+                                }}
+                            >
+                                Próbuję jeszcze raz
                             </button>
                         </div>
                     </div>

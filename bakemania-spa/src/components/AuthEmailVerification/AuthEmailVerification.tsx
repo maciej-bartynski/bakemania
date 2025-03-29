@@ -9,10 +9,25 @@ const AuthEmailVerification: FC = () => {
     const { token } = getQueryParams();
     const [isLoading, setIsLoading] = useState(false);
     const [isVerified, setIsVerified] = useState(false);
+    const [isError, setIsError] = useState(false);
 
     useEffect(() => {
         PathsModule.globalCheckIsTokenAndRedirectRoot();
     }, []);
+
+    if (isError) {
+        return (
+            <div className="verify-email">
+                <span>
+                    <strong>Uups... coś poszło źle.</strong><br /><br />
+                    Twoje konto nie zostało zweryfikowane.<br />
+                </span>
+                <a href={PathsModule.Paths.Login}>
+                    Rozumiem
+                </a>
+            </div >
+        )
+    }
 
     if (isVerified) {
         return (
@@ -53,8 +68,11 @@ const AuthEmailVerification: FC = () => {
                                     window.localStorage.removeItem(Config.sessionKeys.Token);
                                     setIsLoading(false);
                                     setIsVerified(true);
+                                    setIsError(false);
                                 }).catch(() => {
                                     window.localStorage.removeItem(Config.sessionKeys.Token);
+                                    setIsError(true);
+                                    setIsVerified(false);
                                 }).finally(() => {
                                     window.localStorage.removeItem(Config.sessionKeys.Token);
                                     setIsLoading(false);
