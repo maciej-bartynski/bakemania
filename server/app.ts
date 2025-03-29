@@ -68,7 +68,14 @@ app.use('/api/user', Middleware.authenticateToken, userRouter);
 app.use('/api/admin/stamps', Middleware.authenticateToken, Middleware.requireAdmin, stampsRouter);
 app.use('/api/admin/users', Middleware.authenticateToken, Middleware.requireAdmin, usersRouterForAdmin);
 app.use('/api/app-config', Middleware.authenticateToken, appConfigRouter);
+
+/**
+ * Serve static files from bakemania-spa/dist/
+ */
 app.use(express.static(path.resolve(__dirname, '../bakemania-spa/dist/.')));
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../bakemania-spa/dist/index.html'));
+});
 
 
 let wsServer: WebSocketServer;
