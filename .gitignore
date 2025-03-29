@@ -10,6 +10,7 @@ server-dist
 # data
 db
 defaults
+logs
 
 # certs
 cert.pem
