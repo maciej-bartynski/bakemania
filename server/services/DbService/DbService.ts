@@ -83,6 +83,9 @@ class DbService {
     }
 
     async __refreshCacheItemById(id: string) {
+        if (this.__ignoreCache) {
+            return;
+        }
         try {
             const fileRaw = await fsPromises.readFile(path.join(this.route, `/${id}.json`), 'utf8');
             const fileData: Document<any> = JSON.parse(fileRaw);
