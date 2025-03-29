@@ -16,7 +16,6 @@ import AuthSessionExpired from './components/AuthSessionExpired/AuthSessionExpir
 import AuthRegistering from './components/AuthRegistering/AuthRegistering.tsx';
 import AuthRequestPasswordChange from './components/AuthRequestPasswordChange/AuthRequestPasswordChange.tsx';
 import AuthChangePassword from './components/AuthChangePassword/AuthChangePassword.tsx';
-;
 
 registerSW();
 
