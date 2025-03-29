@@ -164,7 +164,7 @@ router.get('/verify-email', middleware.authenticateEmailVerificationToken, async
             isVerified: true,
         };
 
-        await usersDb.updateById<UserModel>(user._id, {
+        await tools.updarteUserOrAssistangById(user._id, {
             verification: newVerificationData
         });
 

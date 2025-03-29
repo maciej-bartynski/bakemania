@@ -26,15 +26,3 @@ jobs:
             git pull origin develop
             make build
             make start
-          envs: |
-            DEPLOY_STATUS=success
-
-      - name: Update deployment status
-        if: always()
-        run: |
-          if [ "${{ env.DEPLOY_STATUS }}" = "success" ]; then
-            echo "Deployment successful"
-          else
-            echo "Deployment failed"
-            exit 1
-          fi
