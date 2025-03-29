@@ -35,7 +35,7 @@ const Background: FC<PropsWithChildren<{
                         />
 
                         <p>
-                            Zbieraj pieczątki<br />i zyskuj rabaty
+                            Zbieraj pieczątki<br />i zyskuj rabaty [1]
                         </p>
                     </header>
 
