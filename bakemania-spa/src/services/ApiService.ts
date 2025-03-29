@@ -30,18 +30,22 @@ class ApiService implements ApiServiceInterface {
 
         return window.fetch(`/api/${input}`, options)
             .then(async response => {
+
                 if (expectedStatuses.includes(response.status)) {
+
                     if (response.status === 204) {
                         /** 
                          * Success status code, no body 
                          * */
                         return response.statusText ?? 'Success';
                     }
+
                     /** 
                      * Success status code, expect body 
                      * */
                     return response.json();
                 }
+
                 /** 
                  * Rejection status code, body expected 
                  * */
@@ -105,17 +109,18 @@ class ApiService implements ApiServiceInterface {
                             body: 'Coś poszło źle',
                         }))
                     }
+                    throw response;
                 }
             })
-            .catch(rejectionData => {
-                getConsole().error('Unexpected catch: ', rejectionData?.message ?? rejectionData);
-                noticesStore.dispatch(noticesSlice.actions.addNotice({
-                    _id: uuid.v4(),
-                    header: 'Nieokreślony błąd',
-                    body: rejectionData?.message ?? rejectionData,
-                }))
+        // .catch(rejectionData => {
+        //     getConsole().error('Unexpected catch: ', rejectionData?.message ?? rejectionData);
+        //     noticesStore.dispatch(noticesSlice.actions.addNotice({
+        //         _id: uuid.v4(),
+        //         header: 'Nieokreślony błąd',
+        //         body: rejectionData?.message ?? rejectionData,
+        //     }))
 
-            });
+        // });
     }
 }
 

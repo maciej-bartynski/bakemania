@@ -368,7 +368,7 @@ router.post('/login', async (req, res) => {
 
         if (!userExists) {
             res.status(401).json({
-                message: 'Niepoprawny adres email',
+                message: 'Niepoprawny adres email lub hasło',
                 details: {
                     userExists,
                     passwordMatch
@@ -377,7 +377,7 @@ router.post('/login', async (req, res) => {
             return;
         } else if (!passwordMatch) {
             res.status(401).json({
-                message: 'Niepoprawne hasło',
+                message: 'Niepoprawne hasło lub adres email',
                 details: {
                     userExists,
                     passwordMatch
