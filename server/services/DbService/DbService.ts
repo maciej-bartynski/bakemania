@@ -11,6 +11,8 @@ class DbService {
     route: string;
     __cache: Record<string, Document<any>>;
     __cacheCleanupInterval?: NodeJS.Timeout;
+    __lock: Record<string, boolean>;
+    __ignoreCache: boolean;
 
     constructor(config: {
         dbStore: DbStores
@@ -18,6 +20,8 @@ class DbService {
         this.dbStore = config.dbStore;
         this.route = path.join(this.path, this.dbStore);
         this.__cache = {};
+        this.__lock = {};
+        this.__ignoreCache = false;
     }
 
     async __drop() {
@@ -27,30 +31,41 @@ class DbService {
 
     async __prepareCache() {
         await Logs.appLogs.catchUnhandled('DbService error on __prepareCache', async () => {
+            this.__ignoreCache = true;
             this.__stopCacheCleanup();
             const fileDescriptors = await fsPromises.readdir(this.route, { withFileTypes: true });
             const filesCached = fileDescriptors.filter(descriptor => descriptor.isFile());
-            this.__cache = filesCached.reduce(async (acc, descriptor) => {
+
+            for (const descriptor of filesCached) {
                 const fileRaw = await fsPromises.readFile(path.join(this.route, descriptor.name), 'utf8');
                 const fileData: Document<any> = JSON.parse(fileRaw);
-                acc[descriptor.name] = fileData;
-                return acc;
-            }, {} as typeof this.__cache);
+                this.__cache[descriptor.name] = fileData;
+            }
 
             this.__startCacheCleanup();
+            this.__ignoreCache = false;
         }, () => {
             this.__cache = {};
             this.__stopCacheCleanup();
             this.__cacheCleanupInterval = undefined;
+            this.__ignoreCache = false;
         });
     }
 
     async __startCacheCleanup() {
+        this.__ignoreCache = true;
         Logs.appLogs.catchUnhandled('DbService error on __startCacheCleanup', async () => {
             const tenMinutes = 1000 * 60 * 10;
             this.__cacheCleanupInterval = setInterval(() => {
                 this.__prepareCache();
             }, tenMinutes);
+            this.__ignoreCache = false;
+        }, () => {
+            this.__cache = {};
+            this.__stopCacheCleanup();
+            this.__cacheCleanupInterval = undefined;
+            this.__ignoreCache = false;
+            this.__prepareCache();
         });
     }
 
@@ -60,8 +75,10 @@ class DbService {
                 clearInterval(this.__cacheCleanupInterval);
                 this.__cacheCleanupInterval = undefined;
             }
+            this.__ignoreCache = false;
         }, () => {
             this.__cacheCleanupInterval = undefined;
+            this.__ignoreCache = false;
         });
     }
 
@@ -75,8 +92,12 @@ class DbService {
         }
     }
 
-    async updateById<T extends Record<string, any>>(id: string, data: Partial<T>) {
+    async updateById<T extends Record<string, any>>(id: string, data: Partial<T>): Promise<string | null> {
         return await Logs.appLogs.catchUnhandled('DbService error on updateById', async () => {
+            if (this.__lock[id]) {
+                throw new Error("File is locked");
+            }
+            this.__lock[id] = true;
             const filePath = path.join(this.route, `/${id}.json`);
             const record = await fsPromises.readFile(filePath, 'utf8');
             const doc: Document<T> = await JSON.parse(record);
@@ -90,14 +111,28 @@ class DbService {
             }
             await fsPromises.writeFile(filePath, JSON.stringify(newDoc, null, 2), 'utf8');
             await this.__refreshCacheItemById(id);
+            delete this.__lock[id];
             return id;
-        });
+        }, () => {
+            delete this.__lock[id];
+            return null;
+        }) ?? null;
     }
 
     async setById<T extends Record<string, any>>(id: string, data: T): Promise<string | null> {
         return await Logs.appLogs.catchUnhandled('DbService error on setById', async () => {
-            return await new Promise<string | void>((resolve, reject) => {
+            if (this.__lock[id]) {
+                throw new Error("File is locked");
+            }
+            this.__lock[id] = true;
+            const resolvedOperation = await new Promise<string | void>(async (resolve, reject) => {
                 const createFilePath = path.join(this.route, `/${id}.json`);
+                const fileExits = await fsPromises.access(createFilePath, fsPromises.constants.F_OK).then(() => true).catch(() => false);
+
+                if (fileExits) {
+                    reject(new Error("File already exists"));
+                }
+
                 const doc: Document<T> = {
                     _id: id,
                     ...data,
@@ -110,14 +145,35 @@ class DbService {
                         reject(err);
                     } else {
                         resolve(id);
-                        this.__refreshCacheItemById(id);
                     }
                 });
             }) ?? null;
+            this.__refreshCacheItemById(id);
+            delete this.__lock[id];
+            return resolvedOperation;
         }, async () => {
             await this.__refreshCacheItemById(id);
+            delete this.__lock[id];
             return this.__cache[id] ? id : null;
         }) ?? null;
+    }
+
+    async removeItemById(id: string): Promise<boolean> {
+        return await Logs.appLogs.catchUnhandled('DbService error on removeItemById', async () => {
+            if (this.__lock[id]) {
+                throw new Error("File is locked");
+            }
+            this.__lock[id] = true;
+            const filePath = path.join(this.route, `/${id}.json`);
+            await fsPromises.unlink(filePath);
+            await this.__refreshCacheItemById(id);
+            delete this.__lock[id];
+            return true;
+        }, async () => {
+            await this.__refreshCacheItemById(id);
+            delete this.__lock[id];
+            return false;
+        }) ?? false;
     }
 
     async getById<T extends Record<string, any>>(id: string): Promise<Document<T> | null> {
@@ -234,14 +290,6 @@ class DbService {
         }) ?? [] as Document<T>[];
     }
 
-    async removeItemById(id: string) {
-        return await Logs.appLogs.catchUnhandled('DbService error on removeItemById', async () => {
-            const filePath = path.join(this.route, `/${id}.json`);
-            await fsPromises.unlink(filePath);
-            await this.__refreshCacheItemById(id);
-        });
-    }
-
     getFormattedDateString(date: Date): string {
         const pad = (num: number) => String(num).padStart(2, '0');
         const day = pad(date.getDate());
@@ -251,6 +299,14 @@ class DbService {
         const minutes = pad(date.getMinutes());
         const seconds = pad(date.getSeconds());
         return `${day}.${month}.${year} ${hours}:${minutes}:${seconds}`;
+    }
+
+    lockFileId(id: string) {
+        this.__lock[id] = true;
+    }
+
+    unlockFileId(id: string) {
+        this.__lock[id] = false;
     }
 }
 
