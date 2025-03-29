@@ -22,6 +22,7 @@ jobs:
           key: ${{ secrets.OVH_SSH_KEY }}
           script: |
             cd /home/ubuntu/bakemania
+            git checkout develop
             git pull origin develop
             make build
             make start
