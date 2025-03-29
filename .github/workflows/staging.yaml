@@ -1,0 +1,39 @@
+name: Staging Deployment
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Deploy to OVH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.OVH_HOST }}
+          username: ${{ secrets.OVH_USERNAME }}
+          key: ${{ secrets.OVH_SSH_KEY }}
+          script: |
+            cd /path/to/your/project
+            git pull origin develop
+            make build
+            make start
+          envs: |
+            DEPLOY_STATUS=success
+
+      - name: Update deployment status
+        if: always()
+        run: |
+          if [ "${{ env.DEPLOY_STATUS }}" = "success" ]; then
+            echo "Deployment successful"
+          else
+            echo "Deployment failed"
+            exit 1
+          fi
