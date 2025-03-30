@@ -1,13 +1,11 @@
 import express, { Request, Response } from 'express';
-import Middleware from '../../lib/middleware';
 import Tools from '../../lib/tools';
 import Logs from '../../services/LogService';
-import usersDb from '../../services/DbService/instances/UsersDb';
 
 const router = express.Router();
 
-router.get('/me', Middleware.authenticateToken, async (req: Request, res: Response) => {
-
+router.get('/me', async (req: Request, res: Response) => {
+    console.log("ME  test");
 
     Logs.appLogs.catchUnhandled('Handler /me error', async () => {
         const userId = ((req as any).user as any)._id;
@@ -32,9 +30,24 @@ router.get('/me', Middleware.authenticateToken, async (req: Request, res: Respon
     });
 });
 
-router.delete('/remove-account', Middleware.authenticateToken, async (req: Request, res: Response) => {
+router.delete('/remove-account', async (req: Request, res: Response) => {
+    console.log("remove - hit");
+
+    try {
+        console.log("req check: ", (req as any).user._id);
+    } catch (e) {
+        console.log("req check - error", e);
+    }
+
     Logs.appLogs.catchUnhandled('Handler /me error', async () => {
         const userId = ((req as any).user as any)._id;
+
+        try {
+            console.log("userId check: ", userId);
+        } catch (e) {
+            console.log("userId check - error", e);
+        }
+
         const sanitizedUser = await Tools.getUserOrAssistantById(userId);
         if (!sanitizedUser) {
             res.status(404).json({

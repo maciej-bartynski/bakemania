@@ -8,7 +8,6 @@ import PanelViewTemplate from "../../atoms/PanelViewTemplate/PanelViewTemplate";
 import BottomPanel from "../../atoms/BottomPanel/BottomPanel";
 import clearSession from "../../tools/clearSession";
 import apiService from "../../services/ApiService";
-import Config from "../../config";
 
 const SettingsSection: FC<{
     active: boolean;
@@ -104,9 +103,6 @@ const SettingsSection: FC<{
                                         onClick={() => {
                                             apiService.fetch('/user/remove-account', {
                                                 method: 'DELETE',
-                                                headers: {
-                                                    'Authorization': `Bearer ${window.localStorage.getItem(Config.sessionKeys.Token)}`
-                                                }
                                             }, [204]).then(() => {
                                                 clearSession();
                                                 window.location.reload();
