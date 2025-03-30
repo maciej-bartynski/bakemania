@@ -94,6 +94,4 @@ class UsersDb extends DbService {
 
 const usersDb = new UsersDb({ dbStore: DbStores.Users });
 
-usersDb.__prepareCache();
-
 export default usersDb;

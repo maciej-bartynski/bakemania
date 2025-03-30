@@ -115,12 +115,7 @@ router.post('/change-password-request', limiterForPasswordChangeRequests, async 
             return;
         }
 
-        if (user.changePassword?.emailSent) {
-            res.status(403).json({
-                message: 'Email z linkiem do zmiany hasła został już wysłany'
-            });
-            return;
-        }
+        const emailSentAlready = user.changePassword?.emailSent;
 
         const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -128,29 +123,35 @@ router.post('/change-password-request', limiterForPasswordChangeRequests, async 
             throw 'Missing secret.';
         }
 
+        const emailSentIdentifier = uuid.v4();
         const changePasswordToken = jwt.sign({
             _id: user._id,
             reason: 'CHANGE_PASSWORD',
+            stamp: emailSentIdentifier
         }, JWT_SECRET, { expiresIn: process.env.EMAIL_VERIFICATION_TOKEN_EXPIRATION_TIME });
 
         await EmailService.sendChangePasswordEmail(user, changePasswordToken);
         const createdId = await tools.updarteUserOrAssistangById(user._id, {
             changePassword: {
-                emailSent: true
+                emailSent: emailSentIdentifier
             }
         });
         if (createdId) {
-            res.status(204).send();
+            res.status(200).json({
+                success: true,
+                isNextEmail: emailSentAlready,
+            });
             return;
         } else {
             res.status(500).json({
+                success: true,
                 message: 'Błąd podczas wysyłania emaila weryfikacyjnego [1].',
             });
             return;
         }
     }, (e) => {
         res.status(500).json({
-            message: 'Coś poszło nie tak podczas próby wysłąnia emaila z linkiem do zmiany hasła.',
+            message: 'Coś poszło nie tak podczas próby wysłania emaila z linkiem do zmiany hasła.',
             details: JSON.stringify((e as any)?.message ?? e)
         });
         return;

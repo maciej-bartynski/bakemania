@@ -28,7 +28,7 @@ type VerificationData = {
 });
 
 type ChangePasswordData = {
-    emailSent: boolean,
+    emailSent: string,
 };
 
 type UserModel = {
