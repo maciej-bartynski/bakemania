@@ -101,56 +101,13 @@ const SettingsSection: FC<{
                                         type="button"
                                         className="secondary"
                                         onClick={() => {
-                                            apiService.fetch('/user/remove-account', {
+                                            apiService.fetch('user/remove-account', {
                                                 method: 'DELETE',
                                             }, [204]).then(() => {
                                                 clearSession();
                                                 window.location.reload();
-                                            }).catch(async (e) => {
+                                            }).catch(() => {
                                                 alert('Nie udało się usunąć konta');
-                                                alert(e);
-
-
-                                                try {
-                                                    const jsonp = JSON.parse(e);
-                                                    alert(jsonp);
-                                                } catch {
-                                                    //nic
-                                                }
-
-                                                try {
-                                                    const jsonp = JSON.parse(e);
-                                                    alert(jsonp.message);
-                                                } catch {
-                                                    //nic
-                                                }
-
-                                                try {
-                                                    const jso = await e.json();
-                                                    alert(jso);
-                                                } catch {
-                                                    //nic
-                                                }
-
-
-                                                try {
-                                                    const jso = await e.json();
-                                                    alert(jso.message);
-                                                } catch {
-                                                    //nic
-                                                }
-
-                                                try {
-                                                    alert(e.statusText);
-                                                } catch {
-                                                    //nic
-                                                }
-
-                                                try {
-                                                    alert(e.status);
-                                                } catch {
-                                                    //nic
-                                                }
                                             });
                                         }}
                                         style={{

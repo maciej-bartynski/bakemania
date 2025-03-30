@@ -111,16 +111,7 @@ class ApiService implements ApiServiceInterface {
                     }
                     throw response;
                 }
-            })
-        // .catch(rejectionData => {
-        //     getConsole().error('Unexpected catch: ', rejectionData?.message ?? rejectionData);
-        //     noticesStore.dispatch(noticesSlice.actions.addNotice({
-        //         _id: uuid.v4(),
-        //         header: 'Nieokreślony błąd',
-        //         body: rejectionData?.message ?? rejectionData,
-        //     }))
-
-        // });
+            });
     }
 }
 

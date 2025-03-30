@@ -7,7 +7,6 @@ const passwordValidator = (password: string): void | string => {
             throw 'Hasło jest wymagane';
         }
         if (password.length < 8 || password.length > 50) {
-            console.log('Hasło musi mieć od 8 do 50 znaków', password);
             throw "Hasło musi mieć od 8 do 50 znaków";
         }
         if (!/[A-Z]/.test(password)) {
