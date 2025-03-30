@@ -2,10 +2,25 @@
     width: 100%;
     padding: 6px;
     display: flex;
+    flex-direction: column;
     gap: 6px;
-    align-items: center;
+    align-items: stretch;
 }
 
-.settings-section-field button .icon-button__label {
-    display: none;
+
+.settings-section-field__settings-button {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: transparent;
+    border: solid 1px var(--text);
+    cursor: pointer;
+    padding-left: 20px;
+}
+
+.settings-section-field__settings-button span {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--text);
+    padding-top: 4px;
 }

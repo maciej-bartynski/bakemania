@@ -407,7 +407,7 @@ router.post('/login', async (req, res) => {
 
             if (userOrAssistan.role === UserRole.User) {
                 const newUserCard = await Tools.createCardId();
-                await usersDb.updateById<UserModel>(userOrAssistan._id, { card: newUserCard });
+                await usersDb.updateById<UserModel>(userOrAssistan._id, { card: newUserCard, changePassword: undefined });
                 res.status(200).json({
                     token,
                     cardId: newUserCard.hash

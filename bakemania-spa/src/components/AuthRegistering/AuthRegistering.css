@@ -125,3 +125,11 @@
     background: linear-gradient(to bottom, rgba(0, 0, 0, .9), rgba(255, 255, 255, 1));
     animation: global-fade-in 250ms ease-in-out forwards;
 }
+
+.auth-registering__agreements-text a {
+    background-color: transparent;
+    border: none;
+    color: var(--colorActive);
+    text-decoration: underline;
+    padding: 0;
+}

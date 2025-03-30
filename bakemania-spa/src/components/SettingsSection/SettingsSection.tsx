@@ -2,12 +2,12 @@ import { FC, useCallback, useState } from "react";
 import AsidePanel from "../../atoms/AsidePanel/AsidePanel";
 import FooterNav from "../FooterNav/FooterNav";
 import IconName from "../../icons/IconName";
-import IconButton from "../../atoms/IconButton/IconButton";
 import './SettingsSection.css';
 import PanelViewTemplate from "../../atoms/PanelViewTemplate/PanelViewTemplate";
 import BottomPanel from "../../atoms/BottomPanel/BottomPanel";
 import clearSession from "../../tools/clearSession";
 import apiService from "../../services/ApiService";
+import Icon from "../../icons/Icon";
 
 const SettingsSection: FC<{
     active: boolean;
@@ -132,30 +132,38 @@ const SettingsSection: FC<{
                     )}
                 >
                     <div className="settings-section-field">
-                        <IconButton
-                            iconName={IconName.LogOut}
-                            bgColor="transparent"
-                            iconColor="var(--text)"
-                            textColor="transparent"
-                            label=""
+                        <button
+                            className="settings-section-field__settings-button"
                             onClick={toggleLogoutPanel}
-                        />
-                        <span>Wyloguj</span>
+                        >
+                            <Icon
+                                iconName={IconName.LogOut}
+                                color="var(--text)"
+                            />
+
+                            <span>
+                                Wyloguj
+                            </span>
+                        </button>
                     </div>
 
-                    <div
-                        className="settings-section-field"
-                    >
-                        <IconButton
-                            iconName={IconName.Destroy}
-                            bgColor="transparent"
-                            iconColor="red"
-                            textColor="red"
-                            label=""
+                    <div className="settings-section-field">
+                        <button
+                            className="settings-section-field__settings-button"
                             onClick={toggleDestroyPanel}
-                        />
-                        <span>Usuń konto</span>
+                        >
+                            <Icon
+                                iconName={IconName.Destroy}
+                                color="red"
+                            />
+
+                            <span style={{ color: 'red' }}>
+                                Usuń konto
+                            </span>
+                        </button>
                     </div>
+
+
                 </PanelViewTemplate>
             </AsidePanel>
         )

@@ -62,17 +62,13 @@ const AuthRequestPasswordChange: FC = () => {
                 <div className="authorization">
                     <section>
                         <span style={{ textAlign: 'center', display: 'block' }}>
-                            Na podany przez Ciebie adres
-                            <br />
-                            wysłano link do zmiany hasła.
-                            <br />
-                            Link będzie ważny przez <strong>10 minut</strong>.
-                            <br /><br />
-                            🚨
-                            <br /><br />
                             Masz w skrzynce<br />
                             <strong>więcej niż 1</strong> link do zmiany hasła.<br />
                             Tylko ostatni link jest ważny.
+                            <br /><br />
+                            🚨
+                            <br /><br />
+                            Link będzie ważny przez <strong>10 minut</strong>.
                         </span>
                     </section>
                 </div>

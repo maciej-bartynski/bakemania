@@ -365,8 +365,8 @@ const AuthRegistering: FC = () => {
                                 required
                                 checked={registrationFormState.agreements.value}
                             />
-                            <span>
-                                Akceptuję regulamin i politykę prywatności
+                            <span className="auth-registering__agreements-text">
+                                Akceptuję <a href="/files/Regulamin.pdf" target="_blank" rel="noopener noreferrer">regulamin</a> i <a href="/files/Polityka-prywatnosci.pdf" target="_blank" rel="noopener noreferrer">politykę prywatności</a>
                             </span>
                         </label>
                         <div className="auth-registering__error">
