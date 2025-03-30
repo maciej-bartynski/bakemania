@@ -12,7 +12,7 @@ const AuthRequestPasswordChange: FC = () => {
     const [emailTouched, setEmailTouched] = useState(false);
 
     const [isSuccess, setIsSuccess] = useState(false);
-
+    const [isNextEmail, setIsNextEmail] = useState(false);
     const onSetEmail = useCallback((emailInput: HTMLInputElement) => {
         setEmail(emailInput.value.trim());
         const isValid = emailInput.checkValidity();
@@ -22,11 +22,18 @@ const AuthRequestPasswordChange: FC = () => {
     const sendRequestChangePassword = useCallback(async () => {
         setIsLoading(true);
         try {
-            await apiService.fetch('auth/change-password-request', {
+            const {
+                success,
+                isNextEmail
+            } = await apiService.fetch('auth/change-password-request', {
                 method: 'POST',
                 body: JSON.stringify({ email })
-            }, [204])
-            setIsSuccess(true);
+            }, [200]);
+
+            if (success) {
+                setIsSuccess(true);
+                setIsNextEmail(isNextEmail);
+            }
 
         } catch (error) {
             const clientLogs = new ClientLogsService();
@@ -49,6 +56,29 @@ const AuthRequestPasswordChange: FC = () => {
     });
 
     if (isSuccess) {
+
+        if (isNextEmail) {
+            return (
+                <div className="authorization">
+                    <section>
+                        <span style={{ textAlign: 'center', display: 'block' }}>
+                            Na podany przez Ciebie adres
+                            <br />
+                            wysłano link do zmiany hasła.
+                            <br />
+                            Link będzie ważny przez <strong>10 minut</strong>.
+                            <br /><br />
+                            🚨
+                            <br /><br />
+                            Masz w skrzynce<br />
+                            <strong>więcej niż 1</strong> link do zmiany hasła.<br />
+                            Tylko ostatni link jest ważny.
+                        </span>
+                    </section>
+                </div>
+            )
+        }
+
         return (
             <div className="authorization">
                 <section>
@@ -56,6 +86,11 @@ const AuthRequestPasswordChange: FC = () => {
                         Na podany przez Ciebie adres e-mail
                         <br />
                         wysłano link do zmiany hasła.
+                        <br /><br />
+                        ⏱️
+                        <br /><br />
+                        Będzie ważny przez<br />
+                        <strong>10 minut</strong>.
                     </span>
                 </section>
             </div>

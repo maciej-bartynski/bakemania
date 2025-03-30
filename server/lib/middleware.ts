@@ -39,6 +39,8 @@ async function authenticateChangePasswordToken(req: Request, res: Response, next
 
                 const tokenizedUser = user as (UserModel | ManagerModel | AdminModel) & {
                     reason?: string;
+                    stamp?: string;
+                    _id?: string;
                 };
 
                 if (tokenizedUser?.reason !== 'CHANGE_PASSWORD') {
@@ -47,12 +49,19 @@ async function authenticateChangePasswordToken(req: Request, res: Response, next
                     });
                     return;
                 }
-                delete tokenizedUser.reason;
+
                 const currentUserOrAssistant = await tools.getUserOrAssistantById(tokenizedUser._id);
 
                 if (!currentUserOrAssistant) {
                     res.status(401).json({
                         message: 'Tej operacji nie można wykonać.'
+                    });
+                    return;
+                }
+
+                if (tokenizedUser.stamp !== currentUserOrAssistant.changePassword?.emailSent) {
+                    res.status(401).json({
+                        message: 'Ten token jest już nieważny. Spróbuj ponownie.'
                     });
                     return;
                 }
