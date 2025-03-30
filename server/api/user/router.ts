@@ -35,9 +35,11 @@ router.get('/me', Middleware.authenticateToken, async (req: Request, res: Respon
 router.delete('/remove-account', Middleware.authenticateToken, async (req: Request, res: Response) => {
     Logs.appLogs.catchUnhandled('Handler /me error', async () => {
         const userId = ((req as any).user as any)._id;
+        console.log('userId', userId);
         const sanitizedUser = await Tools.getUserOrAssistantById(userId);
-
+        console.log('sanitizedUser', sanitizedUser);
         if (!sanitizedUser) {
+            console.log('brak uzytkownika');
             res.status(404).json({
                 message: `Brak użytkownika z identyfikatorem: ${userId ?? "(brak)"}.`,
             });
@@ -45,12 +47,16 @@ router.delete('/remove-account', Middleware.authenticateToken, async (req: Reque
         }
 
         return await Tools.removeUserOrAssistangById(userId).then(() => {
+            console.log('niby sukces');
             res.status(204).send();
             return;
         }).catch((e) => {
+            console.log('co tu sie dzieje:', e);
             res.status(500).json({ message: 'Nie udało się usunąć użytkownika', details: JSON.stringify((e as any)?.message ?? e) });
             throw e;
         });
+
+        console.log('przeszlo');
 
     }, (e) => {
         res.status(500).json({

@@ -92,6 +92,7 @@ const getUserOrAssistantByEmail = async (email: string): Promise<ManagerModel | 
 
 const removeUserOrAssistangById = async (id: string) => {
     const user = await getUserOrAssistantById(id);
+    console.log('czy odnalazl sie taki user:', user);
     if (user?.role === UserRole.User) {
         return usersDb.removeItemById(id);
     }
