@@ -158,7 +158,7 @@ const SettingsSection: FC<{
                             />
 
                             <span style={{ color: 'red' }}>
-                                Wyloguj
+                                Usuń konto
                             </span>
                         </button>
                     </div>
