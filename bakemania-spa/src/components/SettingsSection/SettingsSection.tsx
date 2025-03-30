@@ -110,8 +110,9 @@ const SettingsSection: FC<{
                                             }, [204]).then(() => {
                                                 clearSession();
                                                 window.location.reload();
-                                            }).catch(() => {
+                                            }).catch((e) => {
                                                 alert('Nie udało się usunąć konta');
+                                                alert(e);
                                             });
                                         }}
                                         style={{
