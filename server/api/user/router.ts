@@ -59,6 +59,7 @@ router.delete('/remove-account', Middleware.authenticateToken, async (req: Reque
         console.log('przeszlo');
 
     }, (e) => {
+        console.log('error ostateczny', e);
         res.status(500).json({
             message: '"/remove-account" nie powiodło się.',
             details: JSON.stringify((e as any)?.message ?? e)
