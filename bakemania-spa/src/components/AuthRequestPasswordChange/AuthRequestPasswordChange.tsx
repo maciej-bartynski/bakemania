@@ -142,6 +142,17 @@ const AuthRequestPasswordChange: FC = () => {
                         Potwierdam, że to mój adres email
                     </button>
                 </form>
+                <a
+                    href={PathsModule.Paths.Root}
+                    className="secondary"
+                    style={{
+                        display: "block",
+                        textAlign: "center",
+                        marginTop: "48px"
+                    }}
+                >
+                    Powrót do strony głównej
+                </a>
             </section>
         </div>
     )

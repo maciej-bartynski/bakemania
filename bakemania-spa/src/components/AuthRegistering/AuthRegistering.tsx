@@ -250,9 +250,13 @@ const AuthRegistering: FC = () => {
                     alignItems: 'center',
                     height: '100%',
                     width: '100%',
-
+                    paddingTop: 60,
+                    paddingBottom: 60,
                 }}>
                     <span>Ładowanie captcha...</span>
+                </div>
+                <div className="global-loader-wrapper">
+                    <div className={`global-loader-spinner --active`} />
                 </div>
             </div>
         )

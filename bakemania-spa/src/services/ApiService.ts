@@ -12,7 +12,7 @@ interface ApiServiceInterface {
 }
 
 class ApiService implements ApiServiceInterface {
-    fetch(input: RequestInfo | URL, init?: RequestInit, expectedStatuses = [200]) {
+    fetch(input: RequestInfo | URL, init?: RequestInit, expectedStatuses = [200], returnIf401 = false) {
 
         const options = {
             ...(init || {}),
@@ -73,6 +73,10 @@ class ApiService implements ApiServiceInterface {
                         clearSession();
                     } finally {
                         clearSession();
+                    }
+
+                    if (returnIf401) {
+                        return 401;
                     }
                 } else {
                     try {
