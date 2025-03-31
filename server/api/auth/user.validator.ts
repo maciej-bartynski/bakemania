@@ -9,22 +9,6 @@ const passwordValidator = (password: string): void | string => {
         if (password.length < 8 || password.length > 50) {
             throw "Hasło musi mieć od 8 do 50 znaków";
         }
-        if (!/[A-Z]/.test(password)) {
-            throw "Hasło musi zawierać przynajmniej jedną wielką literę";
-        }
-        if (!/[a-z]/.test(password)) {
-            throw "Hasło musi zawierać przynajmniej jedną małą literę";
-        }
-        if (!/\d/.test(password)) {
-            throw "Hasło musi zawierać przynajmniej jedną cyfrę";
-        }
-        if (!/[\W_]/.test(password)) {
-            throw "Hasło musi zawierać przynajmniej jeden znak specjalny";
-        }
-        if (/\s/.test(password)) {
-            throw "Hasło nie może zawierać spacji";
-        }
-
     } catch (e) {
         if (typeof e === 'string') {
             return e;
@@ -139,21 +123,6 @@ const userValidator = (fields: Partial<UserModel>): void | string => {
 
         if (password.length < 8 || password.length > 50) {
             throw "Hasło musi mieć od 8 do 50 znaków";
-        }
-        if (!/[A-Z]/.test(password)) {
-            throw "Hasło musi zawierać przynajmniej jedną wielką literę";
-        }
-        if (!/[a-z]/.test(password)) {
-            throw "Hasło musi zawierać przynajmniej jedną małą literę";
-        }
-        if (!/\d/.test(password)) {
-            throw "Hasło musi zawierać przynajmniej jedną cyfrę";
-        }
-        if (!/[\W_]/.test(password)) {
-            throw "Hasło musi zawierać przynajmniej jeden znak specjalny";
-        }
-        if (/\s/.test(password)) {
-            throw "Hasło nie może zawierać spacji";
         }
 
         if (!Object.values(UserRole).includes(role as UserRole)) {

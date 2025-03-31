@@ -158,21 +158,6 @@ function registrationReducer(
             if (password.length < 8 || password.length > 50) {
                 errors.push("mieć od 8 do 50 znaków");
             }
-            if (!/[A-Z]/.test(password)) {
-                errors.push("zawierać przynajmniej jedną wielką literę");
-            }
-            if (!/[a-z]/.test(password)) {
-                errors.push("zawierać przynajmniej jedną małą literę");
-            }
-            if (!/\d/.test(password)) {
-                errors.push("zawierać przynajmniej jedną cyfrę");
-            }
-            if (!/[\W_]/.test(password)) {
-                errors.push("zawierać przynajmniej jeden znak specjalny");
-            }
-            if (/\s/.test(password)) {
-                errors.push("być bez spacji");
-            }
 
             const confirmField = state.confirmPassword;
 
