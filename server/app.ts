@@ -73,20 +73,9 @@ app.use('/api/app-config', Middleware.authenticateToken, appConfigRouter);
  */
 
 app.use(express.static(path.resolve(__dirname, '../bakemania-spa/dist/.')));
-// app.get('*', (req, res) => {
-//     res.sendFile(path.resolve(__dirname, '../bakemania-spa/dist/index.html'));
-// });
-app.get('*', (req, res, next) => {
-    const filePath = path.resolve(__dirname, '../bakemania-spa/dist', req.path);
-    fs.access(filePath, fs.constants.F_OK, (err) => {
-        if (err) {
-            res.sendFile(path.resolve(__dirname, '../bakemania-spa/dist/index.html'));
-        } else {
-            res.sendFile(filePath)
-        }
-    });
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../bakemania-spa/dist/index.html'));
 });
-
 
 let wsServer: WebSocketServer;
 

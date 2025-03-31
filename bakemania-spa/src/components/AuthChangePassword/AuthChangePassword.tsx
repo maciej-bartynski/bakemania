@@ -54,14 +54,18 @@ const AuthChangePassword: FC = () => {
                     return;
                 }
 
-                await apiService.fetch('auth/change-password', {
+                const is401 = await apiService.fetch('auth/change-password', {
                     method: 'POST',
                     body: JSON.stringify({
                         password: registrationFormState.password.value,
                     })
-                }, [204]);
+                }, [204], true);
+
                 window.localStorage.removeItem(Config.sessionKeys.Token);
-                setIsSuccess(true);
+
+                if (is401 !== 401) {
+                    setIsSuccess(true);
+                }
 
             } catch (er) {
                 const dataToPass = JSON.parse(JSON.stringify(registrationFormState));

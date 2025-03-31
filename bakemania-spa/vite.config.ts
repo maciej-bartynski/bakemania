@@ -79,11 +79,19 @@ export default defineConfig({
       skipWaiting: true,
       cleanupOutdatedCaches: true,
       disableDevLogs: false,
+      navigateFallbackDenylist: [/\.pdf$/],
+      // Dodaj to:
+      globIgnores: ['**/*.pdf'],
+
       // globPatterns: ['**/*.{ico,png,svg}'],
       runtimeCaching: [
         {
           urlPattern: /^https:\/\/.*\.(js|css)$/,
           handler: 'NetworkOnly',
+        },
+        {
+          urlPattern: /.*\.pdf$/,
+          handler: 'NetworkOnly'
         },
         {
           // Dla plików HTML zawsze pobieraj świeżą wersję
