@@ -1,4 +1,3 @@
-
 import dotenv from 'dotenv';
 import path from 'path';
 import { rateLimit } from 'express-rate-limit'
@@ -72,9 +71,22 @@ app.use('/api/app-config', Middleware.authenticateToken, appConfigRouter);
 /**
  * Serve static files from bakemania-spa/dist/
  */
+
 app.use(express.static(path.resolve(__dirname, '../bakemania-spa/dist/.')));
-app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../bakemania-spa/dist/index.html'));
+// app.get('*', (req, res) => {
+//     res.sendFile(path.resolve(__dirname, '../bakemania-spa/dist/index.html'));
+// });
+app.get('*', (req, res, next) => {
+    const filePath = path.resolve(__dirname, '../bakemania-spa/dist', req.path);
+    fs.access(filePath, fs.constants.F_OK, (err) => {
+        if (err) {
+            // Jeśli plik nie istnieje, przekieruj do index.html
+            res.sendFile(path.resolve(__dirname, '../bakemania-spa/dist/index.html'));
+        } else {
+            // Jeśli plik istnieje, serwuj go
+            res.sendFile(filePath);
+        }
+    });
 });
 
 
