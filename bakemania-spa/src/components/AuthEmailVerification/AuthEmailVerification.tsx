@@ -22,8 +22,13 @@ const AuthEmailVerification: FC = () => {
                     <strong>Uups... coś poszło źle.</strong><br /><br />
                     Twoje konto nie zostało zweryfikowane.<br />
                 </span>
-                <a href={PathsModule.Paths.Login}>
-                    Rozumiem
+
+                <a href={PathsModule.Paths.Login} className="secondary">
+                    Powrót do strony głównej
+                </a>
+
+                <a href={PathsModule.Paths.ResendVerificationEmail}>
+                    Poproś o nowy email weryfikacyjny
                 </a>
             </div >
         )
@@ -64,11 +69,16 @@ const AuthEmailVerification: FC = () => {
                                 window.localStorage.setItem(Config.sessionKeys.Token, token);
                                 apiService.fetch('auth/verify-email', {
                                     method: 'GET',
-                                }).then(() => {
+                                }, [200], true).then((is401?: 401) => {
                                     window.localStorage.removeItem(Config.sessionKeys.Token);
                                     setIsLoading(false);
-                                    setIsVerified(true);
-                                    setIsError(false);
+                                    if (is401 === 401) {
+                                        setIsVerified(false);
+                                        setIsError(true);
+                                    } else {
+                                        setIsError(false);
+                                        setIsVerified(true);
+                                    }
                                 }).catch(() => {
                                     window.localStorage.removeItem(Config.sessionKeys.Token);
                                     setIsError(true);

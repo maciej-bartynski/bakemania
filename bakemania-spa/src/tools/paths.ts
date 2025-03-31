@@ -8,6 +8,7 @@ enum Paths {
     ForgotPassword = '/forgot-password',
     ResetPassword = '/reset-password',
     SessionExpired = '/session-expired',
+    ResendVerificationEmail = '/resend-verification-email',
 }
 
 function redirect(to: Paths) {

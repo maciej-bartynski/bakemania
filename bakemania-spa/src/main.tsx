@@ -16,6 +16,7 @@ import AuthSessionExpired from './components/AuthSessionExpired/AuthSessionExpir
 import AuthRegistering from './components/AuthRegistering/AuthRegistering.tsx';
 import AuthRequestPasswordChange from './components/AuthRequestPasswordChange/AuthRequestPasswordChange.tsx';
 import AuthChangePassword from './components/AuthChangePassword/AuthChangePassword.tsx';
+import AuthRequestResendVerification from './components/AuthRequestResendVerification/AuthRequestResendVerification.tsx';
 
 registerSW();
 
@@ -99,6 +100,20 @@ switch (window.location.pathname) {
         <SafeAreaView>
           <Background>
             <AuthChangePassword />
+          </Background>
+        </SafeAreaView>
+        <NoticesManager />
+      </Provider>
+    );
+    break;
+  }
+
+  case PathsModule.Paths.ResendVerificationEmail: {
+    page = (
+      <Provider store={noticesStore}>
+        <SafeAreaView>
+          <Background>
+            <AuthRequestResendVerification />
           </Background>
         </SafeAreaView>
         <NoticesManager />
