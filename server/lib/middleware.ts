@@ -106,16 +106,8 @@ async function authenticateEmailVerificationToken(req: Request, res: Response, n
             return await Logs.appLogs.catchUnhandled('Middleware error on authenticateToken', async () => {
 
                 if (err) {
-                    try {
-                        const expiredTokenData = jwt.decode(token);
-                        await tools.removeUserOrAssistangById((expiredTokenData as any)._id);
-                    } catch (e) {
-                        Logs.appLogs.report('Error on removing expired user by id', (setData) => {
-                            setData('What happend', (e as any).message ?? e);
-                        });
-                    }
                     res.status(401).json({
-                        message: 'Token jest już nieważny. Załóż nowe konto.'
+                        message: 'Token jest już nieważny. Wyślij email ponownie.'
                     });
                     return;
                 }

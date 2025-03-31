@@ -49,6 +49,56 @@ const limiterForPasswordChangeRequests = rateLimit({
     legacyHeaders: false,
 });
 
+router.post('/resend-verification-email', async (req, res) => {
+    return Logs.appLogs.catchUnhandled('Handler "/verify-email-token" error', async () => {
+        const { email } = (req as any).body;
+        const user = await tools.getUserOrAssistantByEmail(email);
+        if (!user) {
+            res.status(400).json({
+                message: 'Nie znaleziono użytkownika o podanym adresie email'
+            });
+            return;
+        }
+
+        if (user.verification.isVerified) {
+            res.status(400).json({
+                message: 'Użytkownik jest już zweryfikowany'
+            });
+            return;
+        }
+
+        const JWT_SECRET = process.env.JWT_SECRET;
+
+        if (!JWT_SECRET) {
+            throw 'Missing secret.';
+        }
+
+        const emailVerificationToken = jwt.sign({
+            _id: user._id,
+            stamp: uuid.v4(),
+        }, JWT_SECRET, { expiresIn: process.env.EMAIL_VERIFICATION_TOKEN_EXPIRATION_TIME });
+
+        const sanitizedUser = {
+            ...user,
+            verification: {
+                isVerified: false,
+                token: emailVerificationToken,
+            }
+        }
+
+        await EmailService.sendVerificationEmail(sanitizedUser as any);
+        res.status(200).json({
+            success: true
+        });
+    }, (e) => {
+        res.status(500).json({
+            message: 'Coś poszło nie tak podczas wysyłania emaila z linkiem do weryfikacji',
+            details: JSON.stringify((e as any)?.message ?? e)
+        });
+        return;
+    });
+});
+
 router.post('/change-password', middleware.authenticateChangePasswordToken, async (req, res) => {
     return Logs.appLogs.catchUnhandled('Handler "/change-password" error', async () => {
         const { password } = (req as any).body;
