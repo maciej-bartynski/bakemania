@@ -192,6 +192,18 @@ const AuthChangePassword: FC = () => {
                         Zmieniam hasło
                     </button>
                 </form>
+
+                <a
+                    href={PathsModule.Paths.Root}
+                    className="secondary"
+                    style={{
+                        display: "block",
+                        textAlign: "center",
+                        marginTop: "48px"
+                    }}
+                >
+                    Powrót do strony głównej
+                </a>
             </section>
 
             {
