@@ -1,0 +1,64 @@
+.HistorySection {
+    padding: 12px;
+}
+
+.HistorySection__app-bar {
+    background-color: var(--customer);
+    color: white;
+}
+
+.HistorySection__stamp-entry {
+    padding-top: 0;
+    border-radius: 10px;
+    margin-bottom: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    overflow: hidden;
+}
+
+.HistorySection__stamp-entry span {
+    font-size: 10px;
+    line-height: 14px;
+}
+
+.HistorySection__stamp-entry.--earn {
+    border: 2px solid var(--earn-stamp);
+
+}
+
+.HistorySection__stamp-entry.--spend {
+    border: 2px solid var(--bakemaniaGold);
+}
+
+.HistorySection__stamp-entry.--remove {
+    border: 2px solid var(--remove-stamp);
+}
+
+.HistorySection__stamp-entry__icon-container {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px;
+    font-size: 10px;
+    color: white;
+}
+
+.HistorySection__stamp-entry__icon-container.--earn {
+    background-color: var(--earn-stamp);
+}
+
+.HistorySection__stamp-entry__icon-container.--spend {
+    background-color: var(--bakemaniaGold);
+}
+
+.HistorySection__stamp-entry__icon-container.--remove {
+    background-color: var(--remove-stamp);
+}
+
+.HistorySection__stamp-entry__info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 6px;
+}

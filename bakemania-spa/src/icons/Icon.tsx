@@ -16,6 +16,7 @@ import QrCodeIcon from "./QrCodeIcon";
 import UsersIcon from "./UsersIcon";
 import StampRemoveIcon from "./StampRemoveIcon";
 import StampForCashIcon from "./StampForCash";
+import HistoryIcon from "./HistoryIcon";
 
 const Icon: FC<{
     width?: number;
@@ -98,6 +99,10 @@ const Icon: FC<{
             }
             case IconName.Users: {
                 IconComponent = UsersIcon
+                break;
+            }
+            case IconName.History: {
+                IconComponent = HistoryIcon
                 break;
             }
         }

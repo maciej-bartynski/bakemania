@@ -10,12 +10,14 @@ const Earn: FC<{
     cardId: string,
     user: OtherUser,
     appConfig: AppConfig,
-    earnStamps: (amount: number) => void
+    earnStamps: (amount: number) => void,
+    goHistoryView: (userId: string) => void
 }> = ({
     cardId,
     user,
     appConfig,
-    earnStamps
+    earnStamps,
+    goHistoryView
 }) => {
 
         const userGiftsAmount = Math.floor((user?.stamps.amount ?? 0) / appConfig.cardSize);
@@ -31,6 +33,7 @@ const Earn: FC<{
                     userCard={!!user?.card}
                     isVerified={!!user?.verification?.isVerified}
                     isAgreements={!!user?.agreements}
+                    onHistoryClick={() => goHistoryView(user._id)}
                 />
                 <RichNumberForm
                     submitClassName='ScanningSectionEarn__button-submit-earn'

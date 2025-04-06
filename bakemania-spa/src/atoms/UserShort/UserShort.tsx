@@ -12,6 +12,8 @@ const UserShort: FC<{
     userCard: boolean,
     isVerified: boolean,
     isAgreements: boolean,
+    onHistoryClick?: () => void,
+    actionButton?: React.ReactNode
 }> = ({
     userId,
     userEmail,
@@ -19,7 +21,9 @@ const UserShort: FC<{
     userGiftsAmount,
     userCard,
     isVerified,
-    isAgreements
+    isAgreements,
+    onHistoryClick,
+    actionButton
 }) => {
         return (
             <div className="UserShort">
@@ -93,6 +97,31 @@ const UserShort: FC<{
                             </span>
                         </div>
                     )}
+
+                    <div className="UserShort__row">
+                        {actionButton}
+                        {onHistoryClick && (
+                            <button
+                                onClick={onHistoryClick}
+                                className="secondary"
+                                style={{
+                                    height: 28,
+                                    borderColor: 'var(--customer)',
+                                    paddingLeft: 10,
+                                    paddingRight: 10,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: 5,
+                                    color: 'var(--customer)',
+                                    fontWeight: 400
+                                }}
+                            >
+                                <Icon iconName={IconName.History} color="var(--customer)" width={16} height={16} />
+                                Historia klienta
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
         )

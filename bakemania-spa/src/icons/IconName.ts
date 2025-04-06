@@ -14,7 +14,8 @@ enum IconName {
     QrCode = 'QrCode',
     Users = 'Users',
     StampRemove = 'StampRemove',
-    StampForCash = 'StampForCash'
+    StampForCash = 'StampForCash',
+    History = 'History'
 }
 
 export default IconName;

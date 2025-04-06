@@ -26,10 +26,12 @@ const ScanningSection: FC<{
     qrData: ScannedData | null,
     setVariant: (newVariant: 'spend' | 'earn' | 'delete' | 'earn-for-amount') => void;
     returnHomeView: () => void;
+    goHistoryView: (userId: string) => void;
 }> = ({
     qrData,
     setVariant,
-    returnHomeView
+    returnHomeView,
+    goHistoryView
 }) => {
         const overlayTimerRef = useRef<NodeJS.Timeout | null>(null);
         const me = useMeSelector();
@@ -175,8 +177,6 @@ const ScanningSection: FC<{
 
         const renderActionPanel = () => {
             if (qrData && appConfig && userToManage) {
-
-
                 if (qrData.variant === 'earn') {
                     return (
                         <Earn
@@ -184,6 +184,7 @@ const ScanningSection: FC<{
                             user={userToManage}
                             appConfig={appConfig}
                             earnStamps={earnStamps}
+                            goHistoryView={goHistoryView}
                         />
                     );
                 } else if (qrData.variant === 'spend') {
@@ -193,6 +194,7 @@ const ScanningSection: FC<{
                             user={userToManage}
                             appConfig={appConfig}
                             spendStamps={spentStamps}
+                            goHistoryView={goHistoryView}
                         />
                     );
                 } else if (qrData.variant === 'delete') {
@@ -202,6 +204,7 @@ const ScanningSection: FC<{
                             user={userToManage}
                             deleteStamps={deleteStamps}
                             appConfig={appConfig}
+                            goHistoryView={goHistoryView}
                         />
                     );
                 } else if (qrData.variant === 'earn-for-amount') {
@@ -211,6 +214,7 @@ const ScanningSection: FC<{
                             user={userToManage}
                             appConfig={appConfig}
                             earnStamps={earnStamps}
+                            goHistoryView={goHistoryView}
                         />
                     );
                 }
