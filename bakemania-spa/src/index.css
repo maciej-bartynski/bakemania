@@ -17,6 +17,16 @@
   --colorActive: #646cff;
   --colorText: #213547;
 
+  /** operations colors */
+  --manager: #067604;
+  --admin: #a47206;
+  --customer: #3f6185;
+  --spend-card: #00b1fc;
+  --earn-stamp: #2e7416;
+  --remove-stamp: #ff3c00;
+
+
+
   --bakemania-dark-color: black;
   --bakemania-light-color: white;
   --flour-dark-color: #a0958d;

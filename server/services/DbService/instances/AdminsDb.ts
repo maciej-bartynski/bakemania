@@ -1,11 +1,7 @@
-import { SanitizedManagerModel, ManagerModel } from './ManagersDb.types';
 import Logs from '../../LogService';
-import DbService from '../DbService';
 import DbStores from '../DbStores';
 import { AdminModel, SanitizedAdminModel } from './AdminsDb.types';
 import { ManagersDb } from './ManagersDb';
-
-const Xx = Object.getPrototypeOf(ManagersDb);
 
 class AdminsDb extends ManagersDb {
     async getSanitizedAdminById(managerId: string) {
@@ -25,8 +21,6 @@ class AdminsDb extends ManagersDb {
             }
         });
     }
-
-
 
     async setRelationToUserHistory(managerId: string, userId: string) {
         return await Logs.appLogs.catchUnhandled('AdminsDb error on setRelationToUserHistory', async () => {

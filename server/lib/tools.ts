@@ -5,6 +5,7 @@ import managersDb from "../services/DbService/instances/ManagersDb";
 import { ManagerModel, SanitizedManagerModel } from "../services/DbService/instances/ManagersDb.types";
 import adminsDb from "../services/DbService/instances/AdminsDb";
 import { AdminModel, SanitizedAdminModel } from "../services/DbService/instances/AdminsDb.types";
+import { Document } from "./../services/DbService/DbTypes";
 
 const createCardId = async (): Promise<UserCard> => {
     const cardIssueTimestamp = new Date().getTime();
@@ -71,19 +72,19 @@ const getUserOrAssistantById = async (id: string): Promise<ManagerModel | UserMo
 
 
 const getUserOrAssistantByEmail = async (email: string): Promise<ManagerModel | UserModel | AdminModel | null> => {
-    const user = await usersDb.getAllByField<UserModel>('email', email);
-    if (user[0]) {
-        return user[0];
+    const usersData = await usersDb.getAllByField<UserModel>('email', email, { page: 1, size: 1 });
+    if (usersData.items[0]) {
+        return usersData.items[0];
     }
 
-    const manager = await managersDb.getAllByField<ManagerModel>('email', email);
-    if (manager[0]) {
-        return manager[0];
+    const managersData = await managersDb.getAllByField<ManagerModel>('email', email, { page: 1, size: 1 });
+    if (managersData.items[0]) {
+        return managersData.items[0];
     }
 
-    const admin = await adminsDb.getAllByField<AdminModel>('email', email);
-    if (admin[0]) {
-        return admin[0];
+    const adminsData = await adminsDb.getAllByField<AdminModel>('email', email, { page: 1, size: 1 });
+    if (adminsData.items[0]) {
+        return adminsData.items[0];
     }
 
 
@@ -124,6 +125,56 @@ const updarteUserOrAssistangById = async (id: string, fields: Partial<UserModel 
     return null;
 }
 
+const sanitizeUserOrAssistant = (user: Document<(UserModel | ManagerModel | AdminModel)>): Document<(SanitizedUserModel | SanitizedManagerModel | SanitizedAdminModel)> => {
+    switch (user.role) {
+        case UserRole.User: {
+            return {
+                _id: user._id,
+                email: user.email,
+                role: user.role,
+                stamps: user.stamps,
+                agreements: user.agreements,
+                verification: user.verification,
+                card: !!user.card,
+                metadata: {
+                    createdAt: user.metadata.createdAt,
+                    updatedAt: user.metadata.updatedAt
+                }
+            } as Document<SanitizedUserModel>;
+        }
+
+        case UserRole.Manager: {
+            return {
+                _id: user._id,
+                email: user.email,
+                role: user.role,
+                history: user.history,
+                agreements: user.agreements,
+                verification: user.verification,
+                metadata: {
+                    createdAt: user.metadata.createdAt,
+                    updatedAt: user.metadata.updatedAt
+                }
+            } as Document<SanitizedManagerModel>;
+        }
+
+        case UserRole.Admin: {
+            return {
+                _id: user._id,
+                email: user.email,
+                role: user.role,
+                history: user.history,
+                agreements: user.agreements,
+                verification: user.verification,
+                metadata: {
+                    createdAt: user.metadata.createdAt,
+                    updatedAt: user.metadata.updatedAt
+                }
+            } as Document<SanitizedAdminModel>;
+        }
+    }
+}
+
 export default {
     validateCard,
     createCardId,
@@ -132,5 +183,6 @@ export default {
     getUserOrAssistantById,
     getUserOrAssistantByEmail,
     removeUserOrAssistangById,
-    updarteUserOrAssistangById
+    updarteUserOrAssistangById,
+    sanitizeUserOrAssistant
 }

@@ -30,6 +30,7 @@
 
 .RichNumberInput__btn {
     flex: 1;
+    border-radius: 23px;
 }
 
 .RichNumberInput__buttons-row {

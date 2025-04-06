@@ -230,7 +230,7 @@ async function authenticateToken(req: Request, res: Response, next: NextFunction
 }
 
 
-function requireAdmin(req: Request, res: Response, next: NextFunction) {
+function requireAssistant(req: Request, res: Response, next: NextFunction) {
     Logs.appLogs.catchUnhandled('Middleware error on requireAdmin', () => {
         if (((req as any).user.role === UserRole.User)) {
             res.status(403).json({
@@ -252,8 +252,30 @@ function requireAdmin(req: Request, res: Response, next: NextFunction) {
     });
 }
 
+function requireAdmin(req: Request, res: Response, next: NextFunction) {
+    Logs.appLogs.catchUnhandled('Middleware error on requireAdmin', () => {
+        if (((req as any).user.role !== UserRole.Admin)) {
+            res.status(403).json({
+                message: 'Wymagane są uprawnienia administratora.'
+            });
+            return;
+        }
+
+        next()
+    }, (e) => {
+        res.status(500).json({
+            message: 'Coś poszło źle.',
+            details: {
+                url: req.url,
+                error: JSON.stringify((e as any).message ?? e)
+            }
+        });
+        return;
+    });
+}
 export default {
     authenticateToken,
+    requireAssistant,
     requireAdmin,
     authenticateEmailVerificationToken,
     authenticateChangePasswordToken

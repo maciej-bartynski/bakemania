@@ -1,14 +1,14 @@
 import { createContext, useContext } from "react";
 
 type OpenedSection = {
-    title: 'home' | 'settings' | 'card-details' | 'card-list',
+    title: 'home' | 'settings' | 'card-details' | 'card-list' | 'manage',
     details?: undefined | {
         cardId: string,
-        variant: 'spend' | 'earn'
+        variant: 'spend' | 'earn' | 'delete' | 'earn-for-amount'
     }
 } & (
         {
-            title: 'home' | 'settings' | 'card-list',
+            title: 'home' | 'settings' | 'card-list' | 'manage',
             details?: undefined
         } | {
             title: 'card-details',
@@ -16,7 +16,7 @@ type OpenedSection = {
                 cardId: string,
                 userId: string,
                 assistantId: string,
-                variant: 'spend' | 'earn'
+                variant: 'spend' | 'earn' | 'delete' | 'earn-for-amount'
             }
         }
     )

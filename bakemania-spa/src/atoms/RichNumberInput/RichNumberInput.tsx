@@ -7,12 +7,16 @@ const RichNumberInput: FC<{
     label: string;
     minValue: number;
     maxValue: number;
+    addClassName?: string;
+    subtractClassName?: string;
 }> = ({
     value,
     setValue,
     label,
     minValue,
-    maxValue
+    maxValue,
+    addClassName,
+    subtractClassName
 }) => {
 
 
@@ -32,7 +36,7 @@ const RichNumberInput: FC<{
                         <button
                             key={by}
                             onClick={() => changeBy(by)}
-                            className='RichNumberInput__btn'
+                            className={'RichNumberInput__btn ' + subtractClassName}
                         >
                             {by}
                         </button>
@@ -51,7 +55,7 @@ const RichNumberInput: FC<{
                         <button
                             key={by}
                             onClick={() => changeBy(by)}
-                            className='RichNumberInput__btn'
+                            className={'RichNumberInput__btn ' + addClassName}
                         >
                             +{by}
                         </button>
@@ -64,7 +68,7 @@ const RichNumberInput: FC<{
                             <button
                                 key={by}
                                 onClick={() => changeBy(by)}
-                                className='RichNumberInput__btn'
+                                className={'RichNumberInput__btn ' + (by > 0 ? addClassName : subtractClassName)}
 
                             >
                                 {by > 0 ? `+${by}` : by}

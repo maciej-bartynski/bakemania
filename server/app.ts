@@ -16,10 +16,10 @@ import express from 'express';
 import authRouter from './api/auth/router';
 import userRouter from './api/user/router';
 import Middleware from './lib/middleware';
-import stampsRouter from './api/admin/stamps/router';
+import assistantRouter from './api/assistant/router';
+import adminRouter from './api/admin/router';
 import cors from 'cors';
 import appConfigRouter from './api/appConfig/router';
-import usersRouterForAdmin from './api/admin/users/router';
 import fs from 'fs';
 import https from 'https';
 import http from 'http';
@@ -34,16 +34,10 @@ app.use(express.json());
 app.use(cors());
 
 app.use((req, res, next) => {
-    /**
-     * THIS IS LOGING MIDDLEWARE
-     */
     next();
 })
 
 app.get('/api/ping', (req, res) => {
-    /**
-     * THIS IS PING ROUTE
-     */
     res.status(204).send();
 })
 
@@ -64,8 +58,8 @@ app.post('/api/client-logs', limiter, Middleware.authenticateToken, (req, res) =
 
 app.use('/api/auth', authRouter);
 app.use('/api/user', Middleware.authenticateToken, userRouter);
-app.use('/api/admin/stamps', Middleware.authenticateToken, Middleware.requireAdmin, stampsRouter);
-app.use('/api/admin/users', Middleware.authenticateToken, Middleware.requireAdmin, usersRouterForAdmin);
+app.use('/api/assistant', Middleware.authenticateToken, Middleware.requireAssistant, assistantRouter);
+app.use('/api/admin', Middleware.authenticateToken, Middleware.requireAdmin, adminRouter);
 app.use('/api/app-config', Middleware.authenticateToken, appConfigRouter);
 
 /**
@@ -162,13 +156,7 @@ wsServer.on("connection", (ws, req) => {
                         return;
                     }
 
-                    if (connections.wss.has(userId)) {
-                        connections.wss.set(userId,
-                            [...connections.wss.get(userId), (ws)]
-                        );
-                    } else {
-                        connections.wss.set(userId, [ws]);
-                    }
+                    connections.wss.set(userId, ws);
 
                     ws.on("message", (message) => {
                         ws.send('WS initial ping from server');
@@ -179,14 +167,7 @@ wsServer.on("connection", (ws, req) => {
                             if (!connections.wss.has(userId)) {
                                 return;
                             }
-
-                            const updatedSockets = connections.wss.get(userId).filter((socket: any) => socket !== ws);
-
-                            if (updatedSockets.length > 0) {
-                                connections.wss.set(userId, updatedSockets);
-                            } else {
-                                connections.wss.delete(userId);
-                            }
+                            connections.wss.delete(userId);
                         })
                     });
                 }

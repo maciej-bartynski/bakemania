@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import QrScanner from 'qr-scanner';
 import "./AssistantSection.css";
 import Background from "../../atoms/Background/Background";
-import FooterNav from "../../components/FooterNav/FooterNav";
+import FooterNav, { NavAction } from "../../components/FooterNav/FooterNav";
 import IconName from "../../icons/IconName";
 import ScanningSection from "../../components/ScanningSection/ScanningSection";
 import SettingsSection from "../../components/SettingsSection/SettingsSection";
@@ -12,8 +12,8 @@ import Icon from "../../icons/Icon";
 import useAppDispatch from "../../storage/useAppDispatch";
 import appConfigActions from "../../storage/appConfig/appConfig-actions";
 import AssistanContext, { AssistantContextType, OpenedSection } from "./AssistantContext";
-import { Me } from "../../storage/me/me-types";
-import useMeSelector from "../../storage/me/me-selectors";
+import UserRole, { Me } from "../../storage/me/me-types";
+import ManageSection from "../../components/ManageSection/ManageSection";
 
 type ScannedData = {
     variant: 'spend' | 'earn',
@@ -26,12 +26,10 @@ const AssistantSection: FC<{
 }> = ({
     assistant
 }) => {
-
-
+        const isAdmin = assistant.role === UserRole.Admin;
         const [isScanning, setIsScanning] = useState(false);
         const videoRef = useRef<HTMLVideoElement | null>(null);
         const scannerRef = useRef<QrScanner | null>(null);
-        const me = useMeSelector();
 
         const [openedSection, setOpenedSection] = useState<OpenedSection>({ title: 'home' })
 
@@ -56,6 +54,11 @@ const AssistantSection: FC<{
         const toggleSettingsView = useCallback(() => {
             stopScanning();
             setOpenedSection(state => ({ title: state.title === 'settings' ? 'home' : 'settings' }))
+        }, []);
+
+        const toggleManageView = useCallback(() => {
+            stopScanning();
+            setOpenedSection(state => ({ title: state.title === 'manage' ? 'home' : 'manage' }))
         }, []);
 
         const toggleCardDetailsView = useCallback((details?: {
@@ -89,7 +92,7 @@ const AssistantSection: FC<{
             });
         }, []);
 
-        const setVariantCardDetailsView = useCallback((newVariant: 'earn' | 'spend') => {
+        const setVariantCardDetailsView = useCallback((newVariant: 'earn' | 'spend' | 'delete' | 'earn-for-amount') => {
             setOpenedSection(state => {
                 if (state.title === 'card-details') {
                     return {
@@ -121,7 +124,7 @@ const AssistantSection: FC<{
                             cardId: scannedData.cardId,
                             variant: scannedData.variant,
                             userId: scannedData.userId,
-                            assistantId: me.me!._id,
+                            assistantId: assistant._id,
                         });
                         stopScanning();
                     } catch (e) {
@@ -142,7 +145,7 @@ const AssistantSection: FC<{
                     scannerRef.current.destroy();
                 }
             }
-        }, [toggleCardDetailsView, me]);
+        }, [toggleCardDetailsView, assistant]);
 
         const dispatch = useAppDispatch();
 
@@ -161,6 +164,11 @@ const AssistantSection: FC<{
                                     action: toggleSettingsView,
                                     icon: IconName.Cog,
                                 },
+                                isAdmin ? {
+                                    label: 'Zarządzaj',
+                                    action: toggleManageView,
+                                    icon: IconName.Cog,
+                                } : null,
                                 {
                                     label: isScanning ? "Zatrzymaj" : "Skanuj",
                                     action: isScanning ? stopScanning : startScanning,
@@ -172,7 +180,7 @@ const AssistantSection: FC<{
                                     action: toggleCardListView,
                                     icon: IconName.Users,
                                 },
-                            ]}
+                            ].filter((item) => !!item) as NavAction[]}
                         />
 
                     }
@@ -224,6 +232,13 @@ const AssistantSection: FC<{
                         toggleActive={toggleSettingsView}
                     />
 
+                    {isAdmin && (
+                        <ManageSection
+                            active={assistantContext.openedSection.title === 'manage'}
+                            toggleActive={toggleManageView}
+                        />
+                    )}
+
                     <UsersSection
                         active={assistantContext.openedSection.title === 'card-list'}
                         toggleActive={toggleCardListView}
@@ -232,7 +247,7 @@ const AssistantSection: FC<{
                                 toggleCardDetailsView({
                                     userId: details.userId,
                                     variant: details.variant,
-                                    assistantId: me.me!._id,
+                                    assistantId: assistant._id,
                                     cardId: 'change-force',
                                 })
                             }

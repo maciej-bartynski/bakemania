@@ -1,0 +1,39 @@
+.users-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+    width: 500px;
+    max-width: calc(100% - 40px);
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 20px;
+    margin-top: 20px;
+}
+
+.users-list.--customer {
+    box-shadow: 0 0 10px 0 var(--customer);
+}
+
+.users-list.--manager {
+    box-shadow: 0 0 10px 0 var(--manager);
+}
+
+.users-list.--admin {
+    box-shadow: 0 0 10px 0 var(--admin);
+}
+
+.users-list__belt-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 6px;
+    background-color: var(--customer);
+    padding: 6px;
+}
+
+.users-list__belt-header span {
+    font-size: 12px;
+    color: white;
+    font-weight: 500;
+}

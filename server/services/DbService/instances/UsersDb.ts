@@ -17,7 +17,8 @@ class UsersDb extends DbService {
                     agreements: user.agreements,
                     verification: {
                         isVerified: user.verification.isVerified,
-                    }
+                    },
+                    card: !!user.card,
                 }
 
                 return sanitizedUser;

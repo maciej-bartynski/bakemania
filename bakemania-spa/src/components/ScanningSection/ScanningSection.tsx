@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import './ScanningSection.css';
 import FooterNav from '../FooterNav/FooterNav';
 import IconName from '../../icons/IconName';
@@ -6,21 +6,25 @@ import AsidePanel from '../../atoms/AsidePanel/AsidePanel';
 import PanelViewTemplate from '../../atoms/PanelViewTemplate/PanelViewTemplate';
 import apiService from '../../services/ApiService';
 import useAppConfigSelector from '../../storage/appConfig/appConfig-selectors';
-import RichNumberForm from '../RichNumberForm/RichNumberForm';
 import { OtherUser } from '../../storage/users/users-types';
-import UserShort from '../../atoms/UserShort/UserShort';
 import UpdateOverlay from '../../atoms/UpdateOverlay/UpdateOverlay';
 import useMeSelector from '../../storage/me/me-selectors';
+import IconButton from '../../atoms/IconButton/IconButton';
+import Earn from './elements/Earn';
+import Spend from './elements/Spend';
+import Delete from './elements/Delete';
+import EarnForAmount from './elements/EarnForAmount';
+import Icon from '../../icons/Icon';
 
 type ScannedData = {
-    variant: 'spend' | 'earn',
+    variant: 'spend' | 'earn' | 'delete' | 'earn-for-amount',
     cardId: string,
     userId: string,
 }
 
 const ScanningSection: FC<{
     qrData: ScannedData | null,
-    setVariant: (newVariant: 'spend' | 'earn') => void;
+    setVariant: (newVariant: 'spend' | 'earn' | 'delete' | 'earn-for-amount') => void;
     returnHomeView: () => void;
 }> = ({
     qrData,
@@ -61,7 +65,7 @@ const ScanningSection: FC<{
             async function fetchUserToManage() {
                 if (qrData?.userId) {
                     setUserLoading(true);
-                    const userToManage = await apiService.fetch(`admin/users/get-user/${qrData?.userId}`) as OtherUser;
+                    const userToManage = await apiService.fetch(`user/${qrData?.userId}`) as OtherUser;
                     if (userToManage) {
                         setUserToManage(userToManage);
                     }
@@ -76,7 +80,7 @@ const ScanningSection: FC<{
             if (qrData && me.me) {
 
                 if (qrData.cardId === 'change-force') {
-                    await apiService.fetch('admin/stamps/change-force', {
+                    await apiService.fetch('assistant/stamps/change-force', {
                         method: 'POST',
                         body: JSON.stringify({
                             amount,
@@ -85,7 +89,7 @@ const ScanningSection: FC<{
                         })
                     });
                 } else {
-                    await apiService.fetch('admin/stamps/change', {
+                    await apiService.fetch('assistant/stamps/change', {
                         method: 'POST',
                         body: JSON.stringify({
                             amount,
@@ -108,7 +112,7 @@ const ScanningSection: FC<{
         const spentStamps = useCallback(async (amount: number): Promise<void> => {
             if (qrData && me.me) {
                 if (qrData.cardId === 'change-force') {
-                    await apiService.fetch('admin/stamps/change-force', {
+                    await apiService.fetch('assistant/stamps/change-force', {
                         method: 'POST',
                         body: JSON.stringify({
                             amount: -amount,
@@ -117,8 +121,7 @@ const ScanningSection: FC<{
                         })
                     });
                 } else {
-
-                    await apiService.fetch('admin/stamps/change', {
+                    await apiService.fetch('assistant/stamps/change', {
                         method: 'POST',
                         body: JSON.stringify({
                             amount: -amount,
@@ -138,62 +141,77 @@ const ScanningSection: FC<{
             }
         }, [qrData, returnHomeView, setUpdateOverlayConfig, me]);
 
-        const renderActionPanel = () => {
-            if (qrData && appConfig) {
+        const deleteStamps = useCallback(async (amount: number): Promise<void> => {
+            if (qrData && me.me) {
+                if (qrData.cardId === 'change-force') {
+                    await apiService.fetch('assistant/stamps/change-force', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            amount: -amount,
+                            userId: qrData?.userId,
+                            assistantId: me.me._id
+                        })
+                    });
+                } else {
+                    await apiService.fetch('assistant/stamps/change', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            amount: -amount,
+                            userId: qrData?.userId,
+                            cardHash: qrData?.cardId,
+                            assistantId: me.me._id
+                        })
+                    });
+                }
 
-                const userGiftsAmount = Math.floor((userToManage?.stamps.amount ?? 0) / appConfig.cardSize);
+                setUpdateOverlayConfig({
+                    title: 'Pieczątki skasowane!',
+                    message: `Skasowałaś(eś) ${amount}x pieczątki klienta`
+                });
+
+                returnHomeView();
+            }
+        }, [qrData, returnHomeView, setUpdateOverlayConfig, me]);
+
+        const renderActionPanel = () => {
+            if (qrData && appConfig && userToManage) {
+
 
                 if (qrData.variant === 'earn') {
                     return (
-                        <div className='ScanningSection'>
-                            <UserShort
-                                userId={qrData.cardId}
-                                userEmail={userToManage?.email}
-                                userStampsAmount={userToManage?.stamps.amount}
-                                userGiftsAmount={userGiftsAmount}
-                            />
-                            <RichNumberForm
-                                key='stamps'
-                                inputLabel="Ile pieczątek nabić?"
-                                buttonLabel={(submitValue: number) => `Nabij ${submitValue}`}
-                                descriptionLabel={(submitValue: number) => (
-                                    <span>
-                                        Kwota zakupów:<br />
-                                        - od <strong>{submitValue * appConfig.cardSize}.00 PLN</strong><br />
-                                        - do <strong>{((submitValue + 1) * appConfig.cardSize) - 0.01} PLN</strong>
-                                    </span>
-                                )}
-                                onSubmit={earnStamps}
-                                minValue={1}
-                                maxValue={100}
-                            />
-                        </div>
+                        <Earn
+                            cardId={qrData.cardId}
+                            user={userToManage}
+                            appConfig={appConfig}
+                            earnStamps={earnStamps}
+                        />
                     );
                 } else if (qrData.variant === 'spend') {
                     return (
-                        <div className='ScanningSection'>
-                            <UserShort
-                                userId={qrData.cardId}
-                                userEmail={userToManage?.email}
-                                userStampsAmount={userToManage?.stamps.amount}
-                                userGiftsAmount={Math.floor((userToManage?.stamps.amount ?? 0) / appConfig.cardSize)}
-                            />
-                            <RichNumberForm
-                                key='gifts'
-                                inputLabel="Ile kart rabatowych użyć?"
-                                buttonLabel={(submitValue: number) => `Przyznaj rabat ${submitValue * appConfig.discount}.00 PLN (${submitValue} karty)`}
-                                descriptionLabel={(submitValue: number) => (
-                                    <span>
-                                        Przyznajesz rabat:<br />
-                                        - <strong>{submitValue * appConfig.discount}.00 PLN</strong><br />
-                                        - <strong>{submitValue} karty</strong>
-                                    </span>
-                                )}
-                                onSubmit={(submitValue: number) => spentStamps(submitValue * appConfig.cardSize)}
-                                minValue={userGiftsAmount >= 1 ? 1 : 0}
-                                maxValue={userGiftsAmount >= 1 ? userGiftsAmount : 0}
-                            />
-                        </div>
+                        <Spend
+                            cardId={qrData.cardId}
+                            user={userToManage}
+                            appConfig={appConfig}
+                            spendStamps={spentStamps}
+                        />
+                    );
+                } else if (qrData.variant === 'delete') {
+                    return (
+                        <Delete
+                            cardId={qrData.cardId}
+                            user={userToManage}
+                            deleteStamps={deleteStamps}
+                            appConfig={appConfig}
+                        />
+                    );
+                } else if (qrData.variant === 'earn-for-amount') {
+                    return (
+                        <EarnForAmount
+                            cardId={qrData.cardId}
+                            user={userToManage}
+                            appConfig={appConfig}
+                            earnStamps={earnStamps}
+                        />
                     );
                 }
             }
@@ -201,33 +219,89 @@ const ScanningSection: FC<{
             return 'Coś poszło nie tak...';
         };
 
+        let pageTitle: ReactNode = '';
+
+        switch (qrData?.variant) {
+            case 'spend':
+                pageTitle = <>
+                    <Icon iconName={IconName.Gift} color='white' />Odbieranie rabatu</>;
+                break;
+            case 'earn':
+                pageTitle = <>
+                    <Icon iconName={IconName.Stamp} color='white' />Nabijanie pieczątek
+                </>;
+                break;
+            case 'delete':
+                pageTitle = <>
+                    <Icon iconName={IconName.StampRemove} color='white' />Kasowanie pieczątek
+                </>;
+                break;
+            case 'earn-for-amount':
+                pageTitle = <>
+                    <Icon iconName={IconName.StampForCash} color='var(--earn-stamp)' />Nabijanie za kwotę
+                </>;
+                break;
+            default:
+                pageTitle = 'Nieznana operacja';
+                break;
+        }
+
         return (
             <AsidePanel
                 side='left'
                 active={!!qrData}
             >
                 <PanelViewTemplate
-                    title={qrData?.variant === 'spend' ? 'Odbieranie rabatu' : 'Nabijanie pieczątek'}
+                    title={pageTitle}
+                    appBarClassName={`ScanningSection__app-bar-${qrData?.variant}`}
                     appBar={(
                         <>
-                            <FooterNav
-                                actions={[
-                                    qrData?.variant === 'earn' ? {
-                                        label: 'Rabaty klienta',
-                                        action: () => setVariant('spend'),
-                                        icon: IconName.Gift,
-                                    } : {
-                                        label: 'Nabij pieczątki',
-                                        action: () => setVariant('earn'),
-                                        icon: IconName.Stamp,
-                                    },
-                                    {
-                                        label: 'Wróć',
-                                        action: () => returnHomeView(),
-                                        icon: IconName.ArrowDown,
-                                    },
-                                ]}
-                            />
+                            <FooterNav>
+                                <IconButton
+                                    iconColor='white'
+                                    bgColor='var(--earn-stamp)'
+                                    onClick={() => setVariant('earn')}
+                                    label='Nabij'
+                                    iconName={IconName.Stamp}
+                                    textColor='var(--earn-stamp)'
+                                />
+
+                                <IconButton
+                                    iconColor='white'
+                                    bgColor='var(--earn-stamp)'
+                                    onClick={() => setVariant('earn-for-amount')}
+                                    label='Za kwotę'
+                                    iconName={IconName.StampForCash}
+                                    textColor='var(--earn-stamp)'
+                                    variant='secondary'
+                                />
+
+                                <IconButton
+                                    iconColor='white'
+                                    bgColor='var(--bakemaniaGold)'
+                                    onClick={() => setVariant('spend')}
+                                    label='Rabat'
+                                    iconName={IconName.Gift}
+                                    textColor='var(--bakemaniaGold)'
+                                />
+
+                                <IconButton
+                                    iconColor='white'
+                                    bgColor='var(--remove-stamp)'
+                                    onClick={() => setVariant('delete')}
+                                    label='Skasuj'
+                                    iconName={IconName.StampRemove}
+                                    textColor='var(--remove-stamp)'
+                                />
+
+                                <IconButton
+                                    iconColor='white'
+                                    bgColor='var(--text)'
+                                    onClick={returnHomeView}
+                                    label='Wróć'
+                                    iconName={IconName.ArrowDown}
+                                />
+                            </FooterNav>
                         </>
                     )}
                 >
