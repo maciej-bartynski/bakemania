@@ -1,13 +1,14 @@
-import { FC } from "react";
+import { FC, PropsWithChildren } from "react";
 import './FooterNav.css';
 import IconButton from "../../atoms/IconButton/IconButton";
 import IconName from "../../icons/IconName";
 import Config from "../../config";
 
-const FooterNav: FC<{
+const FooterNav: FC<PropsWithChildren<{
     actions?: NavAction[];
-}> = ({
-    actions
+}>> = ({
+    actions,
+    children
 }) => {
 
         return (
@@ -15,6 +16,7 @@ const FooterNav: FC<{
                 className="footer-nav"
                 style={{ height: Config.FooterHeight }}
             >
+                {children}
                 {actions?.map(action => {
                     return (
                         <IconButton
@@ -23,8 +25,8 @@ const FooterNav: FC<{
                             iconName={action.icon}
                             label={action.label}
                             iconColor={action.variant === 'primary' ? "white" : undefined}
-                            textColor={action.variant === 'primary' ? "var(--bakemaniaGold" : undefined}
-                            bgColor={action.variant === 'primary' ? "var(--bakemaniaGold" : undefined}
+                            textColor={action.variant === 'primary' ? "var(--bakemaniaGold)" : undefined}
+                            bgColor={action.variant === 'primary' ? "var(--bakemaniaGold)" : undefined}
                         />
                     )
                 })}

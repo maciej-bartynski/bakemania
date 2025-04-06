@@ -1,0 +1,211 @@
+.manage-section-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+    width: 500px;
+    max-width: calc(100% - 40px);
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 20px;
+    margin-top: 20px;
+}
+
+.manage-section-form.--customer {
+    box-shadow: 0 0 10px 0 var(--customer);
+}
+
+.manage-section-form.--manager {
+    box-shadow: 0 0 10px 0 var(--manager);
+}
+
+.manage-section-form.--admin {
+    box-shadow: 0 0 10px 0 var(--admin);
+}
+
+.manage-section-form__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.manage-section-form__header.--customer strong {
+    color: var(--customer);
+}
+
+.manage-section-form__header.--manager strong {
+    color: var(--manager);
+}
+
+.manage-section-form__header.--admin strong {
+    color: var(--admin);
+}
+
+.manage-section-form__header span {
+    font-size: 12px;
+}
+
+.manage-section__customer-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 6px;
+    background-color: var(--customer);
+    padding: 6px;
+}
+
+.manage-section__manager-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 6px;
+    background-color: var(--manager);
+    padding: 6px;
+}
+
+.manage-section__customer-header span {
+    font-size: 12px;
+    color: white;
+    font-weight: 500;
+}
+
+.manage-section__manager-header span {
+    font-size: 12px;
+    color: white;
+    font-weight: 500;
+}
+
+.manage-section__manager-item,
+.manage-section__customer-item {
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 6px;
+    border: 1px solid var(--manager);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.manage-section__customer-item {
+    border: 1px solid var(--customer);
+}
+
+.manage-section__manager-col-1,
+.manage-section__customer-col-1 {
+    flex: 3;
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-start;
+    flex-direction: row;
+    gap: 6px;
+}
+
+.manage-section__customer-icon-wrapper {
+    background-color: var(--customer);
+    width: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.manage-section__manager-icon-wrapper {
+    background-color: var(--manager);
+    width: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.manage-section__manager-col-2,
+.manage-section__customer-col-2 {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 6px;
+}
+
+.manage-section__manager-data,
+.manage-section__customer-data {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    flex: auto;
+    padding: 6px 0;
+}
+
+.manage-section__manager-email {
+    color: var(--manager);
+    font-size: 16px;
+}
+
+.manage-section__customer-email {
+    color: var(--customer);
+    font-size: 12px;
+}
+
+.manage-section__manager-created-at {
+    font-size: 10px;
+}
+
+.manage-section__customer-created-at {
+    font-size: 8px;
+}
+
+.manage-section__manager-col-2 button,
+.manage-section__customer-col-2 button {
+    height: 30px;
+    padding: 0 10px 0px 0px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 9px;
+    text-align: left;
+    gap: 6px;
+}
+
+.manage-section__customer-col-2 button {
+    background-color: var(--customer);
+    border-color: var(--customer);
+    color: white;
+}
+
+.manage-section__manager-col-2 button {
+    background-color: var(--manager);
+    border-color: var(--manager);
+    color: white;
+}
+
+.manage-section__manager-actions svg,
+.manage-section__customer-actions svg {
+    stroke-width: 2px;
+}
+
+.manage-section__panel-promote-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: var(--customer);
+    font-size: 16px;
+    font-weight: 900;
+    stroke-width: 2px;
+}
+
+.manage-section__panel-downgrade-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: var(--manager);
+    font-size: 16px;
+    font-weight: 900;
+    stroke-width: 2px;
+}
+
+.ManageSection__app-bar {
+    background-color: var(--admin);
+    color: white;
+}

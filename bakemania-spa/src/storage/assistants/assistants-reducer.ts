@@ -1,52 +1,46 @@
 import { createSlice } from "@reduxjs/toolkit";
 import ReducerState from "../types";
-import { UsersState } from "./users-types";
-import usersActions from "./users-actions";
+import { AssistantsState } from "./users-types";
+import assistantsAction from "./assistants-actions";
 
 
-const initialState: UsersState = {
+const initialState: AssistantsState = {
     status: ReducerState.Pristine,
     error: null,
-    users: [],
+    assistants: [],
     hasMore: true,
     page: 1,
     size: 10,
-    email: "",
 };
 
-const usersSlice = createSlice({
-    name: "users",
+const assistantsSlice = createSlice({
+    name: "assistants",
     initialState,
     reducers: {
 
     },
-
-
     extraReducers: (builder) => {
         builder
-            /** Fetch me */
-            .addCase(usersActions.fetchUsers.pending, (state) => {
+            .addCase(assistantsAction.fetchAssistants.pending, (state) => {
                 state.status = ReducerState.Fetching;
             })
-            .addCase(usersActions.fetchUsers.fulfilled, (state, action) => {
+            .addCase(assistantsAction.fetchAssistants.fulfilled, (state, action) => {
                 state.status = ReducerState.Idle;
-                state.users = action.payload.users;
+                state.assistants = action.payload.assistants;
                 state.hasMore = action.payload.hasMore;
                 state.page = action.payload.page;
                 state.size = action.payload.size;
-                state.email = action.payload.email;
                 state.error = null;
             })
-            .addCase(usersActions.fetchUsers.rejected, (state, action) => {
+            .addCase(assistantsAction.fetchAssistants.rejected, (state, action) => {
                 state.status = ReducerState.Error;
-                state.users = [];
+                state.assistants = [];
                 state.hasMore = true;
                 state.page = 1;
                 state.size = 10;
-                state.email = "";
-                state.error = (action.payload as string) || "Nieznany błąd przy pobieraniu danych innych użytkowników.";
+                state.error = (action.payload as string) || "Nieznany błąd przy pobieraniu danych innych asystentów.";
             })
     }
 });
 
-export default usersSlice;
+export default assistantsSlice;

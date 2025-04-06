@@ -14,6 +14,8 @@ import CookieManIcon from "./CookieManIcon";
 import CookieManFillIcon from "./CookieManFillIcon";
 import QrCodeIcon from "./QrCodeIcon";
 import UsersIcon from "./UsersIcon";
+import StampRemoveIcon from "./StampRemoveIcon";
+import StampForCashIcon from "./StampForCash";
 
 const Icon: FC<{
     width?: number;
@@ -48,6 +50,14 @@ const Icon: FC<{
             }
             case IconName.Stamp: {
                 IconComponent = StampIcon
+                break;
+            }
+            case IconName.StampRemove: {
+                IconComponent = StampRemoveIcon
+                break;
+            }
+            case IconName.StampForCash: {
+                IconComponent = StampForCashIcon
                 break;
             }
             case IconName.Discount: {
