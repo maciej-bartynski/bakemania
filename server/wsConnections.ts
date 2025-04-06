@@ -5,12 +5,14 @@ const connections = {
 }
 
 export const broadcastToUser = (userId: string, message: string) => {
-    const sockets = connections.wss.get(userId) || [];
-    sockets.forEach((wss: WebSocket) => {
-        if (wss.readyState === WebSocket.OPEN) {
-            wss.send(message);
+    const socket = connections.wss.get(userId);
+    if (socket) {
+
+        if (socket.readyState === WebSocket.OPEN) {
+            socket.send(message);
         }
-    });
+
+    }
 };
 
 export default connections

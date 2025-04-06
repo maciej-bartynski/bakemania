@@ -43,10 +43,17 @@ const AuthLogin: FC = () => {
                 ? loginResponse.token as string
                 : null;
 
+            const cardId: string | null = (typeof loginResponse?.cardId === 'string' && loginResponse?.cardId?.trim())
+                ? loginResponse.token as string
+                : null;
+
             if (!token) {
                 throw new Error('Nie udało się pobrać tokenu autoryzacji.');
             }
             window.localStorage.setItem(Config.sessionKeys.Token, token);
+            if (cardId) {
+                window.localStorage.setItem(Config.sessionKeys.CardId, cardId);
+            }
             PathsModule.redirect(PathsModule.Paths.Root);
         } catch (error) {
             const clientLogs = new ClientLogsService();

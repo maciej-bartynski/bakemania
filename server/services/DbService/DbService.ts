@@ -136,8 +136,15 @@ class DbService {
         }) ?? null;
     }
 
-    getAllByField = async <T extends Record<string, any>>(fieldName: string, fieldValue: any): Promise<Document<T>[]> => {
+    getAllByField = async <T extends Record<string, any>>(fieldName: string, fieldValue: any, options: {
+        containPhrase?: boolean,
+        page: number,
+        size: number,
+    }): Promise<{ items: Document<T>[], hasMore: boolean }> => {
         return await Logs.appLogs.catchUnhandled('DbService error on getAllByField', async () => {
+            const containPhrase = options?.containPhrase ?? false;
+            const page = options.page ?? 1;
+            const size = options.size ?? 10;
             const selfRoute = this.route;
 
             const fileDescriptors = await Logs.appLogs.catchUnhandled('DbService error on getAll', async () => {
@@ -152,22 +159,34 @@ class DbService {
                         return fileData;
                     }
                 })));
-                const files = decodedFiles.filter((item) => {
-                    if (!!item && item[fieldName] === fieldValue) {
-                        return true;
+                const filteredFiles = decodedFiles.filter((item) => {
+                    if (containPhrase) {
+                        if (!!item && item[fieldName].includes(fieldValue)) {
+                            return true;
+                        }
+                    } else {
+                        if (!!item && item[fieldName] === fieldValue) {
+                            return true;
+                        }
                     }
                     return false;
                 });
-                const finalFiles = files.filter(item => !!item);
-                return finalFiles;
+                const startIndex = (page - 1) * size;
+                const endIndex = startIndex + size;
+                const paginatedFiles = filteredFiles.slice(startIndex, endIndex);
+                const finalFiles = paginatedFiles.filter(item => !!item);
+                return { items: finalFiles, hasMore: filteredFiles.length - 1 > endIndex };
             }
-            return [] as Document<T>[];
+            return { items: [], hasMore: true };
         }, () => {
-            return [] as Document<T>[];
-        }) ?? [] as Document<T>[];
+            return { items: [], hasMore: true } as { items: Document<T>[], hasMore: boolean };
+        }) ?? { items: [], hasMore: true } as { items: Document<T>[], hasMore: boolean };
     }
 
-    getAll = async <T extends Record<string, any>>(pagination?: Pagination): Promise<Document<T>[]> => {
+    getAll = async <T extends Record<string, any>>(pagination: Pagination): Promise<{
+        items: Document<T>[],
+        hasMore: boolean,
+    }> => {
         return await Logs.appLogs.catchUnhandled('DbService error on getAll', async () => {
             const selfRoute = this.route;
 
@@ -177,13 +196,13 @@ class DbService {
 
             if (fileDescriptors) {
                 let _fileDescriptorsPaginated = fileDescriptors;
-                if (pagination) {
-                    const { page, size } = pagination;
-                    const startIndex = (page - 1) * size;
-                    const endIndex = startIndex + size;
-                    _fileDescriptorsPaginated = fileDescriptors.slice(startIndex, endIndex);
-                }
-                const decodedFiles = await Promise.all(fileDescriptors.map(descriptor => Logs.appLogs.catchUnhandled('Corrupted file', async () => {
+
+                const { page, size } = pagination;
+                const startIndex = (page - 1) * size;
+                const endIndex = startIndex + size;
+                _fileDescriptorsPaginated = fileDescriptors.slice(startIndex, endIndex);
+
+                const decodedFiles = await Promise.all(_fileDescriptorsPaginated.map(descriptor => Logs.appLogs.catchUnhandled('Corrupted file', async () => {
                     if (descriptor.isFile()) {
                         const fileRaw = await fsPromises.readFile(path.join(selfRoute, descriptor.name), 'utf8');
                         const fileData: Document<T> = JSON.parse(fileRaw);
@@ -191,12 +210,15 @@ class DbService {
                     }
                 })));
                 const files = decodedFiles.filter(item => !!item);
-                return files;
+                return {
+                    items: files,
+                    hasMore: fileDescriptors.length - 1 > endIndex,
+                };
             }
-            return [];
+            return { items: [], hasMore: true } as { items: Awaited<Document<T>>[], hasMore: boolean };
         }, () => {
-            return [] as Document<T>[];
-        }) ?? [] as Document<T>[];
+            return { items: [], hasMore: true } as { items: Awaited<Document<T>>[], hasMore: boolean };
+        }) ?? { items: [], hasMore: true } as { items: Awaited<Document<T>>[], hasMore: boolean };
     }
 
     getFormattedDateString(date: Date): string {

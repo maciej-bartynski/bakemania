@@ -18,9 +18,9 @@ import DbStores from "./services/DbService/DbStores";
 import * as uuid from 'uuid';
 import bcrypt from 'bcryptjs';
 import { ManagerModel } from "./services/DbService/instances/ManagersDb.types";
-import { AppConfig } from "./api/appConfig/type";
 import { AdminModel } from './services/DbService/instances/AdminsDb.types';
 import Logs from './services/LogService';
+import { AppConfig } from './services/DbService/instances/AppConfigDb.types';
 
 async function dbFixtures() {
     try {
@@ -56,6 +56,31 @@ async function dbFixtures() {
             const passwords: [string, string, string] = ['123QWEasd!', '123QWEasd!', '123QWEasd!'];
             const hashes: [string, string, string] = await Promise.all(passwords.map(async (p) => await bcrypt.hash(p, 10))) as any;
             const ids: [string, string, string] = [uuid.v4(), uuid.v4(), uuid.v4()];
+
+
+            for (let i = 0; i < 120; i++) {
+                const id = uuid.v4();
+                const email = `klient${i}@gmail.com`;
+                const password = '123QWEasd!';
+                const role = UserRole.User;
+                const agreements = true;
+                const hash = await bcrypt.hash(password, 10);
+                const user: UserModel = {
+                    _id: id,
+                    email,
+                    password: hash,
+                    role,
+                    agreements,
+                    verification: {
+                        isVerified: true,
+                    },
+                    stamps: {
+                        amount: 0,
+                        history: []
+                    }
+                }
+                await fixtureUsersDb.setById<UserModel>(id, user);
+            }
 
             await fixtureUsersDb.setById<UserModel>(ids[0], {
                 _id: ids[0],
@@ -111,6 +136,27 @@ async function dbFixtures() {
             const hashes: [string, string, string] = await Promise.all(passwords.map(async (p) => await bcrypt.hash(p, 10))) as any;
             const ids: [string, string, string] = [uuid.v4(), uuid.v4(), uuid.v4()];
 
+            for (let i = 0; i < 20; i++) {
+                const id = uuid.v4();
+                const email = `papiesz${i}@gmail.com`;
+                const password = '123QWEasd!';
+                const role = UserRole.Manager;
+                const history: string[] = [];
+                const agreements = true;
+                const hash = await bcrypt.hash(password, 10);
+                const manager: ManagerModel = {
+                    _id: id,
+                    email,
+                    password: hash,
+                    role,
+                    history,
+                    agreements,
+                    verification: {
+                        isVerified: true,
+                    }
+                }
+                await fixtureManagersDb.setById<ManagerModel>(id, manager);
+            }
             await fixtureManagersDb.setById<ManagerModel>(ids[0], {
                 _id: ids[0],
                 email: 'papiesz@gmail.com',
@@ -202,7 +248,8 @@ async function dbFixtures() {
             await fixtureAppConfigDb.setById<AppConfig>('appConfig', {
                 cardSize: 7,
                 discount: 15,
-                stampsInRow: 4
+                stampsInRow: 4,
+                maxCardsPerTransaction: 3
             })
         }
 

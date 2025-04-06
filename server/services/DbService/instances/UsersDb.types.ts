@@ -58,6 +58,7 @@ type SanitizedUserModel = {
     verification: {
         isVerified: boolean,
     },
+    card: boolean,
     changePassword?: undefined,
 };
 
