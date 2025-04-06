@@ -42,10 +42,11 @@ const UserHistorySection: FC<{
 
 
     if (!appConfig || !user) {
-        return 'Ładowanie konfiguracji...';
+        return null;
     }
 
     const userGiftsAmount = Math.floor(user?.stamps.amount / appConfig.cardSize);
+
     return (
         <AsidePanel
             side='left'
