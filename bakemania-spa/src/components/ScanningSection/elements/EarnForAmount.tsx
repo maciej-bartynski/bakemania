@@ -10,12 +10,14 @@ const EarnForAmoubnt: FC<{
     cardId: string,
     user: OtherUser,
     appConfig: AppConfig,
-    earnStamps: (amount: number) => void
+    earnStamps: (amount: number) => void,
+    goHistoryView: (userId: string) => void
 }> = ({
     cardId,
     user,
     appConfig,
-    earnStamps
+    earnStamps,
+    goHistoryView
 }) => {
 
         const amountToStamps = (cashAmount: number) => {
@@ -34,6 +36,7 @@ const EarnForAmoubnt: FC<{
                     userCard={!!user?.card}
                     isVerified={!!user?.verification?.isVerified}
                     isAgreements={!!user?.agreements}
+                    onHistoryClick={() => goHistoryView(user._id)}
                 />
                 <RichNumberForm
                     key='stamps'

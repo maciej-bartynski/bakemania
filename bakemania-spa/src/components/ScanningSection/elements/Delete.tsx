@@ -10,12 +10,14 @@ const Delete: FC<{
     cardId: string,
     user: OtherUser,
     deleteStamps: (value: number) => void,
-    appConfig: AppConfig
+    appConfig: AppConfig,
+    goHistoryView: (userId: string) => void
 }> = ({
     cardId,
     user,
     deleteStamps,
-    appConfig
+    appConfig,
+    goHistoryView
 }) => {
 
         const userGiftsAmount = Math.floor((user?.stamps.amount ?? 0) / appConfig.cardSize);
@@ -30,6 +32,7 @@ const Delete: FC<{
                     isVerified={!!user?.verification?.isVerified}
                     isAgreements={!!user?.agreements}
                     userGiftsAmount={userGiftsAmount}
+                    onHistoryClick={() => goHistoryView(user._id)}
                 />
                 <RichNumberForm
                     key='remove'

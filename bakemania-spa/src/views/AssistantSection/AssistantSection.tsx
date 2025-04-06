@@ -14,6 +14,7 @@ import appConfigActions from "../../storage/appConfig/appConfig-actions";
 import AssistanContext, { AssistantContextType, OpenedSection } from "./AssistantContext";
 import UserRole, { Me } from "../../storage/me/me-types";
 import ManageSection from "../../components/ManageSection/ManageSection";
+import UserHistorySection from "../../components/UserHistorySection.tsx/UserHistorySection";
 
 type ScannedData = {
     variant: 'spend' | 'earn',
@@ -86,6 +87,23 @@ const AssistantSection: FC<{
                     } else {
                         return {
                             title: 'home'
+                        }
+                    }
+                }
+            });
+        }, []);
+
+        const toggleHistoryView = useCallback((userId: string) => {
+            setOpenedSection(state => {
+                if (state.title === 'history') {
+                    return {
+                        title: 'home'
+                    }
+                } else {
+                    return {
+                        title: 'history',
+                        details: {
+                            userId: userId
                         }
                     }
                 }
@@ -222,9 +240,10 @@ const AssistantSection: FC<{
                     </div>
 
                     <ScanningSection
-                        qrData={assistantContext.openedSection.details ?? null}
+                        qrData={assistantContext.openedSection.title === 'card-details' ? assistantContext.openedSection.details : null}
                         setVariant={setVariantCardDetailsView}
                         returnHomeView={toggleCardDetailsView}
+                        goHistoryView={toggleHistoryView}
                     />
 
                     <SettingsSection
@@ -242,6 +261,23 @@ const AssistantSection: FC<{
                     <UsersSection
                         active={assistantContext.openedSection.title === 'card-list'}
                         toggleActive={toggleCardListView}
+                        toggleCardDetailsView={async (details) => {
+                            if (details) {
+                                toggleCardDetailsView({
+                                    userId: details.userId,
+                                    variant: details.variant,
+                                    assistantId: assistant._id,
+                                    cardId: 'change-force',
+                                })
+                            }
+                        }}
+                    />
+
+
+                    <UserHistorySection
+                        active={assistantContext.openedSection.title === 'history'}
+                        details={assistantContext.openedSection.title === 'history' ? assistantContext.openedSection.details : null}
+                        toggleActive={() => toggleHistoryView(assistantContext.openedSection.details?.userId ?? '')}
                         toggleCardDetailsView={async (details) => {
                             if (details) {
                                 toggleCardDetailsView({

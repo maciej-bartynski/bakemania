@@ -10,12 +10,14 @@ const Spend: FC<{
     cardId: string,
     user: OtherUser,
     appConfig: AppConfig,
-    spendStamps: (amount: number) => void
+    spendStamps: (amount: number) => void,
+    goHistoryView: (userId: string) => void
 }> = ({
     cardId,
     user,
     appConfig,
-    spendStamps
+    spendStamps,
+    goHistoryView
 }) => {
         const userGiftsAmount = Math.floor((user?.stamps.amount ?? 0) / appConfig.cardSize);
 
@@ -29,6 +31,7 @@ const Spend: FC<{
                     userCard={!!user?.card}
                     isVerified={!!user?.verification?.isVerified}
                     isAgreements={!!user?.agreements}
+                    onHistoryClick={() => goHistoryView(user._id)}
                 />
                 <RichNumberForm
                     key='gifts'
