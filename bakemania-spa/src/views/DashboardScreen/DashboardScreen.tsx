@@ -134,6 +134,8 @@ const DashboardScreen: FC<{
                     <SettingsSection
                         active={showSettingsSection}
                         toggleActive={closeSettingsSection}
+                        toggleHistoryView={() => { }}
+                        toggleCardDetailsView={() => { }}
                     />
 
                     {(!appConfigState.appConfig || appConfigState.status === ReducerState.Pristine || appConfigState.status === ReducerState.Fetching) && (
