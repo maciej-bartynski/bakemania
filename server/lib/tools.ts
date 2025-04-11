@@ -50,6 +50,22 @@ const getSanitizedUserOrAssistantById = async (id: string): Promise<SanitizedMan
     return null;
 }
 
+const getSanitizedAssistantById = async (id: string): Promise<SanitizedManagerModel | SanitizedAdminModel | null> => {
+
+    const manager = await managersDb.getSanitizedManagerById(id);
+    if (manager) {
+        return manager;
+    }
+
+
+    const admin = await adminsDb.getSanitizedAdminById(id);
+    if (admin) {
+        return admin;
+    }
+
+    return null;
+}
+
 const getUserOrAssistantById = async (id: string): Promise<ManagerModel | UserModel | AdminModel | null> => {
     const user = await usersDb.getById<UserModel>(id);
     if (user) {
@@ -108,7 +124,7 @@ const removeUserOrAssistangById = async (id: string) => {
     return null;
 }
 
-const updarteUserOrAssistangById = async (id: string, fields: Partial<UserModel | ManagerModel | AdminModel>) => {
+const updateUserOrAssistantById = async (id: string, fields: Partial<UserModel | ManagerModel | AdminModel>) => {
     const user = await getUserOrAssistantById(id);
     if (user?.role === UserRole.User) {
         return usersDb.updateById<UserModel>(id, fields as Partial<UserModel>);
@@ -148,7 +164,7 @@ const sanitizeUserOrAssistant = (user: Document<(UserModel | ManagerModel | Admi
                 _id: user._id,
                 email: user.email,
                 role: user.role,
-                history: user.history,
+                transactionsHistory: user.transactionsHistory,
                 agreements: user.agreements,
                 verification: user.verification,
                 metadata: {
@@ -163,7 +179,7 @@ const sanitizeUserOrAssistant = (user: Document<(UserModel | ManagerModel | Admi
                 _id: user._id,
                 email: user.email,
                 role: user.role,
-                history: user.history,
+                transactionsHistory: user.transactionsHistory,
                 agreements: user.agreements,
                 verification: user.verification,
                 metadata: {
@@ -183,6 +199,7 @@ export default {
     getUserOrAssistantById,
     getUserOrAssistantByEmail,
     removeUserOrAssistangById,
-    updarteUserOrAssistangById,
-    sanitizeUserOrAssistant
+    updateUserOrAssistantById,
+    sanitizeUserOrAssistant,
+    getSanitizedAssistantById
 }

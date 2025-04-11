@@ -11,13 +11,15 @@ const Spend: FC<{
     user: OtherUser,
     appConfig: AppConfig,
     spendStamps: (amount: number) => void,
-    goHistoryView: (userId: string) => void
+    goHistoryView: (userId: string) => void,
+    renderTabs: () => React.ReactNode
 }> = ({
     cardId,
     user,
     appConfig,
     spendStamps,
-    goHistoryView
+    goHistoryView,
+    renderTabs
 }) => {
         const userGiftsAmount = Math.floor((user?.stamps.amount ?? 0) / appConfig.cardSize);
 
@@ -25,35 +27,43 @@ const Spend: FC<{
             <>
                 <UserShort
                     userId={cardId}
-                    userEmail={user.email}
-                    userStampsAmount={user.stamps.amount}
-                    userGiftsAmount={Math.floor((user.stamps.amount ?? 0) / appConfig.cardSize)}
+                    userEmail={user?.email}
+                    userStampsAmount={user?.stamps.amount}
+                    userGiftsAmount={userGiftsAmount}
                     userCard={!!user?.card}
                     isVerified={!!user?.verification?.isVerified}
                     isAgreements={!!user?.agreements}
-                    onHistoryClick={() => goHistoryView(user._id)}
+                    actionButtons={[
+                        {
+                            label: "Historia",
+                            onClick: () => goHistoryView(user._id),
+                            icon: IconName.History
+                        }
+                    ]}
                 />
+                {renderTabs()}
                 <RichNumberForm
-                    key='gifts'
-                    inputLabel="Ile kart rabatowych użyć?"
+                    submitClassName='ScanningSectionSpend__button-submit-spend'
                     addClassName='ScanningSectionSpend__button-add'
                     subtractClassName='ScanningSectionSpend__button-remove'
-                    submitClassName='ScanningSectionSpend__button-submit-spend'
+                    key='stamps'
+                    inputLabel="Ile pieczątek wymienić?"
                     buttonLabel={(submitValue: number) => {
                         return <>
-                            <Icon iconName={IconName.Gift} color="white" />Przyznaj rabat ${submitValue * appConfig.discount}.00 PLN (${submitValue} karty)
+                            <Icon iconName={IconName.Gift} color="white" />
+                            Wymień {submitValue}
                         </>
                     }}
                     descriptionLabel={(submitValue: number) => (
                         <span>
-                            Przyznajesz rabat:<br />
-                            - <strong>{submitValue * appConfig.discount}.00 PLN</strong><br />
-                            - <strong>{submitValue} karty</strong>
+                            Kwota rabatu:<br />
+                            - od <strong>{submitValue * appConfig.cardSize}.00 PLN</strong><br />
+                            - do <strong>{((submitValue + 1) * appConfig.cardSize) - 0.01} PLN</strong>
                         </span>
                     )}
-                    onSubmit={(submitValue: number) => spendStamps(submitValue * appConfig.cardSize)}
-                    minValue={userGiftsAmount >= 1 ? 1 : 0}
-                    maxValue={userGiftsAmount >= 1 ? userGiftsAmount : 0}
+                    onSubmit={spendStamps}
+                    minValue={1}
+                    maxValue={100}
                 />
             </>
         );

@@ -61,7 +61,7 @@ router.delete('/remove-account', async (req: Request, res: Response) => {
 });
 
 router.get('/:userId', middleware.requireAssistant, async (req, res) => {
-    Logs.appLogs.catchUnhandled('Handler /get-user/:userId error', async () => {
+    Logs.appLogs.catchUnhandled('Handler /:userId error', async () => {
         const userId = req.params.userId;
         const sanitizedUser = await usersDb.getSanitizedUserById(userId);
         if (!sanitizedUser) {
@@ -88,18 +88,34 @@ router.get('/:userId', middleware.requireAssistant, async (req, res) => {
 
 router.get('', middleware.requireAssistant, async (req, res) => {
     Logs.appLogs.catchUnhandled('Handler /users error', async () => {
+        const userIds = req.query.ids as string[];
         const email = req.query.email as string;
         const page = req.query.page as string;
         const size = req.query.size as string;
         const pageNumber = parseInt(page) ?? 1;
         const pageSize = parseInt(size) ?? 10;
 
+        console.log(userIds);
+
+
         if (typeof pageNumber !== 'number' || typeof pageSize !== 'number') {
             res.status(400).json({ message: 'Nieprawidłowa wartość "page" lub "size".' });
             return;
         }
 
-        if (email && typeof email === 'string') {
+        if (userIds && userIds instanceof Array && userIds.length > 0) {
+            const ids = userIds[0].split(',');
+            const usersData = await usersDb
+                .getAllByFileNames<UserModel>(ids);
+
+            const saniUsers: Document<SanitizedUserModel>[] = usersData.map((user) => Tools.sanitizeUserOrAssistant(user) as Document<SanitizedUserModel>)
+
+            res.status(200).json({
+                users: saniUsers
+            });
+            return;
+        }
+        else if (email && typeof email === 'string') {
             const sanitizedUsersData = await usersDb
                 .getAllByField<UserModel>('email', email, { containPhrase: true, page: pageNumber, size: pageSize })
                 .then((usersData) => {
@@ -175,15 +191,21 @@ router.put('/:userId/promote', middleware.requireAdmin, async (req, res) => {
             return;
         }
 
+        const userCustomerData = {
+            stamps: user.stamps,
+            card: user.card,
+        }
+
         const createdAssistantId = await managersDb.setById<ManagerModel>(user._id, {
             _id: user._id,
             email: user.email,
             password: user.password,
             role: UserRole.Manager,
-            history: [],
+            transactionsHistory: [],
             agreements: user.agreements,
             verification: user.verification,
             changePassword: user.changePassword,
+            ...userCustomerData,
         });
 
         if (!createdAssistantId) {

@@ -1,0 +1,77 @@
+.TabButton {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.6);
+    transition: all 0.2s ease;
+    border-radius: 12px 12px 0 0;
+    margin-top: 8px;
+    position: relative;
+}
+
+.TabButton:hover {
+    opacity: 1;
+}
+
+.TabButton--selected {
+    color: var(--text);
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.TabButton--selected::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: currentColor;
+    border-radius: 3px 3px 0 0;
+}
+
+.TabButton__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.TabButton__label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+}
+
+.TabButton--primary {
+    color: var(--earn-stamp);
+}
+
+.TabButton--secondary {
+    color: var(--bakemaniaGold);
+}
+
+.TabButton--delete {
+    color: #ff4444;
+}
+
+.TabButton--delete:hover {
+    color: #ff6666;
+}
+
+.TabButton--delete:active {
+    color: #ff2222;
+}
+
+.TabButton--selected.TabButton--delete {
+    color: #ff4444;
+    background-color: rgba(255, 68, 68, 0.1);
+}

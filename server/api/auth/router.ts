@@ -106,7 +106,7 @@ router.post('/change-password', middleware.authenticateChangePasswordToken, asyn
 
         if (!password) {
             try {
-                await tools.updarteUserOrAssistangById((user as any)._id, { changePassword: undefined });
+                await tools.updateUserOrAssistantById((user as any)._id, { changePassword: undefined });
             } catch (e) {
                 Logs.appLogs.report('Error on removing changePassword field', (setData) => {
                     setData('What happend', (e as any).message ?? e);
@@ -124,7 +124,7 @@ router.post('/change-password', middleware.authenticateChangePasswordToken, asyn
 
         if (typeof errorMessage === 'string') {
             try {
-                await tools.updarteUserOrAssistangById((user as any)._id, { changePassword: undefined });
+                await tools.updateUserOrAssistantById((user as any)._id, { changePassword: undefined });
             } catch (e) {
                 Logs.appLogs.report('Error on removing changePassword field', (setData) => {
                     setData('What happend', (e as any).message ?? e);
@@ -134,7 +134,7 @@ router.post('/change-password', middleware.authenticateChangePasswordToken, asyn
             return;
         }
 
-        await tools.updarteUserOrAssistangById(user._id, {
+        await tools.updateUserOrAssistantById(user._id, {
             password: hashedPassword,
             changePassword: undefined
         });
@@ -181,7 +181,7 @@ router.post('/change-password-request', limiterForPasswordChangeRequests, async 
         }, JWT_SECRET, { expiresIn: process.env.EMAIL_VERIFICATION_TOKEN_EXPIRATION_TIME });
 
         await EmailService.sendChangePasswordEmail(user, changePasswordToken);
-        const createdId = await tools.updarteUserOrAssistangById(user._id, {
+        const createdId = await tools.updateUserOrAssistantById(user._id, {
             changePassword: {
                 emailSent: emailSentIdentifier
             }
@@ -215,7 +215,7 @@ router.get('/verify-email', middleware.authenticateEmailVerificationToken, async
             isVerified: true,
         };
 
-        await tools.updarteUserOrAssistangById(user._id, {
+        await tools.updateUserOrAssistantById(user._id, {
             verification: newVerificationData
         });
 

@@ -25,7 +25,7 @@ async function authenticateChangePasswordToken(req: Request, res: Response, next
                 if (err) {
                     try {
                         const expiredTokenData = jwt.decode(token);
-                        await tools.updarteUserOrAssistangById((expiredTokenData as any)._id, { changePassword: undefined });
+                        await tools.updateUserOrAssistantById((expiredTokenData as any)._id, { changePassword: undefined });
                     } catch (e) {
                         Logs.appLogs.report('Error on removing expired changePassword field', (setData) => {
                             setData('What happend', (e as any).message ?? e);

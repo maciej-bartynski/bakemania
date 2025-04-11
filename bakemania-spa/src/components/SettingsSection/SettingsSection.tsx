@@ -1,4 +1,4 @@
-import { FC, useCallback, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import AsidePanel from "../../atoms/AsidePanel/AsidePanel";
 import FooterNav from "../FooterNav/FooterNav";
 import IconName from "../../icons/IconName";
@@ -8,16 +8,32 @@ import BottomPanel from "../../atoms/BottomPanel/BottomPanel";
 import clearSession from "../../tools/clearSession";
 import apiService from "../../services/ApiService";
 import Icon from "../../icons/Icon";
+import useMeSelector from "../../storage/me/me-selectors";
+import { OtherUser } from "../../storage/users/users-types";
+import HistoryEntry from "../../atoms/HistoryEntry/HistoryEntry";
+import useAppConfigSelector from "../../storage/appConfig/appConfig-selectors";
+import AppUser from '../../atoms/AppUser/AppUser';
 
 const SettingsSection: FC<{
     active: boolean;
     toggleActive: () => void;
+    toggleHistoryView: (userId: string) => void;
+    toggleCardDetailsView: (details?: {
+        cardId: string;
+        variant: "spend" | "earn";
+        userId: string;
+        assistantId: string;
+    }) => void
 }> = ({
     active,
-    toggleActive
+    toggleActive,
+    toggleCardDetailsView,
+    toggleHistoryView
 }) => {
         const [showLogoutPanel, setShowLogoutPanel] = useState(false);
         const [showDestroyPanel, setShowDestroyPanel] = useState(false);
+        const { me } = useMeSelector();
+        const { appConfig } = useAppConfigSelector();
 
         const toggleLogoutPanel = useCallback(() => {
             setShowDestroyPanel(false)
@@ -27,7 +43,39 @@ const SettingsSection: FC<{
         const toggleDestroyPanel = useCallback(() => {
             setShowLogoutPanel(false)
             setShowDestroyPanel(state => !state);
-        }, [])
+        }, []);
+
+        const [users, setUsers] = useState<OtherUser[]>([]);
+        useEffect(() => {
+            async function fetchUsersForUserHistory() {
+                const operationsHistory = me?.transactionsHistory;
+
+                if (operationsHistory instanceof Array && operationsHistory?.length > 0) {
+                    const userIds = operationsHistory.reduce((acc, curr) => {
+                        acc.push(curr.userId);
+                        return acc;
+                    }, [] as string[]);
+
+                    const uniqueUserIds = [...new Set(userIds)];
+
+                    const data = await apiService.fetch(`user?ids[]=${uniqueUserIds.join(',')}`, {
+                        method: 'GET',
+                    }, [200]);
+
+                    setUsers(data.users);
+                }
+            }
+
+            if (active) {
+                fetchUsersForUserHistory();
+            }
+        }, [me?.transactionsHistory, active])
+
+        if (!me) {
+            return null;
+        }
+
+        const isManagerOrAdmin = me.role === 'manager' || me.role === 'admin';
 
         return (
             <AsidePanel
@@ -89,6 +137,7 @@ const SettingsSection: FC<{
                                 title="Usuwanie konta - ta opcja jest nieodwracalna"
                                 show={showDestroyPanel}
                                 toggleBottomPanel={toggleDestroyPanel}
+                                variant="danger"
                             >
                                 <div
                                     style={{
@@ -133,37 +182,60 @@ const SettingsSection: FC<{
                 >
                     <div className="settings-section-field">
                         <button
-                            className="settings-section-field__settings-button"
+                            className="settings-section-field__account-button settings-section-field__account-button--logout"
                             onClick={toggleLogoutPanel}
                         >
                             <Icon
                                 iconName={IconName.LogOut}
                                 color="var(--text)"
                             />
-
                             <span>
-                                Wyloguj
+                                Wyloguj się
                             </span>
                         </button>
                     </div>
 
                     <div className="settings-section-field">
                         <button
-                            className="settings-section-field__settings-button"
+                            className="settings-section-field__account-button settings-section-field__account-button--delete"
                             onClick={toggleDestroyPanel}
                         >
                             <Icon
                                 iconName={IconName.Destroy}
-                                color="red"
+                                color="#ff4444"
                             />
-
-                            <span style={{ color: 'red' }}>
+                            <span>
                                 Usuń konto
                             </span>
                         </button>
                     </div>
 
-
+                    {isManagerOrAdmin && (
+                        <div className="settings-section-field">
+                            <h2 className="settings-section-field__history-header">
+                                <div className="settings-section-field__history-header-content">
+                                    <span>Operacje moderowane przez </span>
+                                    <AppUser email={me.email} role={me.role} />
+                                </div>
+                            </h2>
+                            <div className="settings-section-field__history-list">
+                                {me.transactionsHistory?.map(entry => (
+                                    <HistoryEntry
+                                        key={entry._id}
+                                        createdAt={entry.createdAt}
+                                        by={entry.by}
+                                        balance={entry.balance}
+                                        userEmail={users.find(user => user._id === entry.userId)?.email ?? '-'}
+                                        cardSize={appConfig?.cardSize ?? 0}
+                                        assistantId={me._id}
+                                        userId={entry.userId}
+                                        toggleHistoryView={toggleHistoryView}
+                                        toggleCardDetailsView={toggleCardDetailsView}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </PanelViewTemplate>
             </AsidePanel>
         )

@@ -11,19 +11,19 @@ const Earn: FC<{
     user: OtherUser,
     appConfig: AppConfig,
     earnStamps: (amount: number) => void,
-    goHistoryView: (userId: string) => void
+    goHistoryView: (userId: string) => void,
+    renderTabs: () => React.ReactNode
 }> = ({
     cardId,
     user,
     appConfig,
     earnStamps,
-    goHistoryView
+    goHistoryView,
+    renderTabs
 }) => {
-
         const userGiftsAmount = Math.floor((user?.stamps.amount ?? 0) / appConfig.cardSize);
 
         return (
-
             <>
                 <UserShort
                     userId={cardId}
@@ -33,8 +33,15 @@ const Earn: FC<{
                     userCard={!!user?.card}
                     isVerified={!!user?.verification?.isVerified}
                     isAgreements={!!user?.agreements}
-                    onHistoryClick={() => goHistoryView(user._id)}
+                    actionButtons={[
+                        {
+                            label: "Historia",
+                            onClick: () => goHistoryView(user._id),
+                            icon: IconName.History
+                        }
+                    ]}
                 />
+                {renderTabs()}
                 <RichNumberForm
                     submitClassName='ScanningSectionEarn__button-submit-earn'
                     addClassName='ScanningSectionEarn__button-add'

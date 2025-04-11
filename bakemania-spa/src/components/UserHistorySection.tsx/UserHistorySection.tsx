@@ -10,7 +10,13 @@ import './UserHistorySection.css';
 import Icon from "../../icons/Icon";
 import useAppConfigSelector from "../../storage/appConfig/appConfig-selectors";
 import UserShort from "../../atoms/UserShort/UserShort";
-
+import HistoryEntry from "../../atoms/HistoryEntry/HistoryEntry";
+import useMeSelector from "../../storage/me/me-selectors";
+import assistantsAction from "../../storage/assistants/assistants-actions";
+import useAppDispatch from "../../storage/useAppDispatch";
+import useAssistantsSelector from "../../storage/assistants/users-selectors";
+import AppUser from "../../atoms/AppUser/AppUser";
+import UserRole from "../../storage/me/me-types";
 
 const UserHistorySection: FC<{
     active: boolean,
@@ -28,6 +34,17 @@ const UserHistorySection: FC<{
 
     const [user, setUser] = useState<OtherUser | null>(null);
     const { appConfig } = useAppConfigSelector();
+    const { me } = useMeSelector();
+    const dispatch = useAppDispatch();
+    const { assistants, admins } = useAssistantsSelector();
+
+    const allAssistants = [...assistants, ...(admins?.admins ?? [])];
+
+    useEffect(() => {
+        if (active) {
+            dispatch(assistantsAction.fetchAssistants({ page: 1, size: user?.stamps.history.length ?? 10 }));
+        }
+    }, [active, dispatch, user]);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -41,7 +58,7 @@ const UserHistorySection: FC<{
 
 
 
-    if (!appConfig || !user) {
+    if (!appConfig || !user || !me) {
         return null;
     }
 
@@ -79,91 +96,51 @@ const UserHistorySection: FC<{
                         userCard={user?.card}
                         isVerified={user?.verification.isVerified}
                         isAgreements={user?.agreements}
-                        actionButton={
-                            <button
-                                className='secondary'
-                                style={{
-                                    height: 28,
-                                    borderColor: 'var(--customer)',
-                                    paddingLeft: 10,
-                                    paddingRight: 10,
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    gap: 5,
-                                    color: 'var(--customer)',
-                                    fontWeight: 400
-                                }}
-                                onClick={() => {
+                        actionButtons={[
+                            {
+                                label: "Idź do karty",
+                                onClick: () => {
                                     toggleCardDetailsView({
                                         userId: user._id,
                                         variant: 'spend',
                                         assistantId: '',
                                         cardId: 'change-force',
+                                    })
+                                },
+                                icon: IconName.QrCode
+                            }
+                        ]}
+                    />
 
+                    <div className="HistorySection__header">
+                        <div className="HistorySection__header-content">
+                            <span>Historia klienta </span>
+                            <AppUser email={user?.email ?? ''} role={UserRole.User} />
+                        </div>
+                    </div>
+                    <div className="HistorySection__list">
+                        {user?.stamps.history.map(entry => (
+                            <HistoryEntry
+                                key={entry._id}
+                                createdAt={entry.createdAt}
+                                by={entry.by}
+                                balance={entry.balance}
+                                assistantId={entry.assistantId}
+                                assistantEmail={allAssistants?.find(assistant => assistant._id === entry.assistantId)?.email ?? "(nieznany)"}
+                                userId={entry.userId}
+                                cardSize={appConfig.cardSize}
+                                toggleHistoryView={toggleActive}
+                                toggleCardDetailsView={() => {
+                                    toggleCardDetailsView({
+                                        userId: user._id,
+                                        variant: 'earn',
+                                        assistantId: me._id,
+                                        cardId: 'change-force',
                                     })
                                 }}
-                            >
-                                <Icon iconName={IconName.QrCode} color='var(--customer)' width={16} height={16} /> Idź do karty
-                            </button>
-                        }
-                    />
-                    {user?.stamps.history.map(entry => {
-                        const infoElement = (
-                            <div className="HistorySection__stamp-entry__info">
-                                <span>Zmiana: <strong>{entry.by}</strong></span>
-                                <span>Saldo po operacji: <strong>{entry.balance}</strong></span>
-                                <span>Data: <strong>{entry.createdAt}</strong></span>
-                                <span>Sprzedawca: <strong>{entry.assistantId}</strong></span>
-                            </div>
-                        )
-
-                        if (entry.by > 0) {
-                            // zarobil
-                            return (
-                                <div
-                                    className="HistorySection__stamp-entry --earn"
-                                    key={entry._id}
-                                >
-                                    <div className="HistorySection__stamp-entry__icon-container --earn">
-                                        <Icon iconName={IconName.Stamp} color='white' width={16} height={16} /> Nabito pieczątki
-                                    </div>
-                                    {infoElement}
-                                </div>
-                            )
-                        } else {
-                            // stracił
-                            if (+entry.by % appConfig.cardSize === 0) {
-                                return (
-                                    <div
-                                        className="HistorySection__stamp-entry --spend"
-                                        key={entry._id}
-
-                                    >
-                                        <div className="HistorySection__stamp-entry__icon-container --spend">
-                                            <Icon iconName={IconName.Gift} color='white' width={16} height={16} /> Skorzystano z rabatu
-                                        </div>
-                                        {infoElement}
-                                    </div>
-                                )
-                            } else {
-                                return (
-                                    <div
-                                        className="HistorySection__stamp-entry --remove"
-                                        key={entry._id}
-
-                                    >
-                                        <div className="HistorySection__stamp-entry__icon-container --remove">
-                                            <Icon iconName={IconName.StampRemove} color='white' width={16} height={16} /> Usunięto pieczątki
-                                        </div>
-                                        {infoElement}
-                                    </div>
-                                )
-                            }
-                        }
-
-
-                    })}
+                            />
+                        ))}
+                    </div>
                 </div>
             </PanelViewTemplate>
         </AsidePanel>

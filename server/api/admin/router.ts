@@ -20,7 +20,7 @@ adminRouter.post('/users/:userId/change-role', async (req, res) => {
             return;
         }
 
-        const updatedId = await tools.updarteUserOrAssistangById(userByEmail._id, {
+        const updatedId = await tools.updateUserOrAssistantById(userByEmail._id, {
             role
         });
 

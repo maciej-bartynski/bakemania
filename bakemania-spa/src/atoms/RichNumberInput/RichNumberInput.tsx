@@ -36,7 +36,7 @@ const RichNumberInput: FC<{
                         <button
                             key={by}
                             onClick={() => changeBy(by)}
-                            className={'RichNumberInput__btn ' + subtractClassName}
+                            className={'RichNumberInput__btn --negative ' + subtractClassName}
                         >
                             {by}
                         </button>
@@ -55,7 +55,7 @@ const RichNumberInput: FC<{
                         <button
                             key={by}
                             onClick={() => changeBy(by)}
-                            className={'RichNumberInput__btn ' + addClassName}
+                            className={'RichNumberInput__btn --positive ' + addClassName}
                         >
                             +{by}
                         </button>
@@ -68,7 +68,7 @@ const RichNumberInput: FC<{
                             <button
                                 key={by}
                                 onClick={() => changeBy(by)}
-                                className={'RichNumberInput__btn ' + (by > 0 ? addClassName : subtractClassName)}
+                                className={'RichNumberInput__btn ' + ` ${by > 0 ? '--positive' : "--negative"} ` + (by > 0 ? addClassName : subtractClassName)}
 
                             >
                                 {by > 0 ? `+${by}` : by}

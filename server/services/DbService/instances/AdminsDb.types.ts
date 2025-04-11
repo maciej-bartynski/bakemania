@@ -1,11 +1,11 @@
-import UserRole, { ChangePasswordData, VerificationData } from "./UsersDb.types"
+import UserRole, { ChangePasswordData, StampsHistoryEntry, VerificationData } from "./UsersDb.types"
 
 type AdminModel = {
     _id: string,
     email: string,
     password: string,
     role: UserRole.Admin,
-    history: string[],
+    transactionsHistory: StampsHistoryEntry[],
     agreements: true,
     verification: VerificationData,
     changePassword?: ChangePasswordData,
@@ -15,7 +15,7 @@ type SanitizedAdminModel = {
     _id: string,
     email: string,
     role: UserRole.Admin,
-    history: string[],
+    transactionsHistory: StampsHistoryEntry[],
     agreements: true,
     verification: {
         isVerified: boolean,

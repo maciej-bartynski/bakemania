@@ -1,10 +1,15 @@
-import { FC } from "react";
+import React, { useState } from 'react';
 import './UserShort.css'
-import UserIcon from "../../icons/UserIcon";
-import IconName from "../../icons/IconName";
-import Icon from "../../icons/Icon";
+import Icon from '../../icons/Icon';
+import IconName from '../../icons/IconName';
 
-const UserShort: FC<{
+interface ActionButton {
+    label: string;
+    onClick: () => void;
+    icon: IconName;
+}
+
+interface UserShortProps {
     userId: string;
     userEmail: string,
     userStampsAmount: number,
@@ -12,9 +17,10 @@ const UserShort: FC<{
     userCard: boolean,
     isVerified: boolean,
     isAgreements: boolean,
-    onHistoryClick?: () => void,
-    actionButton?: React.ReactNode
-}> = ({
+    actionButtons: ActionButton[];
+}
+
+const UserShort: React.FC<UserShortProps> = ({
     userId,
     userEmail,
     userStampsAmount,
@@ -22,110 +28,113 @@ const UserShort: FC<{
     userCard,
     isVerified,
     isAgreements,
-    onHistoryClick,
-    actionButton
+    actionButtons
 }) => {
-        return (
-            <div className="UserShort">
-                <div className="UserShort__icon">
-                    <UserIcon.Customer color="white" />
-                </div>
-                <div className="UserShort__info">
-                    {userId && userId !== 'change-force' && (
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    return (
+        <div className="UserShort">
+            <div className="UserShort__icon">
+                <Icon iconName={IconName.Users} color="white" width={24} height={24} />
+            </div>
+            <div className="UserShort__content">
+                <div className="UserShort__details">
+                    <div className="UserShort__row">
+                        <div className="UserShort__row-line id">
+                            <strong>ID:</strong> {userId}
+                        </div>
+                        <div className="UserShort__row-email">
+                            {userEmail}
+                        </div>
+                    </div>
+
+                    {!isVerified && (
                         <div className="UserShort__row">
-                            <span className="UserShort__row-line">
-                                ID: <strong>{userId}</strong>
-                            </span>
+                            <div className="UserShort__row-line warning">
+                                <Icon iconName={IconName.Destroy} color="var(--remove-stamp)" width={16} height={16} />
+                                <span className="UserShort__row-line-text">Konto niezweryfikowane</span>
+                            </div>
                         </div>
                     )}
 
                     {!isAgreements && (
                         <div className="UserShort__row">
-                            <span className="UserShort__row-line">
-                                <Icon iconName={IconName.Cog} color="var(--remove-stamp)" width={16} height={16} />
-                                <span className="UserShort__row-line-text" style={{ color: 'var(--remove-stamp)' }}>
-                                    <strong>Klien nie zaakceptował warunków użytkowania</strong>
-                                </span>
-                            </span>
-                        </div>
-                    )}
-
-                    {!isVerified && (
-                        <div className="UserShort__row">
-                            <span className="UserShort__row-line">
-                                <Icon iconName={IconName.Users} color="var(--remove-stamp)" width={16} height={16} />
-                                <span className="UserShort__row-line-text" style={{ color: 'var(--remove-stamp)' }}>
-                                    <strong>Klien nie zweryfikował swojego konta</strong>
-                                </span>
-                            </span>
+                            <div className="UserShort__row-line warning">
+                                <Icon iconName={IconName.Destroy} color="var(--remove-stamp)" width={16} height={16} />
+                                <span className="UserShort__row-line-text">Niezaakceptowane regulaminy</span>
+                            </div>
                         </div>
                     )}
 
                     {!userCard && (
                         <div className="UserShort__row">
-                            <span className="UserShort__row-line">
-                                <Icon iconName={IconName.QrCode} color="var(--remove-stamp)" width={16} height={16} />
-                                <span className="UserShort__row-line-text" style={{ color: 'var(--remove-stamp)' }}>
-                                    <strong>Klien nie posiada karty QR</strong>
-                                </span>
-                            </span>
-                        </div>
-                    )}
-
-                    {userEmail && (
-                        <div className="UserShort__row" style={{ marginBottom: '6px' }}>
-                            <span className="UserShort__row-line">
-                                <strong className="UserShort__row-email">{userEmail}</strong>
-                            </span>
+                            <div className="UserShort__row-line warning">
+                                <Icon iconName={IconName.Destroy} color="var(--remove-stamp)" width={16} height={16} />
+                                <span className="UserShort__row-line-text">Brak karty QR</span>
+                            </div>
                         </div>
                     )}
 
                     {(typeof userStampsAmount === 'number' || typeof userGiftsAmount === 'number') && (
                         <div className="UserShort__row">
-                            <span className="UserShort__row-line" style={{ strokeWidth: '2' }}>
+                            <div className="UserShort__row-line success">
                                 <Icon iconName={IconName.Stamp} color="var(--customer)" width={16} height={16} />
-                                <span className="UserShort__row-line-text" style={{ marginTop: '2px' }}>
+                                <span className="UserShort__row-line-text">
                                     <strong>{userStampsAmount}</strong> pieczątek
                                 </span>
-                            </span>
+                            </div>
 
-                            <span className="UserShort__row-line" style={{ strokeWidth: '2' }}>
+                            <div className="UserShort__row-line success">
                                 <Icon iconName={IconName.Gift} color="var(--customer)" width={16} height={16} />
-                                <span className="UserShort__row-line-text" style={{ marginTop: '2px' }}>
+                                <span className="UserShort__row-line-text">
                                     <strong>{userGiftsAmount}</strong> kart
                                 </span>
-                            </span>
+                            </div>
                         </div>
                     )}
-
-                    <div className="UserShort__row">
-                        {actionButton}
-                        {onHistoryClick && (
-                            <button
-                                onClick={onHistoryClick}
-                                className="secondary"
-                                style={{
-                                    height: 28,
-                                    borderColor: 'var(--customer)',
-                                    paddingLeft: 10,
-                                    paddingRight: 10,
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    gap: 5,
-                                    color: 'var(--customer)',
-                                    fontWeight: 400
-                                }}
-                            >
-                                <Icon iconName={IconName.History} color="var(--customer)" width={16} height={16} />
-                                Historia klienta
-                            </button>
-                        )}
-                    </div>
                 </div>
             </div>
-        )
-    }
 
+            <button
+                className="UserShort__detailsButton"
+                onClick={() => setIsExpanded(!isExpanded)}
+            >
+                <Icon iconName={IconName.Cog} color='var(--customer)' width={20} height={20} />
+            </button>
+
+            <div className={`UserShort__options ${isExpanded ? 'UserShort__options--expanded' : ''}`}>
+                <div className="UserShort__optionsContent">
+                    {actionButtons.map((button, index) => (
+                        <button
+                            key={index}
+                            className="UserShort__option"
+                            style={{
+                                color: 'var(--customer)',
+                                strokeWidth: 2
+                            }}
+                            onClick={() => {
+                                button.onClick();
+                                setIsExpanded(false);
+                            }}
+                        >
+                            <Icon iconName={button.icon} color='var(--customer)' width={16} height={16} />
+                            {button.label}
+                        </button>
+                    ))}
+                    <button
+                        className="UserShort__option"
+                        onClick={() => setIsExpanded(false)}
+                        style={{
+                            strokeWidth: 2
+                        }}
+                    >
+                        <Icon iconName={IconName.ArrowDown} width={16} height={16} />
+                        Schowaj
+                    </button>
+                </div>
+            </div>
+        </div>
+    )
+}
 
 export default UserShort;

@@ -1,4 +1,4 @@
-import UserRole, { ChangePasswordData } from "./UsersDb.types";
+import UserRole, { ChangePasswordData, StampsHistoryEntry } from "./UsersDb.types";
 import { VerificationData } from "./UsersDb.types";
 
 type ManagerModel = {
@@ -6,7 +6,7 @@ type ManagerModel = {
     email: string,
     password: string,
     role: UserRole.Manager,
-    history: string[],
+    transactionsHistory: StampsHistoryEntry[],
     agreements: true,
     verification: VerificationData,
     changePassword?: ChangePasswordData,
@@ -16,7 +16,7 @@ type SanitizedManagerModel = {
     _id: string,
     email: string,
     role: UserRole.Manager,
-    history: string[],
+    transactionsHistory: StampsHistoryEntry[],
     agreements: true,
     verification: {
         isVerified: boolean,

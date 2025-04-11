@@ -7,54 +7,10 @@
     gap: 10px;
 }
 
-.ScanningSectionEarn__button-submit-earn {
-    background-color: var(--earn-stamp);
-    border: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 6px;
-    stroke-width: 2;
-}
-
-.ScanningSectionSpend__button-submit-spend {
-    background-color: var(--bakemaniaGold);
-    border: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 6px;
-    stroke-width: 2;
-}
-
-.ScanningSectionEarnForAmount__button-submit-earn-for-amount {
-    border-color: var(--earn-stamp);
-    background: transparent;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 6px;
-    stroke-width: 2;
-    border-width: 2px;
-    color: var(--earn-stamp);
-}
-
 .ScanningSection__app-bar-earn-for-amount {
     background-color: white;
     border: solid 2px var(--earn-stamp);
     color: var(--earn-stamp);
-}
-
-.ScanningSectionDelete__button-submit-remove {
-    border-color: var(--remove-stamp);
-    background: transparent;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 6px;
-    stroke-width: 2;
-    border-width: 2px;
-    color: var(--remove-stamp);
 }
 
 .ScanningSection__app-bar-earn {
@@ -72,42 +28,27 @@
     color: white;
 }
 
-/* .ScanningSectionEarn__button-add {
-    background-color: var(--earn-stamp);
+.ScanningSection__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: white;
+    position: relative;
+}
+
+.ScanningSection__tabs-indicator {
+    width: 100%;
+    height: 36px;
+    background-color: currentColor;
+    transition: background-color 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     color: white;
+    font-size: 12px;
+    gap: 4px;
 }
 
-.ScanningSectionEarn__button-remove {
-    background-color: var(--remove-stamp);
-    color: white
+.ScanningSection__tabs-indicator svg {
+    width: 16px;
+    height: 16px;
 }
-
-.ScanningSectionSpend__button-add {
-    background-color: var(--bakemaniaGold);
-    color: white;
-}
-
-.ScanningSectionSpend__button-remove {
-    background-color: var(--bakemaniaGold);
-    color: white
-}
-
-.ScanningSectionRemove__button-add {
-    background-color: var(--remove-stamp);
-    color: white;
-}
-
-.ScanningSectionRemove__button-remove {
-    background-color: var(--remove-stamp);
-    color: white
-}
-
-.ScanningSectionEarnForAmount__button-add {
-    background-color: var(--earn-stamp);
-    color: white;
-}
-
-.ScanningSectionEarnForAmount__button-remove {
-    background-color: var(--earn-stamp);
-    color: white
-} */
