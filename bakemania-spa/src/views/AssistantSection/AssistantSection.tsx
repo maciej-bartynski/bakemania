@@ -249,6 +249,8 @@ const AssistantSection: FC<{
                     <SettingsSection
                         active={assistantContext.openedSection.title === 'settings'}
                         toggleActive={toggleSettingsView}
+                        toggleCardDetailsView={toggleCardDetailsView}
+                        toggleHistoryView={toggleHistoryView}
                     />
 
                     {isAdmin && (

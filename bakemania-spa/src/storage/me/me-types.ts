@@ -18,6 +18,7 @@ type StampsHistoryEntry = {
     by: number,
     balance: number,
     assistantId: string,
+    userId: string,
 }
 
 type Me = {
@@ -27,7 +28,8 @@ type Me = {
         amount: number,
         history: StampsHistoryEntry[]
     },
-    role: UserRole
+    role: UserRole,
+    transactionsHistory?: StampsHistoryEntry[],
 }
 
 export type {

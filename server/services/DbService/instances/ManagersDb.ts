@@ -2,6 +2,7 @@ import { SanitizedManagerModel, ManagerModel } from './ManagersDb.types';
 import Logs from '../../LogService';
 import DbService from '../DbService';
 import DbStores from '../DbStores';
+import { StampsHistoryEntry } from './UsersDb.types';
 
 export class ManagersDb extends DbService {
     async getSanitizedManagerById(managerId: string) {
@@ -12,7 +13,7 @@ export class ManagersDb extends DbService {
                     _id: manager._id,
                     email: manager.email,
                     role: manager.role,
-                    history: manager.history,
+                    transactionsHistory: manager.transactionsHistory,
                     agreements: manager.agreements,
                     verification: manager.verification
                 }
@@ -22,19 +23,19 @@ export class ManagersDb extends DbService {
         });
     }
 
-    async setRelationToUserHistory(managerId: string, userId: string) {
+    async setRelationToUserHistory(managerId: string, historyEntry: StampsHistoryEntry) {
         return await Logs.appLogs.catchUnhandled('ManagersDb error on setRelationToUserHistory', async () => {
             const manager = await this.getById<ManagerModel>(managerId);
             if (manager) {
-                const currentHistory = manager.history;
-                let nextHistory: string[] = [];
+                const currentHistory = manager.transactionsHistory;
+                let nextHistory: StampsHistoryEntry[] = [];
                 if (currentHistory.length >= 50) {
-                    nextHistory = [...(currentHistory.slice(-49)), userId];
+                    nextHistory = [...(currentHistory.slice(-49)), historyEntry];
                 } else {
-                    nextHistory = [...currentHistory, userId];
+                    nextHistory = [...currentHistory, historyEntry];
                 }
                 const updatedId = await this.updateById<ManagerModel>(managerId, {
-                    history: nextHistory
+                    transactionsHistory: nextHistory
                 })
                 if (updatedId) {
                     return updatedId

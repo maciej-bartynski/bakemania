@@ -73,11 +73,21 @@ assistantRouter.post('/stamps/change', async (req, res) => {
             }
         }
 
-        const updatedUserId = await usersDb.changeStampsAndWriteHistory(userId, amount, assistantId);
+        const assistant = await Tools.getSanitizedAssistantById(assistantId);
 
-        if (updatedUserId) {
-            const updatedUser = await usersDb.getSanitizedUserById(updatedUserId);
-            broadcastToUser(updatedUserId, 'stamps');
+        if (!assistant) {
+            res.status(404).json({ message: 'Konto asystenta nie istnieje.' });
+            return;
+        }
+
+        const historyEntry = await usersDb.changeStampsAndWriteHistory(userId, amount, assistantId);
+
+        if (historyEntry) {
+            await Tools.updateUserOrAssistantById(assistantId, {
+                transactionsHistory: [...(assistant.transactionsHistory ?? []), historyEntry]
+            });
+            const updatedUser = await usersDb.getSanitizedUserById(userId);
+            broadcastToUser(userId, 'stamps');
             res.status(200).json(updatedUser);
             return;
         }
@@ -132,16 +142,21 @@ assistantRouter.post('/stamps/change-force', async (req, res) => {
             return;
         }
 
-        if (!user.card) {
-            res.status(404).json({ message: 'Karta klienta nie istnieje.' });
+        const assistant = await Tools.getSanitizedAssistantById(assistantId);
+
+        if (!assistant) {
+            res.status(404).json({ message: 'Konto asystenta nie istnieje.' });
             return;
         }
 
-        const updatedUserId = await usersDb.changeStampsAndWriteHistory(userId, amount, assistantId);
+        const historyEntry = await usersDb.changeStampsAndWriteHistory(userId, amount, assistantId);
 
-        if (updatedUserId) {
-            const updatedUser = await usersDb.getSanitizedUserById(updatedUserId);
-            broadcastToUser(updatedUserId, 'stamps');
+        if (historyEntry) {
+            await Tools.updateUserOrAssistantById(assistantId, {
+                transactionsHistory: [...(assistant.transactionsHistory ?? []), historyEntry]
+            });
+            const updatedUser = await usersDb.getSanitizedUserById(userId);
+            broadcastToUser(userId, 'stamps');
             res.status(200).json(updatedUser);
             return;
         }
@@ -160,39 +175,39 @@ assistantRouter.post('/stamps/change-force', async (req, res) => {
     })
 });
 
-assistantRouter.get('/users/get', async (req, res) => {
-    Logs.appLogs.catchUnhandled('Handler /get error', async () => {
-        const page = req.query.page ? parseInt(req.query.page as string) : 1;
-        const size = req.query.size ? parseInt(req.query.size as string) : 10;
+// assistantRouter.get('/users/get', async (req, res) => {
+//     Logs.appLogs.catchUnhandled('Handler /get error', async () => {
+//         const page = req.query.page ? parseInt(req.query.page as string) : 1;
+//         const size = req.query.size ? parseInt(req.query.size as string) : 10;
 
-        const usersData = await usersDb.getAll<UserModel>({
-            page,
-            size,
-        });
+//         const usersData = await usersDb.getAll<UserModel>({
+//             page,
+//             size,
+//         });
 
-        const { items: users, hasMore } = usersData;
+//         const { items: users, hasMore } = usersData;
 
-        if (!users || !users.length || !(users instanceof Array)) {
-            res.status(404).json({ message: 'Nie znaleziono użytkowników.' });
-            return;
-        }
+//         if (!users || !users.length || !(users instanceof Array)) {
+//             res.status(404).json({ message: 'Nie znaleziono użytkowników.' });
+//             return;
+//         }
 
-        res.status(200).json({
-            users,
-            hasMore,
-        });
-        return;
-    }, (e) => {
-        res.status(500).json({
-            message: 'Ups... przypalilśmy serwer :C',
-            details: {
-                error: e,
-                route: 'assistant/users/get',
-            }
-        });
-        return;
-    });
-});
+//         res.status(200).json({
+//             users,
+//             hasMore,
+//         });
+//         return;
+//     }, (e) => {
+//         res.status(500).json({
+//             message: 'Ups... przypalilśmy serwer :C',
+//             details: {
+//                 error: e,
+//                 route: 'assistant/users/get',
+//             }
+//         });
+//         return;
+//     });
+// });
 
 assistantRouter.get('/users/get-user/:userId', async (req, res) => {
     Logs.appLogs.catchUnhandled('Handler /get-user/:userId error', async () => {
@@ -339,10 +354,10 @@ assistantRouter.put('/:managerId/downgrade', middleware.requireAdmin, async (req
             verification: manager.verification,
             changePassword: manager.changePassword,
             card: await Tools.createCardId(),
-            stamps: {
+            stamps: ((manager as any).stamps ?? {
                 amount: 0,
                 history: [],
-            }
+            }) as any,
         });
 
         if (!createdUserId) {

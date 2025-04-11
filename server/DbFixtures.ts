@@ -12,7 +12,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 import fs from "fs/promises";
-import UserRole, { UserModel } from "./services/DbService/instances/UsersDb.types";
+import UserRole, { StampsHistoryEntry, UserModel } from "./services/DbService/instances/UsersDb.types";
 import DbService from "./services/DbService/DbService";
 import DbStores from "./services/DbService/DbStores";
 import * as uuid from 'uuid';
@@ -141,7 +141,7 @@ async function dbFixtures() {
                 const email = `papiesz${i}@gmail.com`;
                 const password = '123QWEasd!';
                 const role = UserRole.Manager;
-                const history: string[] = [];
+                const transactionsHistory: StampsHistoryEntry[] = [];
                 const agreements = true;
                 const hash = await bcrypt.hash(password, 10);
                 const manager: ManagerModel = {
@@ -149,7 +149,7 @@ async function dbFixtures() {
                     email,
                     password: hash,
                     role,
-                    history,
+                    transactionsHistory,
                     agreements,
                     verification: {
                         isVerified: true,
@@ -162,7 +162,7 @@ async function dbFixtures() {
                 email: 'papiesz@gmail.com',
                 password: hashes[0],
                 role: UserRole.Manager,
-                history: [],
+                transactionsHistory: [],
                 agreements: true,
                 verification: {
                     isVerified: true,
@@ -174,7 +174,7 @@ async function dbFixtures() {
                 email: 'papiesz2@gmail.com',
                 password: hashes[1],
                 role: UserRole.Manager,
-                history: [],
+                transactionsHistory: [],
                 agreements: true,
                 verification: {
                     isVerified: true,
@@ -186,7 +186,7 @@ async function dbFixtures() {
                 email: 'papiesz3@gmail.com',
                 password: hashes[2],
                 role: UserRole.Manager,
-                history: [],
+                transactionsHistory: [],
                 agreements: true,
                 verification: {
                     isVerified: true,
@@ -208,7 +208,7 @@ async function dbFixtures() {
                 email: 'pawel@gmail.com',
                 password: hashes[0],
                 role: UserRole.Admin,
-                history: [],
+                transactionsHistory: [],
                 agreements: true,
                 verification: {
                     isVerified: true,
@@ -220,7 +220,7 @@ async function dbFixtures() {
                 email: 'wel@gmail.com',
                 password: hashes[1],
                 role: UserRole.Admin,
-                history: [],
+                transactionsHistory: [],
                 agreements: true,
                 verification: {
                     isVerified: true,
@@ -232,7 +232,7 @@ async function dbFixtures() {
                 email: 'pa@gmail.com',
                 password: hashes[2],
                 role: UserRole.Admin,
-                history: [],
+                transactionsHistory: [],
                 agreements: true,
                 verification: {
                     isVerified: true,

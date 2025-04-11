@@ -38,11 +38,15 @@ class UsersDb extends DbService {
                             by,
                             assistantId,
                             balance: user.stamps.amount,
-                            createdAt: this.getFormattedDateString(new Date())
+                            createdAt: this.getFormattedDateString(new Date()),
+                            userId: userId,
                         };
-                        await this.setHistoryEntry(updatedId, newHistoryEntry);
+                        const entry = await this.setHistoryEntry(updatedId, newHistoryEntry);
+                        if (entry) {
+                            return entry;
+                        }
                     }
-                    return updatedId;
+                    return null;
                 }
             }
         });
@@ -68,7 +72,7 @@ class UsersDb extends DbService {
     }
 
     async setHistoryEntry(userId: string, entry: StampsHistoryEntry) {
-        return await Logs.appLogs.catchUnhandled('UsersDb error on setHistoryEntry', async () => {
+        return await Logs.appLogs.catchUnhandled('UsersDb setHistoryEntry', async () => {
             const user = await this.getById<UserModel>(userId);
             if (user) {
                 const currentHistory = user.stamps.history ?? [];
@@ -83,10 +87,10 @@ class UsersDb extends DbService {
                         amount: user.stamps.amount,
                         history: nextHistory,
                     }
-                })
+                });
 
                 if (updatedId) {
-                    return updatedId
+                    return entry
                 }
             }
         });

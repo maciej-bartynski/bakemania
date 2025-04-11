@@ -1,4 +1,4 @@
-import UserRole from "../me/me-types";
+import UserRole, { StampsHistoryEntry } from "../me/me-types";
 import ReducerState from "../types";
 
 type OtherAssistant = {
@@ -8,7 +8,7 @@ type OtherAssistant = {
     verification: {
         isVerified: boolean,
     },
-    history: [],
+    transactionsHistory: StampsHistoryEntry[],
     metadata: {
         createdAt: string,
         updatedAt?: string,

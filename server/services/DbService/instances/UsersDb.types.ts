@@ -15,6 +15,7 @@ type StampsHistoryEntry = {
     by: number,
     balance: number,
     assistantId: string,
+    userId: string,
 }
 
 type VerificationData = {

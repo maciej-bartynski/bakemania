@@ -183,6 +183,34 @@ class DbService {
         }) ?? { items: [], hasMore: true } as { items: Document<T>[], hasMore: boolean };
     }
 
+    getAllByFileNames = async <T extends Record<string, any>>(fileNames: string[]): Promise<Document<T>[]> => {
+        return await Logs.appLogs.catchUnhandled('DbService error on getAllByFieldArray', async () => {
+            const selfRoute = this.route;
+
+            const files = (await Promise.all(fileNames.map(async (fileName) => {
+                const filePath = path.join(selfRoute, `/${fileName}.json`);
+                const fileExists = await fsPromises.access(filePath, fsPromises.constants.F_OK).then(() => true).catch(() => false);
+                if (fileExists) {
+                    const raw = await fsPromises.readFile(filePath, 'utf8');
+                    const file: Document<T> = JSON.parse(raw);
+                    return file;
+                } else {
+                    return null;
+                }
+            }))).filter(item => !!item);
+
+            if (files.length > 0) {
+                return files;
+            }
+
+            return [];
+
+
+        }, () => {
+            return [] as Document<T>[];
+        }) ?? [] as Document<T>[];
+    }
+
     getAll = async <T extends Record<string, any>>(pagination: Pagination): Promise<{
         items: Document<T>[],
         hasMore: boolean,
