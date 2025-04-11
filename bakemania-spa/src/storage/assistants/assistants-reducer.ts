@@ -11,6 +11,10 @@ const initialState: AssistantsState = {
     hasMore: true,
     page: 1,
     size: 10,
+    admins: {
+        admins: [],
+        hasMore: true,
+    }
 };
 
 const assistantsSlice = createSlice({
@@ -31,6 +35,7 @@ const assistantsSlice = createSlice({
                 state.page = action.payload.page;
                 state.size = action.payload.size;
                 state.error = null;
+                state.admins = action.payload.admins;
             })
             .addCase(assistantsAction.fetchAssistants.rejected, (state, action) => {
                 state.status = ReducerState.Error;
@@ -39,6 +44,10 @@ const assistantsSlice = createSlice({
                 state.page = 1;
                 state.size = 10;
                 state.error = (action.payload as string) || "Nieznany błąd przy pobieraniu danych innych asystentów.";
+                state.admins = {
+                    admins: [],
+                    hasMore: true,
+                }
             })
     }
 });

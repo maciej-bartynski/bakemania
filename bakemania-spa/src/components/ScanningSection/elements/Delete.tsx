@@ -9,51 +9,58 @@ import { AppConfig } from "../../../storage/appConfig/appConfig-types";
 const Delete: FC<{
     cardId: string,
     user: OtherUser,
-    deleteStamps: (value: number) => void,
     appConfig: AppConfig,
+    deleteStamps: (amount: number) => void,
     goHistoryView: (userId: string) => void
 }> = ({
     cardId,
     user,
-    deleteStamps,
     appConfig,
+    deleteStamps,
     goHistoryView
 }) => {
-
         const userGiftsAmount = Math.floor((user?.stamps.amount ?? 0) / appConfig.cardSize);
 
         return (
             <>
                 <UserShort
                     userId={cardId}
-                    userEmail={user.email}
-                    userStampsAmount={user.stamps.amount}
+                    userEmail={user?.email}
+                    userStampsAmount={user?.stamps.amount}
+                    userGiftsAmount={userGiftsAmount}
                     userCard={!!user?.card}
                     isVerified={!!user?.verification?.isVerified}
                     isAgreements={!!user?.agreements}
-                    userGiftsAmount={userGiftsAmount}
-                    onHistoryClick={() => goHistoryView(user._id)}
+                    actionButtons={[
+                        {
+                            label: "Historia",
+                            onClick: () => goHistoryView(user._id),
+                            icon: IconName.History
+                        }
+                    ]}
                 />
                 <RichNumberForm
-                    key='remove'
+                    submitClassName='ScanningSectionDelete__button-submit-delete'
+                    addClassName='ScanningSectionDelete__button-add'
+                    subtractClassName='ScanningSectionDelete__button-remove'
+                    key='stamps'
                     inputLabel="Ile pieczątek skasować?"
-                    submitClassName='ScanningSectionDelete__button-submit-remove'
                     buttonLabel={(submitValue: number) => {
                         return <>
-                            <Icon iconName={IconName.StampRemove} color="var(--remove-stamp)" />Usuń {submitValue} pieczątki
+                            <Icon iconName={IconName.StampRemove} color="white" />
+                            Skasuj {submitValue}
                         </>
                     }}
                     descriptionLabel={(submitValue: number) => (
                         <span>
-                            Usuwasz <strong>{submitValue}</strong> pieczątki. Odpowiada to:<br />
-                            - {Math.floor(submitValue / appConfig.cardSize)} całym kartom rabatowym i...<br />
-                            - ...{submitValue - Math.floor(submitValue / appConfig.cardSize) * appConfig.cardSize} pieczątkom reszty<br />
-                            - {user.stamps.amount - submitValue} pieczątek pozostanie na koncie klienta.
+                            Kwota zakupów:<br />
+                            - od <strong>{submitValue * appConfig.cardSize}.00 PLN</strong><br />
+                            - do <strong>{((submitValue + 1) * appConfig.cardSize) - 0.01} PLN</strong>
                         </span>
                     )}
-                    onSubmit={(submitValue: number) => deleteStamps(submitValue)}
-                    minValue={0}
-                    maxValue={user.stamps.amount}
+                    onSubmit={deleteStamps}
+                    minValue={1}
+                    maxValue={100}
                 />
             </>
         )

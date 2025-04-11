@@ -7,6 +7,28 @@
     color: white;
 }
 
+.HistorySection__header {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 16px 0 8px 0;
+    padding: 0 16px;
+}
+
+.HistorySection__header-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.HistorySection__list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0 16px;
+    margin-top: 16px;
+}
+
 .HistorySection__stamp-entry {
     padding-top: 0;
     border-radius: 10px;

@@ -22,6 +22,10 @@ type AssistantsState = {
     size: number,
     status: ReducerState,
     error: string | null,
+    admins: {
+        admins: OtherAssistant[],
+        hasMore: boolean,
+    }
 }
 
 export type {

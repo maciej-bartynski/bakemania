@@ -6,7 +6,7 @@ import { AppConfig } from "../../../storage/appConfig/appConfig-types";
 import Icon from "../../../icons/Icon";
 import IconName from "../../../icons/IconName";
 
-const EarnForAmoubnt: FC<{
+const EarnForAmount: FC<{
     cardId: string,
     user: OtherUser,
     appConfig: AppConfig,
@@ -19,51 +19,51 @@ const EarnForAmoubnt: FC<{
     earnStamps,
     goHistoryView
 }) => {
-
-        const amountToStamps = (cashAmount: number) => {
-            return Math.floor(cashAmount / appConfig.discount);
-        }
-
         const userGiftsAmount = Math.floor((user?.stamps.amount ?? 0) / appConfig.cardSize);
 
         return (
             <>
                 <UserShort
                     userId={cardId}
-                    userEmail={user.email}
-                    userStampsAmount={user.stamps.amount}
+                    userEmail={user?.email}
+                    userStampsAmount={user?.stamps.amount}
                     userGiftsAmount={userGiftsAmount}
                     userCard={!!user?.card}
                     isVerified={!!user?.verification?.isVerified}
                     isAgreements={!!user?.agreements}
-                    onHistoryClick={() => goHistoryView(user._id)}
+                    actionButtons={[
+                        {
+                            label: "Historia",
+                            onClick: () => goHistoryView(user._id),
+                            icon: IconName.History
+                        }
+                    ]}
                 />
                 <RichNumberForm
-                    key='stamps'
-                    inputLabel="Ile PLN wydał klient?"
+                    submitClassName='ScanningSectionEarnForAmount__button-submit-earn'
                     addClassName='ScanningSectionEarnForAmount__button-add'
                     subtractClassName='ScanningSectionEarnForAmount__button-remove'
-                    submitClassName='ScanningSectionEarnForAmount__button-submit-earn-for-amount'
+                    key='stamps'
+                    inputLabel="Ile pieczątek nabić?"
                     buttonLabel={(submitValue: number) => {
                         return <>
-                            <Icon iconName={IconName.StampForCash} color="var(--earn-stamp)" />
-                            Nabij {amountToStamps(submitValue)} pieczątek
+                            <Icon iconName={IconName.StampForCash} color="white" />
+                            Nabij {submitValue}
                         </>
                     }}
                     descriptionLabel={(submitValue: number) => (
                         <span>
-                            Kwota zakupów {submitValue} PLN to przedział:<br />
-                            - od <strong>{amountToStamps(submitValue) * appConfig.discount}.00 PLN</strong><br />
-                            - do <strong>{((amountToStamps(submitValue) + 1) * appConfig.discount) - 0.01} PLN</strong><br />
-                            - Klient otrzyma <strong>{amountToStamps(submitValue)} pieczątek</strong>
+                            Kwota zakupów:<br />
+                            - od <strong>{submitValue * appConfig.cardSize}.00 PLN</strong><br />
+                            - do <strong>{((submitValue + 1) * appConfig.cardSize) - 0.01} PLN</strong>
                         </span>
                     )}
-                    onSubmit={(submitValue: number) => earnStamps(amountToStamps(submitValue))}
-                    minValue={0}
-                    maxValue={200}
+                    onSubmit={earnStamps}
+                    minValue={1}
+                    maxValue={100}
                 />
             </>
         )
     }
 
-export default EarnForAmoubnt;
+export default EarnForAmount;

@@ -1,46 +1,171 @@
 .UserShort {
-    border-radius: 10px;
-    background-color: rgb(255, 255, 255);
-    box-shadow: 0px 0px 6px var(--customer);
     display: flex;
     flex-direction: row;
-    align-items: stretch;
+    align-items: center;
+    padding: 16px;
+    border-radius: 12px;
+    gap: 16px;
+    margin: 8px 0;
+    box-shadow: 0 0px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    background-color: white;
+    position: relative;
     overflow: hidden;
+}
+
+.UserShort:hover {
+    transform: translateY(-2px);
 }
 
 .UserShort__icon {
-    width: 50px;
-    height: 100%;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
     background-color: var(--customer);
+    flex-shrink: 0;
 }
 
-.UserShort__info {
-    padding: 10px;
+.UserShort__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+.UserShort__details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .UserShort__row {
-    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .UserShort__row-line {
-    width: 100%;
-    display: inline-flex;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 11px;
+    display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--text);
 }
 
 .UserShort__row-line-text {
-    font-size: 12px;
+    font-size: 14px;
+    color: var(--text);
 }
 
 .UserShort__row-email {
-    font-size: 14px;
+    font-size: 18px;
+    font-weight: 600;
     color: var(--customer);
+    margin-bottom: 2px;
+}
+
+.UserShort__row-line.warning {
+    color: var(--remove-stamp);
+    font-size: 13px;
+}
+
+.UserShort__row-line.warning .UserShort__row-line-text {
+    color: var(--remove-stamp);
+}
+
+.UserShort__row-line.success {
+    color: var(--customer);
+    font-size: 15px;
+}
+
+.UserShort__row-line.success .UserShort__row-line-text {
+    color: var(--customer);
+}
+
+.UserShort__row-line.success .UserShort__row-line-text strong {
+    color: var(--customer);
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.UserShort__row-line.id {
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.UserShort__row-line.id strong {
+    font-weight: 500;
+}
+
+.UserShort__detailsButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.UserShort__detailsButton:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.UserShort__options {
+    position: absolute;
+    right: -200px;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    box-shadow: inset 4px 0 12px rgba(0, 0, 0, 0.1);
+    transform: translateX(0);
+    transition: transform 0.3s ease;
+    z-index: 10;
+    width: 200px;
+}
+
+.UserShort__options--expanded {
+    transform: translateX(-200px);
+}
+
+.UserShort__optionsContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    gap: 8px;
+}
+
+.UserShort__option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    width: 100%;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: rgba(0, 0, 0, 0.8);
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+    text-align: left;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.UserShort__option:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.UserShort__option:last-child {
+    border-bottom: none;
 }

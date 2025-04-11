@@ -5,14 +5,14 @@ import anyErrorToDisplayError from "../../services/ErrorService";
 import { OtherAssistant } from "./users-types";
 
 const fetchAssistants = createAsyncThunk<
-    { assistants: OtherAssistant[], hasMore: boolean, page: number, size: number },
+    { assistants: OtherAssistant[], hasMore: boolean, page: number, size: number, admins: { admins: OtherAssistant[], hasMore: boolean } },
     { page: number, size: number }
 >(
     "users/fetchAssistants",
     async (pagination: { page: number, size: number }, { rejectWithValue }) => {
         try {
             const otherManagersData = await apiService
-                .fetch(`assistant?page=${pagination.page}&size=${pagination.size}`) as { assistants: OtherAssistant[], hasMore: boolean };
+                .fetch(`assistant?page=${pagination.page}&size=${pagination.size}`) as { assistants: OtherAssistant[], hasMore: boolean, admins: { admins: OtherAssistant[], hasMore: boolean } };
             if (otherManagersData) {
                 return {
                     ...otherManagersData,
