@@ -11,13 +11,15 @@ const EarnForAmount: FC<{
     user: OtherUser,
     appConfig: AppConfig,
     earnStamps: (amount: number) => void,
-    goHistoryView: (userId: string) => void
+    goHistoryView: (userId: string) => void,
+    renderTabs: () => React.ReactNode
 }> = ({
     cardId,
     user,
     appConfig,
     earnStamps,
-    goHistoryView
+    goHistoryView,
+    renderTabs
 }) => {
         const userGiftsAmount = Math.floor((user?.stamps.amount ?? 0) / appConfig.cardSize);
 
@@ -39,12 +41,13 @@ const EarnForAmount: FC<{
                         }
                     ]}
                 />
+                {renderTabs()}
                 <RichNumberForm
                     submitClassName='ScanningSectionEarnForAmount__button-submit-earn'
                     addClassName='ScanningSectionEarnForAmount__button-add'
                     subtractClassName='ScanningSectionEarnForAmount__button-remove'
                     key='stamps'
-                    inputLabel="Ile pieczątek nabić?"
+                    inputLabel="Za jaką kwotę nabić?"
                     buttonLabel={(submitValue: number) => {
                         return <>
                             <Icon iconName={IconName.StampForCash} color="white" />

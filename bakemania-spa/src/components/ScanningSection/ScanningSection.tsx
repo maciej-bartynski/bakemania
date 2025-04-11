@@ -15,6 +15,7 @@ import Spend from './elements/Spend';
 import Delete from './elements/Delete';
 import EarnForAmount from './elements/EarnForAmount';
 import Icon from '../../icons/Icon';
+import TabButton from '../../atoms/TabButton/TabButton';
 
 type ScannedData = {
     variant: 'spend' | 'earn' | 'delete' | 'earn-for-amount',
@@ -175,6 +176,51 @@ const ScanningSection: FC<{
             }
         }, [qrData, returnHomeView, setUpdateOverlayConfig, me]);
 
+        const renderTabs = () => {
+            return (
+
+                <div className="ScanningSection__tabs">
+                    <TabButton
+                        variant="primary"
+                        iconName={IconName.Stamp}
+                        label="Nabij"
+                        onClick={() => setVariant('earn')}
+                        selected={qrData?.variant === 'earn'}
+                    />
+                    <TabButton
+                        variant="primary"
+                        iconName={IconName.StampForCash}
+                        label="Za kwotę"
+                        onClick={() => setVariant('earn-for-amount')}
+                        selected={qrData?.variant === 'earn-for-amount'}
+                    />
+                    <TabButton
+                        variant="secondary"
+                        iconName={IconName.Gift}
+                        label="Rabat"
+                        onClick={() => setVariant('spend')}
+                        selected={qrData?.variant === 'spend'}
+                    />
+                    <TabButton
+                        variant="delete"
+                        iconName={IconName.StampRemove}
+                        label="Skasuj"
+                        onClick={() => setVariant('delete')}
+                        selected={qrData?.variant === 'delete'}
+                    />
+                    <div
+                        className="ScanningSection__tabs-indicator"
+                        style={{
+                            backgroundColor: getTabColor(qrData?.variant ?? 'earn'),
+                        }}
+                    >
+                        {pageTitle}
+                    </div>
+                </div>
+
+            )
+        }
+
         const renderActionPanel = () => {
             if (qrData && appConfig && userToManage) {
                 if (qrData.variant === 'earn') {
@@ -185,6 +231,7 @@ const ScanningSection: FC<{
                             appConfig={appConfig}
                             earnStamps={earnStamps}
                             goHistoryView={goHistoryView}
+                            renderTabs={renderTabs}
                         />
                     );
                 } else if (qrData.variant === 'spend') {
@@ -195,6 +242,7 @@ const ScanningSection: FC<{
                             appConfig={appConfig}
                             spendStamps={spentStamps}
                             goHistoryView={goHistoryView}
+                            renderTabs={renderTabs}
                         />
                     );
                 } else if (qrData.variant === 'delete') {
@@ -205,6 +253,7 @@ const ScanningSection: FC<{
                             deleteStamps={deleteStamps}
                             appConfig={appConfig}
                             goHistoryView={goHistoryView}
+                            renderTabs={renderTabs}
                         />
                     );
                 } else if (qrData.variant === 'earn-for-amount') {
@@ -215,6 +264,7 @@ const ScanningSection: FC<{
                             appConfig={appConfig}
                             earnStamps={earnStamps}
                             goHistoryView={goHistoryView}
+                            renderTabs={renderTabs}
                         />
                     );
                 }
@@ -242,7 +292,7 @@ const ScanningSection: FC<{
                 break;
             case 'earn-for-amount':
                 pageTitle = <>
-                    <Icon iconName={IconName.StampForCash} color='var(--earn-stamp)' />Nabijanie za kwotę
+                    <Icon iconName={IconName.StampForCash} color='white' />Nabijanie za kwotę
                 </>;
                 break;
             default:
@@ -250,54 +300,31 @@ const ScanningSection: FC<{
                 break;
         }
 
+        const getTabColor = (variant: 'spend' | 'earn' | 'delete' | 'earn-for-amount') => {
+            switch (variant) {
+                case 'earn':
+                    return 'var(--earn-stamp)';
+                case 'spend':
+                    return 'var(--bakemaniaGold)';
+                case 'delete':
+                    return '#ff4444';
+                case 'earn-for-amount':
+                    return 'var(--earn-stamp)';
+                default:
+                    return 'var(--text)';
+            }
+        };
+
         return (
             <AsidePanel
                 side='left'
                 active={!!qrData}
             >
                 <PanelViewTemplate
-                    title={pageTitle}
-                    appBarClassName={`ScanningSection__app-bar-${qrData?.variant}`}
+                    title={'Operacje na karcie'}
                     appBar={(
                         <>
                             <FooterNav>
-                                <IconButton
-                                    iconColor='white'
-                                    bgColor='var(--earn-stamp)'
-                                    onClick={() => setVariant('earn')}
-                                    label='Nabij'
-                                    iconName={IconName.Stamp}
-                                    textColor='var(--earn-stamp)'
-                                />
-
-                                <IconButton
-                                    iconColor='white'
-                                    bgColor='var(--earn-stamp)'
-                                    onClick={() => setVariant('earn-for-amount')}
-                                    label='Za kwotę'
-                                    iconName={IconName.StampForCash}
-                                    textColor='var(--earn-stamp)'
-                                    variant='secondary'
-                                />
-
-                                <IconButton
-                                    iconColor='white'
-                                    bgColor='var(--bakemaniaGold)'
-                                    onClick={() => setVariant('spend')}
-                                    label='Rabat'
-                                    iconName={IconName.Gift}
-                                    textColor='var(--bakemaniaGold)'
-                                />
-
-                                <IconButton
-                                    iconColor='white'
-                                    bgColor='var(--remove-stamp)'
-                                    onClick={() => setVariant('delete')}
-                                    label='Skasuj'
-                                    iconName={IconName.StampRemove}
-                                    textColor='var(--remove-stamp)'
-                                />
-
                                 <IconButton
                                     iconColor='white'
                                     bgColor='var(--text)'

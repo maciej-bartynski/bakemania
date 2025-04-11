@@ -11,13 +11,15 @@ const Earn: FC<{
     user: OtherUser,
     appConfig: AppConfig,
     earnStamps: (amount: number) => void,
-    goHistoryView: (userId: string) => void
+    goHistoryView: (userId: string) => void,
+    renderTabs: () => React.ReactNode
 }> = ({
     cardId,
     user,
     appConfig,
     earnStamps,
-    goHistoryView
+    goHistoryView,
+    renderTabs
 }) => {
         const userGiftsAmount = Math.floor((user?.stamps.amount ?? 0) / appConfig.cardSize);
 
@@ -39,6 +41,7 @@ const Earn: FC<{
                         }
                     ]}
                 />
+                {renderTabs()}
                 <RichNumberForm
                     submitClassName='ScanningSectionEarn__button-submit-earn'
                     addClassName='ScanningSectionEarn__button-add'

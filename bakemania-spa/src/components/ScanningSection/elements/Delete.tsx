@@ -11,13 +11,15 @@ const Delete: FC<{
     user: OtherUser,
     appConfig: AppConfig,
     deleteStamps: (amount: number) => void,
-    goHistoryView: (userId: string) => void
+    goHistoryView: (userId: string) => void,
+    renderTabs: () => React.ReactNode
 }> = ({
     cardId,
     user,
     appConfig,
     deleteStamps,
-    goHistoryView
+    goHistoryView,
+    renderTabs
 }) => {
         const userGiftsAmount = Math.floor((user?.stamps.amount ?? 0) / appConfig.cardSize);
 
@@ -39,6 +41,7 @@ const Delete: FC<{
                         }
                     ]}
                 />
+                {renderTabs()}
                 <RichNumberForm
                     submitClassName='ScanningSectionDelete__button-submit-delete'
                     addClassName='ScanningSectionDelete__button-add'

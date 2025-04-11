@@ -11,13 +11,15 @@ const Spend: FC<{
     user: OtherUser,
     appConfig: AppConfig,
     spendStamps: (amount: number) => void,
-    goHistoryView: (userId: string) => void
+    goHistoryView: (userId: string) => void,
+    renderTabs: () => React.ReactNode
 }> = ({
     cardId,
     user,
     appConfig,
     spendStamps,
-    goHistoryView
+    goHistoryView,
+    renderTabs
 }) => {
         const userGiftsAmount = Math.floor((user?.stamps.amount ?? 0) / appConfig.cardSize);
 
@@ -39,6 +41,7 @@ const Spend: FC<{
                         }
                     ]}
                 />
+                {renderTabs()}
                 <RichNumberForm
                     submitClassName='ScanningSectionSpend__button-submit-spend'
                     addClassName='ScanningSectionSpend__button-add'
