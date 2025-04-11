@@ -181,28 +181,28 @@ const ScanningSection: FC<{
 
                 <div className="ScanningSection__tabs">
                     <TabButton
-                        variant="primary"
+                        activeColor={"var(--earn-stamp)"}
                         iconName={IconName.Stamp}
                         label="Nabij"
                         onClick={() => setVariant('earn')}
                         selected={qrData?.variant === 'earn'}
                     />
                     <TabButton
-                        variant="primary"
+                        activeColor={"var(--earn-stamp)"}
                         iconName={IconName.StampForCash}
                         label="Za kwotę"
                         onClick={() => setVariant('earn-for-amount')}
                         selected={qrData?.variant === 'earn-for-amount'}
                     />
                     <TabButton
-                        variant="secondary"
+                        activeColor={"var(--bakemaniaGold)"}
                         iconName={IconName.Gift}
                         label="Rabat"
                         onClick={() => setVariant('spend')}
                         selected={qrData?.variant === 'spend'}
                     />
                     <TabButton
-                        variant="delete"
+                        activeColor={"var(--remove-stamp)"}
                         iconName={IconName.StampRemove}
                         label="Skasuj"
                         onClick={() => setVariant('delete')}
