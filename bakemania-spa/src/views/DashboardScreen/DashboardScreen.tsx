@@ -148,18 +148,22 @@ const DashboardScreen: FC<{
                         onClick={dismissStampsUpdated}
                         style={{
                             position: 'fixed',
-                            top: 0,
-                            left: 0,
+                            top: stampsUpdated ? '50%' : 0,
+                            left: stampsUpdated ? '50%' : 0,
+                            transform: stampsUpdated ? 'translate(-50%, -50%)' : 'translate(0%, 0%)',
                             background: 'white',
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
                             justifyContent: 'center',
                             overflow: 'hidden',
-
+                            maxWidth: '80vw',
+                            maxHeight: '70vh',
+                            borderRadius: 16,
+                            boxShadow: stampsUpdated ? '0 0 10px 120px rgba(0, 0, 0, 0.5)' : undefined,
                             ...(stampsUpdated ? {
-                                width: undefined,
-                                height: undefined,
+                                width: '100%',
+                                height: '100%',
                                 animation: 'ping-animation 5000ms linear',
                                 right: 0,
                                 bottom: 0,
@@ -180,11 +184,20 @@ const DashboardScreen: FC<{
                             />
                         )}
 
+                        <button
+                            onClick={dismissStampsUpdated}
+                            className="secondary"
+                            style={{
+                                marginTop: 16,
+                                paddingLeft: 16,
+                                paddingRight: 16,
+                            }}
+                        >
+                            Rozumiem!
+                        </button>
                         {!appConfigState.appConfig && (
                             <>
                                 <span>
-                                    <Stamp stampConfig={iterateIcons(1)[0]} />
-                                    <Stamp stampConfig={iterateIcons(7)[3]} />
                                     <Stamp stampConfig={iterateIcons(3)[2]} />
                                 </span>
                                 <br />
