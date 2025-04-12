@@ -7,14 +7,13 @@ import Icon from "../../../icons/Icon";
 import IconName from "../../../icons/IconName";
 
 const Spend: FC<{
-    cardId: string,
     user: OtherUser,
     appConfig: AppConfig,
     spendStamps: (amount: number) => void,
     goHistoryView: (userId: string) => void,
     renderTabs: () => React.ReactNode
 }> = ({
-    cardId,
+
     user,
     appConfig,
     spendStamps,
@@ -26,7 +25,8 @@ const Spend: FC<{
         return (
             <>
                 <UserShort
-                    userId={cardId}
+                    hideId={true}
+                    userId={user._id}
                     userEmail={user?.email}
                     userStampsAmount={user?.stamps.amount}
                     userGiftsAmount={userGiftsAmount}
@@ -43,27 +43,30 @@ const Spend: FC<{
                 />
                 {renderTabs()}
                 <RichNumberForm
-                    submitClassName='ScanningSectionSpend__button-submit-spend'
-                    addClassName='ScanningSectionSpend__button-add'
-                    subtractClassName='ScanningSectionSpend__button-remove'
                     key='stamps'
-                    inputLabel="Ile pieczątek wymienić?"
+                    inputLabel="Ile kart wymienić na rabat?"
                     buttonLabel={(submitValue: number) => {
-                        return <>
-                            <Icon iconName={IconName.Gift} color="white" />
-                            Wymień {submitValue}
-                        </>
+                        return <strong style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "4px",
+                            color: "white",
+                            justifyContent: "center"
+                        }}>
+                            Wymień {submitValue}x <Icon iconName={IconName.Gift} color="white" />
+                        </strong>
                     }}
                     descriptionLabel={(submitValue: number) => (
                         <span>
-                            Kwota rabatu:<br />
-                            - od <strong>{submitValue * appConfig.cardSize}.00 PLN</strong><br />
-                            - do <strong>{((submitValue + 1) * appConfig.cardSize) - 0.01} PLN</strong>
+                            Kwota rabatu: <strong>{submitValue * appConfig.discount}</strong> PLN<br />
+                            Zużyte pieczątki: <strong>{submitValue * appConfig.cardSize}</strong><br />
                         </span>
                     )}
                     onSubmit={spendStamps}
-                    minValue={1}
-                    maxValue={100}
+                    minValue={0}
+                    maxValue={appConfig.maxCardsPerTransaction}
+                    dynamicButtons={Array.from({ length: appConfig.maxCardsPerTransaction }, (_, i) => i + 1)}
+                    currencyIcon={<Icon iconName={IconName.Gift} color="var(--earn-stamp)" width={18} height={18} />}
                 />
             </>
         );

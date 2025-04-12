@@ -226,7 +226,6 @@ const ScanningSection: FC<{
                 if (qrData.variant === 'earn') {
                     return (
                         <Earn
-                            cardId={qrData.cardId}
                             user={userToManage}
                             appConfig={appConfig}
                             earnStamps={earnStamps}
@@ -237,7 +236,7 @@ const ScanningSection: FC<{
                 } else if (qrData.variant === 'spend') {
                     return (
                         <Spend
-                            cardId={qrData.cardId}
+
                             user={userToManage}
                             appConfig={appConfig}
                             spendStamps={spentStamps}
@@ -248,7 +247,7 @@ const ScanningSection: FC<{
                 } else if (qrData.variant === 'delete') {
                     return (
                         <Delete
-                            cardId={qrData.cardId}
+
                             user={userToManage}
                             deleteStamps={deleteStamps}
                             appConfig={appConfig}
@@ -259,7 +258,7 @@ const ScanningSection: FC<{
                 } else if (qrData.variant === 'earn-for-amount') {
                     return (
                         <EarnForAmount
-                            cardId={qrData.cardId}
+
                             user={userToManage}
                             appConfig={appConfig}
                             earnStamps={earnStamps}

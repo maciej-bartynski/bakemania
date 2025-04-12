@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './UserShort.css'
 import Icon from '../../icons/Icon';
 import IconName from '../../icons/IconName';
+import UserIcon from '../../icons/UserIcon';
 
 interface ActionButton {
     label: string;
@@ -10,6 +11,7 @@ interface ActionButton {
 }
 
 interface UserShortProps {
+    hideId?: boolean,
     userId: string;
     userEmail: string,
     userStampsAmount: number,
@@ -21,6 +23,7 @@ interface UserShortProps {
 }
 
 const UserShort: React.FC<UserShortProps> = ({
+    hideId,
     userId,
     userEmail,
     userStampsAmount,
@@ -35,14 +38,14 @@ const UserShort: React.FC<UserShortProps> = ({
     return (
         <div className="UserShort">
             <div className="UserShort__icon">
-                <Icon iconName={IconName.Users} color="white" width={24} height={24} />
+                <UserIcon.Customer color="white" width={24} height={24} />
             </div>
             <div className="UserShort__content">
                 <div className="UserShort__details">
                     <div className="UserShort__row">
-                        <div className="UserShort__row-line id">
+                        {hideId ? null : (<div className="UserShort__row-line id">
                             <strong>ID:</strong> {userId}
-                        </div>
+                        </div>)}
                         <div className="UserShort__row-email">
                             {userEmail}
                         </div>

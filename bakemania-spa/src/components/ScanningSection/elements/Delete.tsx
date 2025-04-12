@@ -7,14 +7,12 @@ import IconName from "../../../icons/IconName";
 import { AppConfig } from "../../../storage/appConfig/appConfig-types";
 
 const Delete: FC<{
-    cardId: string,
     user: OtherUser,
     appConfig: AppConfig,
     deleteStamps: (amount: number) => void,
     goHistoryView: (userId: string) => void,
     renderTabs: () => React.ReactNode
 }> = ({
-    cardId,
     user,
     appConfig,
     deleteStamps,
@@ -26,7 +24,8 @@ const Delete: FC<{
         return (
             <>
                 <UserShort
-                    userId={cardId}
+                    hideId={true}
+                    userId={user._id}
                     userEmail={user?.email}
                     userStampsAmount={user?.stamps.amount}
                     userGiftsAmount={userGiftsAmount}
@@ -43,26 +42,28 @@ const Delete: FC<{
                 />
                 {renderTabs()}
                 <RichNumberForm
-                    submitClassName='ScanningSectionDelete__button-submit-delete'
-                    addClassName='ScanningSectionDelete__button-add'
-                    subtractClassName='ScanningSectionDelete__button-remove'
                     key='stamps'
                     inputLabel="Ile pieczątek skasować?"
+                    currencyIcon={<Icon iconName={IconName.StampRemove} color="var(--earn-stamp)" width={18} height={18} />}
+                    negativeCurrencyIcon={<Icon iconName={IconName.Stamp} color="var(--remove-stamp)" width={18} height={18} />}
                     buttonLabel={(submitValue: number) => {
-                        return <>
-                            <Icon iconName={IconName.StampRemove} color="white" />
-                            Skasuj {submitValue}
-                        </>
+                        return <strong style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "4px",
+                            color: "white",
+                            justifyContent: "center"
+                        }}>
+                            Skasuj {submitValue}<Icon iconName={IconName.StampRemove} color="white" />
+                        </strong>
                     }}
                     descriptionLabel={(submitValue: number) => (
                         <span>
-                            Kwota zakupów:<br />
-                            - od <strong>{submitValue * appConfig.cardSize}.00 PLN</strong><br />
-                            - do <strong>{((submitValue + 1) * appConfig.cardSize) - 0.01} PLN</strong>
+                            Usuniesz <strong>{submitValue}x</strong> pieczątek
                         </span>
                     )}
                     onSubmit={deleteStamps}
-                    minValue={1}
+                    minValue={0}
                     maxValue={100}
                 />
             </>
