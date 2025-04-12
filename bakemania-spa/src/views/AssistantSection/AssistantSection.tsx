@@ -263,6 +263,7 @@ const AssistantSection: FC<{
                     <UsersSection
                         active={assistantContext.openedSection.title === 'card-list'}
                         toggleActive={toggleCardListView}
+                        goHistoryView={toggleHistoryView}
                         toggleCardDetailsView={async (details) => {
                             if (details) {
                                 toggleCardDetailsView({
