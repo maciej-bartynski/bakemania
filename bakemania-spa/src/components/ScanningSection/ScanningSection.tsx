@@ -46,13 +46,15 @@ const ScanningSection: FC<{
         }, []);
 
         const [updateOverlayConfig, _setUpdateOverlayConfig] = useState<{
-            title: string,
-            message: string,
+            title: ReactNode,
+            message: ReactNode,
+            variant: 'success' | 'error'
         } | null>(null);
 
         const setUpdateOverlayConfig = useCallback((param: {
-            title: string,
-            message: string,
+            title: ReactNode,
+            message: ReactNode,
+            variant: 'success' | 'error'
         }) => {
             _setUpdateOverlayConfig(param);
             overlayTimerRef.current = setTimeout(() => {
@@ -80,6 +82,15 @@ const ScanningSection: FC<{
         }, [qrData]);
 
         const earnStamps = useCallback(async (amount: number): Promise<void> => {
+            if (amount <= 0) {
+                setUpdateOverlayConfig({
+                    title: 'Ilość nie może być mniejsza od 1',
+                    message: 'Wprowadź poprawną ilość',
+                    variant: 'error',
+                });
+                return;
+            };
+
             if (qrData && me.me) {
 
                 if (qrData.cardId === 'change-force') {
@@ -105,7 +116,8 @@ const ScanningSection: FC<{
 
                 setUpdateOverlayConfig({
                     title: 'Pieczątki nabite!',
-                    message: `Dodałaś(eś) ${amount}x pieczątki do konta klienta`
+                    message: <>Dodałaś(eś)  <br /><strong>{amount}</strong>x pieczątki<br /> do konta klienta</>,
+                    variant: 'success'
                 });
 
                 returnHomeView();
@@ -113,6 +125,16 @@ const ScanningSection: FC<{
         }, [qrData, returnHomeView, setUpdateOverlayConfig, me]);
 
         const spentStamps = useCallback(async (amount: number): Promise<void> => {
+
+            if (amount <= 0) {
+                setUpdateOverlayConfig({
+                    title: 'Ilość nie może być mniejsza od 1',
+                    message: 'Wprowadź poprawną ilość',
+                    variant: 'error',
+                });
+                return;
+            }
+
             if (qrData && me.me) {
                 if (qrData.cardId === 'change-force') {
                     await apiService.fetch('assistant/stamps/change-force', {
@@ -135,14 +157,27 @@ const ScanningSection: FC<{
                     });
                 }
 
+                if (appConfig?.cardSize) {
+                    if (amount % appConfig?.cardSize === 0) {
+                        setUpdateOverlayConfig({
+                            title: 'Rabat przyznany!',
+                            message: <>Wymieniłaś(eś)<br /><strong>{amount}</strong>x<br />pieczątki klienta na zniżkę</>,
+                            variant: 'success'
+                        });
+                        returnHomeView();
+                        return;
+                    }
+                }
+
                 setUpdateOverlayConfig({
-                    title: 'Rabat przyznany!',
-                    message: `Wymieniłaś(eś) ${amount}x pieczątki klienta na zniżkę`
+                    title: 'Odjęto pieczątki!',
+                    message: <>Odjęłaś(eś)<br /><strong>{amount}</strong>x<br />pieczątki od salda klienta</>,
+                    variant: 'success'
                 });
 
                 returnHomeView();
             }
-        }, [qrData, returnHomeView, setUpdateOverlayConfig, me]);
+        }, [qrData, appConfig, returnHomeView, setUpdateOverlayConfig, me]);
 
         const deleteStamps = useCallback(async (amount: number): Promise<void> => {
             if (qrData && me.me) {
@@ -169,7 +204,8 @@ const ScanningSection: FC<{
 
                 setUpdateOverlayConfig({
                     title: 'Pieczątki skasowane!',
-                    message: `Skasowałaś(eś) ${amount}x pieczątki klienta`
+                    message: <>Skasowałaś(eś)<br /><strong>{amount}</strong>x<br />pieczątki z konta klienta</>,
+                    variant: 'success'
                 });
 
                 returnHomeView();
@@ -236,7 +272,6 @@ const ScanningSection: FC<{
                 } else if (qrData.variant === 'spend') {
                     return (
                         <Spend
-
                             user={userToManage}
                             appConfig={appConfig}
                             spendStamps={spentStamps}
@@ -247,7 +282,6 @@ const ScanningSection: FC<{
                 } else if (qrData.variant === 'delete') {
                     return (
                         <Delete
-
                             user={userToManage}
                             deleteStamps={deleteStamps}
                             appConfig={appConfig}
@@ -258,7 +292,6 @@ const ScanningSection: FC<{
                 } else if (qrData.variant === 'earn-for-amount') {
                     return (
                         <EarnForAmount
-
                             user={userToManage}
                             appConfig={appConfig}
                             earnStamps={earnStamps}
@@ -342,8 +375,13 @@ const ScanningSection: FC<{
                 <UpdateOverlay
                     title={updateOverlayConfig?.title ?? "-"}
                     message={updateOverlayConfig?.message ?? "-"}
+                    variant={updateOverlayConfig?.variant ?? 'success'}
                     timeout={5000}
                     updated={!!updateOverlayConfig}
+                    onClose={() => {
+                        _setUpdateOverlayConfig(null)
+                        if (overlayTimerRef.current) clearTimeout(overlayTimerRef.current);
+                    }}
                 />
             </AsidePanel>
         );

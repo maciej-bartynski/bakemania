@@ -65,7 +65,7 @@ const UsersSection: FC<{
                     <UsersList
                         headerElement={<strong>Zarządzaj gośćmi</strong>}
                         userActions={[{
-                            label: 'Zarządzaj',
+                            label: 'Operacje',
                             action: (user) => {
                                 toggleCardDetailsView({
                                     variant: 'earn',

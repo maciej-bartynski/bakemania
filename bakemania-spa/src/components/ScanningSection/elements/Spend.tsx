@@ -62,7 +62,10 @@ const Spend: FC<{
                             Zużyte pieczątki: <strong>{submitValue * appConfig.cardSize}</strong><br />
                         </span>
                     )}
-                    onSubmit={spendStamps}
+                    onSubmit={(submitValue) => {
+                        const stampsAmount = submitValue * appConfig.cardSize;
+                        spendStamps(stampsAmount);
+                    }}
                     minValue={0}
                     maxValue={appConfig.maxCardsPerTransaction}
                     dynamicButtons={Array.from({ length: appConfig.maxCardsPerTransaction }, (_, i) => i + 1)}
