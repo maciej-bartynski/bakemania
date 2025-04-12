@@ -9,9 +9,9 @@ const RichNumberForm: FC<{
     descriptionLabel?: (submitValue: number) => ReactNode;
     minValue: number,
     maxValue: number,
-    submitClassName?: string,
-    addClassName?: string,
-    subtractClassName?: string,
+    currencyIcon?: ReactNode,
+    negativeCurrencyIcon?: ReactNode,
+    dynamicButtons?: number[],
 }> = ({
     onSubmit,
     inputLabel,
@@ -23,9 +23,9 @@ const RichNumberForm: FC<{
     ),
     minValue,
     maxValue,
-    submitClassName,
-    addClassName,
-    subtractClassName,
+    currencyIcon,
+    negativeCurrencyIcon,
+    dynamicButtons
 }) => {
         const [value, setValue] = useState(minValue);
 
@@ -37,13 +37,13 @@ const RichNumberForm: FC<{
                     label={inputLabel}
                     minValue={minValue}
                     maxValue={maxValue}
-                    addClassName={addClassName}
-                    subtractClassName={subtractClassName}
+                    currencyIcon={currencyIcon}
+                    negativeCurrencyIcon={negativeCurrencyIcon}
+                    dynamicButtons={dynamicButtons}
                 />
 
                 <button
                     onClick={() => onSubmit(value)}
-                    className={submitClassName}
                 >
                     {buttonLabel(value)}
                 </button>

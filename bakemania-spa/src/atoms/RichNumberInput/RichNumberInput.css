@@ -21,6 +21,8 @@
     color: var(--text);
     margin-bottom: 12px;
     padding: 0 4px;
+    text-align: center;
+    color: var(--colorActive);
 }
 
 .RichNumberInput__input-wrapper {
@@ -35,7 +37,7 @@
     flex: 2;
     text-align: center;
     padding: 16px;
-    font-size: 24px;
+    font-size: 12px;
     font-weight: 700;
     color: var(--colorActive);
     border: none;
@@ -64,6 +66,7 @@
     border: none;
     background-color: rgba(0, 0, 0, 0.02);
     color: var(--text);
+    outline: none;
 }
 
 .RichNumberInput__btn:hover {

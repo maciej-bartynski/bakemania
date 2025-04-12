@@ -7,14 +7,12 @@ import Icon from "../../../icons/Icon";
 import IconName from "../../../icons/IconName";
 
 const EarnForAmount: FC<{
-    cardId: string,
     user: OtherUser,
     appConfig: AppConfig,
     earnStamps: (amount: number) => void,
     goHistoryView: (userId: string) => void,
     renderTabs: () => React.ReactNode
 }> = ({
-    cardId,
     user,
     appConfig,
     earnStamps,
@@ -26,7 +24,7 @@ const EarnForAmount: FC<{
         return (
             <>
                 <UserShort
-                    userId={cardId}
+                    userId={user._id}
                     userEmail={user?.email}
                     userStampsAmount={user?.stamps.amount}
                     userGiftsAmount={userGiftsAmount}
@@ -43,26 +41,35 @@ const EarnForAmount: FC<{
                 />
                 {renderTabs()}
                 <RichNumberForm
-                    submitClassName='ScanningSectionEarnForAmount__button-submit-earn'
-                    addClassName='ScanningSectionEarnForAmount__button-add'
-                    subtractClassName='ScanningSectionEarnForAmount__button-remove'
+                    currencyIcon={"PLN"}
                     key='stamps'
                     inputLabel="Za jaką kwotę nabić?"
                     buttonLabel={(submitValue: number) => {
-                        return <>
-                            <Icon iconName={IconName.StampForCash} color="white" />
-                            Nabij {submitValue}
-                        </>
+                        const stampsAmount = Math.floor(submitValue / appConfig.discount);
+                        return <strong style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "4px",
+                            color: "white",
+                            justifyContent: "center"
+                        }}>
+                            Nabij {stampsAmount}<Icon iconName={IconName.Stamp} color="white" width={16} height={16} /> za {submitValue} PLN
+                        </strong>
                     }}
                     descriptionLabel={(submitValue: number) => (
                         <span>
-                            Kwota zakupów:<br />
-                            - od <strong>{submitValue * appConfig.cardSize}.00 PLN</strong><br />
-                            - do <strong>{((submitValue + 1) * appConfig.cardSize) - 0.01} PLN</strong>
+                            <strong>{Math.floor(submitValue / appConfig.discount)}</strong> pieczątek<br />
+                            - Przedział od <strong>{Math.floor(submitValue / appConfig.discount) * appConfig.discount}.00 PLN</strong><br />
+                            - Przedział do <strong>{(Math.floor(submitValue / appConfig.discount) * appConfig.discount + appConfig.discount) - 0.01} PLN</strong>
                         </span>
                     )}
-                    onSubmit={earnStamps}
-                    minValue={1}
+                    onSubmit={(submitValue: number) => {
+                        const stampsAmount = Math.floor(submitValue / appConfig.discount);
+                        if (stampsAmount > 0) {
+                            earnStamps(stampsAmount)
+                        }
+                    }}
+                    minValue={0}
                     maxValue={100}
                 />
             </>

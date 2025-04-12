@@ -7,14 +7,12 @@ import Icon from "../../../icons/Icon"
 import IconName from "../../../icons/IconName"
 
 const Earn: FC<{
-    cardId: string,
     user: OtherUser,
     appConfig: AppConfig,
     earnStamps: (amount: number) => void,
     goHistoryView: (userId: string) => void,
     renderTabs: () => React.ReactNode
 }> = ({
-    cardId,
     user,
     appConfig,
     earnStamps,
@@ -26,9 +24,9 @@ const Earn: FC<{
         return (
             <>
                 <UserShort
-                    userId={cardId}
-                    userEmail={user?.email}
-                    userStampsAmount={user?.stamps.amount}
+                    userId={user._id}
+                    userEmail={user.email}
+                    userStampsAmount={user.stamps.amount}
                     userGiftsAmount={userGiftsAmount}
                     userCard={!!user?.card}
                     isVerified={!!user?.verification?.isVerified}
@@ -43,26 +41,31 @@ const Earn: FC<{
                 />
                 {renderTabs()}
                 <RichNumberForm
-                    submitClassName='ScanningSectionEarn__button-submit-earn'
-                    addClassName='ScanningSectionEarn__button-add'
-                    subtractClassName='ScanningSectionEarn__button-remove'
                     key='stamps'
                     inputLabel="Ile pieczątek nabić?"
                     buttonLabel={(submitValue: number) => {
-                        return <>
+                        return <strong style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "4px",
+                            color: "white",
+                            justifyContent: "center"
+                        }}>
                             <Icon iconName={IconName.Stamp} color="white" />
                             Nabij {submitValue}
-                        </>
+                        </strong>
                     }}
+                    currencyIcon={<Icon iconName={IconName.Stamp} color="var(--earn-stamp)" width={18} height={18} />}
+                    negativeCurrencyIcon={<Icon iconName={IconName.StampRemove} color="var(--remove-stamp)" width={18} height={18} />}
                     descriptionLabel={(submitValue: number) => (
                         <span>
                             Kwota zakupów:<br />
-                            - od <strong>{submitValue * appConfig.cardSize}.00 PLN</strong><br />
-                            - do <strong>{((submitValue + 1) * appConfig.cardSize) - 0.01} PLN</strong>
+                            - od <strong>{submitValue * appConfig.discount}.00 PLN</strong><br />
+                            - do <strong>{((submitValue + 1) * appConfig.discount) - 0.01} PLN</strong>
                         </span>
                     )}
                     onSubmit={earnStamps}
-                    minValue={1}
+                    minValue={0}
                     maxValue={100}
                 />
             </>
