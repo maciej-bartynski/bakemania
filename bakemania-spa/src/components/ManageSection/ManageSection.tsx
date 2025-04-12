@@ -88,11 +88,11 @@ const ManageSection: FC<{
                         (
                             <>
                                 <UsersList
-                                    userAction={{
-                                        label: 'Zatrugnij',
+                                    userActions={[{
+                                        label: 'Zatrudnij',
                                         action: setSelectedCustomer,
                                         icon: <UserIcon.Promote color="white" />
-                                    }}
+                                    }]}
                                     headerElement={(
                                         <div className='manage-section-form__header --customer'>
                                             <UserIcon.Customer />

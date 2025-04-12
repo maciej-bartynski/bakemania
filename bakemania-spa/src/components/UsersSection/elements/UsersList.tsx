@@ -1,6 +1,5 @@
 import useAppDispatch from "../../../storage/useAppDispatch";
 import usersActions from "../../../storage/users/users-actions";
-import UserIcon from "../../../icons/UserIcon";
 import { FC, useEffect, useState } from "react";
 import Pagination from "../../../atoms/Pagination/Pagination";
 import CustomerItem from "./CustomerItem";
@@ -10,14 +9,14 @@ import { OtherUser } from "../../../storage/users/users-types";
 
 const UsersList: FC<{
     headerElement: React.ReactNode;
-    userAction: {
+    userActions: {
         label: string,
         action: (user: OtherUser) => void;
         icon: React.ReactNode
-    };
+    }[];
 }> = ({
     headerElement,
-    userAction
+    userActions
 }) => {
 
         const dispatch = useAppDispatch();
@@ -60,16 +59,13 @@ const UsersList: FC<{
                 {foundUsers?.length > 0 ? (
                     <>
                         <div className='users-list__belt-header'>
-                            <UserIcon.Customer color="white" width={16} height={16} />
-                            <span>
-                                Użytkownicy:
-                            </span>
+                            Użytkownicy:
                         </div>
                         {foundUsers.map((user) => (
                             <CustomerItem
                                 user={user}
                                 key={user._id}
-                                userAction={userAction}
+                                userActions={userActions}
                             />
                         ))}
                         <Pagination

@@ -13,6 +13,7 @@ import useAppDispatch from '../../storage/useAppDispatch';
 
 const UsersSection: FC<{
     active: boolean;
+    goHistoryView: (userId: string) => void;
     toggleActive: () => void;
     toggleCardDetailsView: (details?: {
         variant: "spend" | "earn";
@@ -21,7 +22,8 @@ const UsersSection: FC<{
 }> = ({
     active,
     toggleActive,
-    toggleCardDetailsView
+    toggleCardDetailsView,
+    goHistoryView
 }) => {
         const { me } = useMeSelector();
         const { appConfig } = useAppConfigSelector();
@@ -62,7 +64,7 @@ const UsersSection: FC<{
 
                     <UsersList
                         headerElement={<strong>Zarządzaj gośćmi</strong>}
-                        userAction={{
+                        userActions={[{
                             label: 'Zarządzaj',
                             action: (user) => {
                                 toggleCardDetailsView({
@@ -71,7 +73,11 @@ const UsersSection: FC<{
                                 })
                             },
                             icon: <Icon iconName={IconName.Cog} color="white" />
-                        }}
+                        }, {
+                            label: "Historia",
+                            action: (user) => goHistoryView(user._id),
+                            icon: IconName.History
+                        }]}
                     />
 
                     <br />
