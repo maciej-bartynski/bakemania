@@ -1,14 +1,14 @@
 .manage-section-form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
     align-items: stretch;
     width: 500px;
     max-width: calc(100% - 40px);
     margin: 0 auto;
-    padding: 20px;
     border-radius: 20px;
     margin-top: 20px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    padding: 24px 6px;
 }
 
 .manage-section-form.--customer {
@@ -32,18 +32,37 @@
 
 .manage-section-form__header.--customer strong {
     color: var(--customer);
+    font-size: 18px;
+    margin: 10px 0;
 }
 
 .manage-section-form__header.--manager strong {
     color: var(--manager);
+    font-size: 18px;
+    margin: 10px 0;
 }
 
 .manage-section-form__header.--admin strong {
     color: var(--admin);
+    font-size: 18px;
+    margin: 10px 0;
 }
 
 .manage-section-form__header span {
     font-size: 12px;
+    color: var(--text);
+    text-align: center;
+}
+
+.manage-section-form__header svg {
+    width: 24px;
+    height: 24px;
+}
+
+.manage-section-form__header span svg {
+    width: 12px;
+    height: 12px;
+    margin: 0 4px;
 }
 
 .manage-section__customer-header {
@@ -85,6 +104,10 @@
     border: 1px solid var(--manager);
     border-radius: 10px;
     overflow: hidden;
+}
+
+.manage-section__manager-item {
+    margin-bottom: 10px;
 }
 
 .manage-section__customer-item {
