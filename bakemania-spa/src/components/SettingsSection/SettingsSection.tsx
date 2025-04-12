@@ -13,6 +13,8 @@ import { OtherUser } from "../../storage/users/users-types";
 import HistoryEntry from "../../atoms/HistoryEntry/HistoryEntry";
 import useAppConfigSelector from "../../storage/appConfig/appConfig-selectors";
 import AppUser from '../../atoms/AppUser/AppUser';
+import useAppDispatch from "../../storage/useAppDispatch";
+import meActions from "../../storage/me/me-actions";
 
 const SettingsSection: FC<{
     active: boolean;
@@ -30,6 +32,7 @@ const SettingsSection: FC<{
     toggleCardDetailsView,
     toggleHistoryView
 }) => {
+        const dispatch = useAppDispatch();
         const [showLogoutPanel, setShowLogoutPanel] = useState(false);
         const [showDestroyPanel, setShowDestroyPanel] = useState(false);
         const { me } = useMeSelector();
@@ -46,8 +49,18 @@ const SettingsSection: FC<{
         }, []);
 
         const [users, setUsers] = useState<OtherUser[]>([]);
+        const [loading, setLoading] = useState(false);
+        const [prevstate, setPrevstate] = useState(active);
+
         useEffect(() => {
+            setPrevstate(active);
+        }, [active])
+
+        useEffect(() => {
+
             async function fetchUsersForUserHistory() {
+                setLoading(true);
+                dispatch(meActions.fetchMe());
                 const operationsHistory = me?.transactionsHistory;
 
                 if (operationsHistory instanceof Array && operationsHistory?.length > 0) {
@@ -63,13 +76,14 @@ const SettingsSection: FC<{
                     }, [200]);
 
                     setUsers(data.users);
+                    setLoading(false);
                 }
             }
 
-            if (active) {
+            if (active && prevstate === false) {
                 fetchUsersForUserHistory();
             }
-        }, [me?.transactionsHistory, active])
+        }, [me?.transactionsHistory, active, dispatch, prevstate])
 
         if (!me) {
             return null;
@@ -219,7 +233,7 @@ const SettingsSection: FC<{
                                 </div>
                             </h2>
                             <div className="settings-section-field__history-list">
-                                {me.transactionsHistory?.map(entry => (
+                                {me.transactionsHistory?.length ? [...me.transactionsHistory].reverse().map(entry => (
                                     <HistoryEntry
                                         key={entry._id}
                                         createdAt={entry.createdAt}
@@ -232,11 +246,16 @@ const SettingsSection: FC<{
                                         toggleHistoryView={toggleHistoryView}
                                         toggleCardDetailsView={toggleCardDetailsView}
                                     />
-                                ))}
+                                )) : null}
                             </div>
                         </div>
                     )}
                 </PanelViewTemplate>
+                {loading && (
+                    <div className="global-loader-wrapper">
+                        <div className={`global-loader-spinner --active`} />
+                    </div>
+                )}
             </AsidePanel>
         )
     }
