@@ -24,6 +24,7 @@ const Delete: FC<{
         return (
             <>
                 <UserShort
+                    hideId={true}
                     userId={user._id}
                     userEmail={user?.email}
                     userStampsAmount={user?.stamps.amount}
@@ -41,9 +42,10 @@ const Delete: FC<{
                 />
                 {renderTabs()}
                 <RichNumberForm
-
                     key='stamps'
                     inputLabel="Ile pieczątek skasować?"
+                    currencyIcon={<Icon iconName={IconName.StampRemove} color="var(--earn-stamp)" width={18} height={18} />}
+                    negativeCurrencyIcon={<Icon iconName={IconName.Stamp} color="var(--remove-stamp)" width={18} height={18} />}
                     buttonLabel={(submitValue: number) => {
                         return <strong style={{
                             display: "flex",

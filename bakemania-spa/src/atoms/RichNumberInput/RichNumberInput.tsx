@@ -28,22 +28,10 @@ const RichNumberInput: FC<{
 
         return (
             <div className="RichNumberInput">
-
                 <span className="RichNumberInput__label">
                     {label}
                 </span>
                 <div className="RichNumberInput__input-wrapper">
-                    {!dynamicButtons && (
-                        [-3, -1].map(by => (
-                            <button
-                                key={by}
-                                onClick={() => changeBy(by)}
-                                className={'RichNumberInput__btn --negative '}
-                            >
-                                {by} {negativeCurrencyIcon ?? currencyIcon}
-                            </button>
-                        ))
-                    )}
                     <input
                         className="RichNumberInput__input-num"
                         type="number"
@@ -54,44 +42,7 @@ const RichNumberInput: FC<{
                             setValue(numValue);
                         }}
                     />
-                    {!dynamicButtons && (
-                        [1, 3].map(by => (
-                            <button
-                                key={by}
-                                onClick={() => changeBy(by)}
-                                className={'RichNumberInput__btn --positive '}
-                            >
-                                +{by} {currencyIcon}
-                            </button>
-                        ))
-                    )}
                 </div>
-
-                <div className="RichNumberInput__buttons-row">
-                    {dynamicButtons ? dynamicButtons.map(value => {
-                        return (
-                            <button
-                                key={value}
-                                onClick={() => setValue(value)}
-                                className={'RichNumberInput__btn --positive'}
-                            >
-                                {value} {currencyIcon}
-                            </button>
-                        )
-                    }) : [-10, -7, -5, 5, 7, 10].map(by => {
-                        return (
-                            <button
-                                key={by}
-                                onClick={() => changeBy(by)}
-                                className={'RichNumberInput__btn ' + ` ${by > 0 ? '--positive' : "--negative"} `}
-
-                            >
-                                {by > 0 ? `+${by}` : by}{by > 0 ? currencyIcon : negativeCurrencyIcon ?? currencyIcon}
-                            </button>
-                        )
-                    })}
-                </div>
-
                 <div className="RichNumberInput__input-wrapper">
                     <input
                         type='range'
@@ -106,6 +57,104 @@ const RichNumberInput: FC<{
                     />
                 </div>
 
+                <span className="RichNumberInput__label">
+                    Zwiększaj/zmniejszaj:
+                </span>
+                {!dynamicButtons && (
+                    <>
+                        <div className="RichNumberInput__input-wrapper">
+                            {!dynamicButtons && (
+                                [-3, -1].map(by => (
+                                    <button
+                                        key={by}
+                                        onClick={() => changeBy(by)}
+                                        className={'RichNumberInput__btn --negative '}
+                                    >
+                                        {by} {negativeCurrencyIcon ?? currencyIcon}
+                                    </button>
+                                ))
+                            )}
+
+                            {!dynamicButtons && (
+                                [1, 3].map(by => (
+                                    <button
+                                        key={by}
+                                        onClick={() => changeBy(by)}
+                                        className={'RichNumberInput__btn --positive '}
+                                    >
+                                        +{by} {currencyIcon}
+                                    </button>
+                                ))
+                            )}
+                        </div>
+                        <div className="RichNumberInput__input-wrapper">
+                            {!dynamicButtons && (
+                                [-7, -5].map(by => (
+                                    <button
+                                        key={by}
+                                        onClick={() => changeBy(by)}
+                                        className={'RichNumberInput__btn --negative '}
+                                    >
+                                        {by} {negativeCurrencyIcon ?? currencyIcon}
+                                    </button>
+                                ))
+                            )}
+
+                            {!dynamicButtons && (
+                                [5, 7].map(by => (
+                                    <button
+                                        key={by}
+                                        onClick={() => changeBy(by)}
+                                        className={'RichNumberInput__btn --positive '}
+                                    >
+                                        +{by} {currencyIcon}
+                                    </button>
+                                ))
+                            )}
+                        </div>
+                        <div className="RichNumberInput__input-wrapper">
+                            {!dynamicButtons && (
+                                [-10].map(by => (
+                                    <button
+                                        key={by}
+                                        onClick={() => changeBy(by)}
+                                        className={'RichNumberInput__btn --negative '}
+                                    >
+                                        {by} {negativeCurrencyIcon ?? currencyIcon}
+                                    </button>
+                                ))
+                            )}
+
+                            {!dynamicButtons && (
+                                [10].map(by => (
+                                    <button
+                                        key={by}
+                                        onClick={() => changeBy(by)}
+                                        className={'RichNumberInput__btn --positive '}
+                                    >
+                                        +{by} {currencyIcon}
+                                    </button>
+                                ))
+                            )}
+                        </div>
+                    </>
+                )}
+
+                {dynamicButtons && (
+                    <div className="RichNumberInput__buttons-row">
+                        {dynamicButtons.map(value => {
+                            return (
+                                <button
+                                    key={value}
+                                    onClick={() => setValue(value)}
+                                    className={'RichNumberInput__btn --positive'}
+                                >
+                                    {value} {currencyIcon}
+                                </button>
+                            )
+                        })}
+                    </div>
+                )}
             </div>
         )
     }

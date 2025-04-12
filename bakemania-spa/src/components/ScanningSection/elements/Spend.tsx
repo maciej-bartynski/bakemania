@@ -25,6 +25,7 @@ const Spend: FC<{
         return (
             <>
                 <UserShort
+                    hideId={true}
                     userId={user._id}
                     userEmail={user?.email}
                     userStampsAmount={user?.stamps.amount}
@@ -58,7 +59,7 @@ const Spend: FC<{
                     descriptionLabel={(submitValue: number) => (
                         <span>
                             Kwota rabatu: <strong>{submitValue * appConfig.discount}</strong> PLN<br />
-                            Pieczątki: <strong>{submitValue * appConfig.cardSize}</strong><br />
+                            Zużyte pieczątki: <strong>{submitValue * appConfig.cardSize}</strong><br />
                         </span>
                     )}
                     onSubmit={spendStamps}

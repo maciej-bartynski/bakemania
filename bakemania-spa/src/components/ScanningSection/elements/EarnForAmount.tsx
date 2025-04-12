@@ -24,6 +24,7 @@ const EarnForAmount: FC<{
         return (
             <>
                 <UserShort
+                    hideId={true}
                     userId={user._id}
                     userEmail={user?.email}
                     userStampsAmount={user?.stamps.amount}
