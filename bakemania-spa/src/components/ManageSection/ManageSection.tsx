@@ -105,27 +105,24 @@ const ManageSection: FC<{
                                     )}
                                 />
 
-                                <div className='manage-section-form --manager'>
+                                <div className='manage-section-form'>
                                     <div className='manage-section-form__header --manager'>
                                         <UserIcon.Manager />
-                                        <strong>Obecni pracownicy</strong>
+                                        <strong>Pracownicy bakeMAnii</strong>
                                         <span>
                                             Znajdź <UserIcon.Manager width={12} height={12} color='var(--text)' /> pracownika
                                             i odbierz mu <UserIcon.Downgrade width={12} height={12} color='var(--text)' /> uprawnienia.
                                         </span>
                                     </div>
 
-                                    <div className='manage-section__manager-header'>
-                                        <UserIcon.Manager color="white" width={16} height={16} />
-                                        <span>
-                                            Pracownicy bakeMAnii:
-                                        </span>
-                                    </div>
                                     {assistants.map((manager) => (
-                                        <ManagerItem
-                                            manager={manager}
-                                            key={manager._id}
-                                        />
+                                        <>
+                                            <ManagerItem
+                                                manager={manager}
+                                                key={manager._id}
+                                            />
+
+                                        </>
                                     ))}
                                     <Pagination
                                         page={page}
@@ -137,7 +134,7 @@ const ManageSection: FC<{
                                     />
                                 </div>
                                 <form
-                                    className='manage-section-form --admin'
+                                    className='manage-section-form'
                                     onSubmit={async (e) => {
                                         setIsSaving(true);
                                         e.preventDefault();
@@ -206,7 +203,10 @@ const ManageSection: FC<{
                                             }
                                         }}
                                     />
-                                    <button type='submit'>Zapisz</button>
+                                    <br />
+                                    <button type='submit' style={{
+                                        backgroundColor: 'var(--bakemaniaGold)',
+                                    }}>Zapisz</button>
                                 </form>
                                 <br />
                                 <br />
@@ -277,7 +277,7 @@ const ManageSection: FC<{
                         </div>
                     </BottomPanel>
                 </PanelViewTemplate>
-            </AsidePanel>
+            </AsidePanel >
         );
     };
 
