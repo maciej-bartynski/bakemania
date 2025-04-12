@@ -95,9 +95,6 @@ router.get('', middleware.requireAssistant, async (req, res) => {
         const pageNumber = parseInt(page) ?? 1;
         const pageSize = parseInt(size) ?? 10;
 
-        console.log(userIds);
-
-
         if (typeof pageNumber !== 'number' || typeof pageSize !== 'number') {
             res.status(400).json({ message: 'Nieprawidłowa wartość "page" lub "size".' });
             return;
