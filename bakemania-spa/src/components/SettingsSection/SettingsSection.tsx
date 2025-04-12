@@ -15,6 +15,7 @@ import useAppConfigSelector from "../../storage/appConfig/appConfig-selectors";
 import AppUser from '../../atoms/AppUser/AppUser';
 import useAppDispatch from "../../storage/useAppDispatch";
 import meActions from "../../storage/me/me-actions";
+import UserRole from "../../storage/me/me-types";
 
 const SettingsSection: FC<{
     active: boolean;
@@ -49,7 +50,7 @@ const SettingsSection: FC<{
         }, []);
 
         const [users, setUsers] = useState<OtherUser[]>([]);
-        const [loading, setLoading] = useState(false);
+
         const [prevstate, setPrevstate] = useState(active);
 
         useEffect(() => {
@@ -58,8 +59,12 @@ const SettingsSection: FC<{
 
         useEffect(() => {
 
+            if (me?.role === UserRole.User || me === null) {
+                return;
+            }
+
             async function fetchUsersForUserHistory() {
-                setLoading(true);
+
                 dispatch(meActions.fetchMe());
                 const operationsHistory = me?.transactionsHistory;
 
@@ -76,14 +81,13 @@ const SettingsSection: FC<{
                     }, [200]);
 
                     setUsers(data.users);
-                    setLoading(false);
                 }
             }
 
             if (active && prevstate === false) {
                 fetchUsersForUserHistory();
             }
-        }, [me?.transactionsHistory, active, dispatch, prevstate])
+        }, [me?.transactionsHistory, active, dispatch, prevstate, me])
 
         if (!me) {
             return null;
@@ -251,11 +255,7 @@ const SettingsSection: FC<{
                         </div>
                     )}
                 </PanelViewTemplate>
-                {loading && (
-                    <div className="global-loader-wrapper">
-                        <div className={`global-loader-spinner --active`} />
-                    </div>
-                )}
+
             </AsidePanel>
         )
     }
