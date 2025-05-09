@@ -10,8 +10,7 @@ const RichNumberForm: FC<{
     minValue: number,
     maxValue: number,
     currencyIcon?: ReactNode,
-    negativeCurrencyIcon?: ReactNode,
-    dynamicButtons?: number[],
+    step?: number,
 }> = ({
     onSubmit,
     inputLabel,
@@ -24,8 +23,7 @@ const RichNumberForm: FC<{
     minValue,
     maxValue,
     currencyIcon,
-    negativeCurrencyIcon,
-    dynamicButtons
+    step = 1
 }) => {
         const [value, setValue] = useState(minValue);
 
@@ -38,8 +36,7 @@ const RichNumberForm: FC<{
                     minValue={minValue}
                     maxValue={maxValue}
                     currencyIcon={currencyIcon}
-                    negativeCurrencyIcon={negativeCurrencyIcon}
-                    dynamicButtons={dynamicButtons}
+                    step={step}
                 />
 
                 <button

@@ -2,8 +2,13 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 16px;
     background-color: white;
+}
+
+@media (min-height: 500px) {
+    .RichNumberForm {
+        gap: 16px;
+    }
 }
 
 .RichNumberForm__submit {

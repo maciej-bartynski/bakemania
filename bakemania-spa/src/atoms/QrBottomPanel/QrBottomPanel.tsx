@@ -28,7 +28,7 @@ const QrBottomPanel: FC<{
                 <div className="panel__wrapper">
                     <QRCode
                         value={JSON.stringify({
-                            variant: variant == 'spend' ? 'spend' : 'earn',
+                            variant: variant == 'spend' ? 'spend' : 'earn-for-amount',
                             cardId,
                             userId,
                         })}

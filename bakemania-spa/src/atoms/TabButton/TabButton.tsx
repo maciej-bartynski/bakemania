@@ -25,7 +25,7 @@ const TabButton: FC<TabButtonProps> = ({
             style={{ backgroundColor: selected ? activeColor : 'transparent' }}
         >
             <div className="TabButton__content">
-                <Icon iconName={iconName} color={selected ? 'white' : 'var(--dark-color)'} />
+                <Icon iconName={iconName} width={14} height={14} color={selected ? 'white' : 'var(--dark-color)'} />
                 <span className="TabButton__label" style={{ color: selected ? 'white' : 'var(--dark-color)' }}>{label}</span>
             </div>
         </button>

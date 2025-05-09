@@ -54,7 +54,7 @@ const UserShort: React.FC<UserShortProps> = ({
                     {!isVerified && (
                         <div className="UserShort__row">
                             <div className="UserShort__row-line warning">
-                                <Icon iconName={IconName.Destroy} color="var(--remove-stamp)" width={16} height={16} />
+                                <Icon iconName={IconName.Destroy} color="var(--remove-stamp)" width={12} height={12} />
                                 <span className="UserShort__row-line-text">Konto niezweryfikowane</span>
                             </div>
                         </div>
@@ -63,7 +63,7 @@ const UserShort: React.FC<UserShortProps> = ({
                     {!isAgreements && (
                         <div className="UserShort__row">
                             <div className="UserShort__row-line warning">
-                                <Icon iconName={IconName.Destroy} color="var(--remove-stamp)" width={16} height={16} />
+                                <Icon iconName={IconName.Destroy} color="var(--remove-stamp)" width={12} height={12} />
                                 <span className="UserShort__row-line-text">Niezaakceptowane regulaminy</span>
                             </div>
                         </div>
@@ -72,7 +72,7 @@ const UserShort: React.FC<UserShortProps> = ({
                     {!userCard && (
                         <div className="UserShort__row">
                             <div className="UserShort__row-line warning">
-                                <Icon iconName={IconName.Destroy} color="var(--remove-stamp)" width={16} height={16} />
+                                <Icon iconName={IconName.Destroy} color="var(--remove-stamp)" width={12} height={12} />
                                 <span className="UserShort__row-line-text">Brak karty QR</span>
                             </div>
                         </div>
@@ -81,14 +81,14 @@ const UserShort: React.FC<UserShortProps> = ({
                     {(typeof userStampsAmount === 'number' || typeof userGiftsAmount === 'number') && (
                         <div className="UserShort__row">
                             <div className="UserShort__row-line success">
-                                <Icon iconName={IconName.Stamp} color="var(--customer)" width={16} height={16} />
+                                <Icon iconName={IconName.Stamp} color="var(--customer)" width={12} height={12} />
                                 <span className="UserShort__row-line-text">
                                     <strong>{userStampsAmount}</strong> pieczątek
                                 </span>
                             </div>
 
                             <div className="UserShort__row-line success">
-                                <Icon iconName={IconName.Gift} color="var(--customer)" width={16} height={16} />
+                                <Icon iconName={IconName.Gift} color="var(--customer)" width={12} height={12} />
                                 <span className="UserShort__row-line-text">
                                     <strong>{userGiftsAmount}</strong> kart
                                 </span>

@@ -4,7 +4,6 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 12px 16px;
     border: none;
     background: none;
     cursor: pointer;
@@ -13,8 +12,8 @@
     color: rgba(0, 0, 0, 0.6);
     transition: all 0.2s ease;
     border-radius: 12px 12px 0 0;
-    margin-top: 8px;
     position: relative;
+    height: 40px;
 }
 
 .TabButton:hover {
@@ -45,10 +44,10 @@
 }
 
 .TabButton__label {
-    font-size: 10px;
+    font-size: 8px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.2px;
+    letter-spacing: 0.1px;
 }
 
 .TabButton--primary {

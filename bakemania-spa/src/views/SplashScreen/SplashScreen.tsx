@@ -64,7 +64,9 @@ const SplashScreen: FC = () => {
             )
         }
         return (
-            <DashboardScreen me={me} />
+            <BrowserRouter>
+                <DashboardScreen me={me} />
+            </BrowserRouter>
         )
     }
 
