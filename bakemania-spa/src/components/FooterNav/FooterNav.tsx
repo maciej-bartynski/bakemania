@@ -22,7 +22,8 @@ const FooterNav: FC<PropsWithChildren<{
                         <IconButton
                             key={action.label}
                             onClick={action.action}
-                            iconName={action.icon}
+                            iconName={typeof action.icon === 'string' ? action.icon as IconName : undefined}
+                            iconElement={typeof action.icon === 'object' ? action.icon : undefined}
                             label={action.label}
                             iconColor={action.variant === 'primary' ? "white" : undefined}
                             textColor={action.variant === 'primary' ? "var(--bakemaniaGold)" : undefined}
@@ -39,6 +40,6 @@ export default FooterNav;
 export type NavAction = {
     label: string;
     action: () => void;
-    icon: IconName;
+    icon: IconName | React.ReactNode;
     variant?: 'primary' | 'secondary';
 }

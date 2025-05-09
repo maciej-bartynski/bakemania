@@ -9,6 +9,7 @@ import Background from "../../atoms/Background/Background";
 import clearSession from "../../tools/clearSession";
 import useDebouncedCallback from "../../tools/useDebouncedCallback";
 import Config from "../../config";
+import { BrowserRouter } from "react-router";
 
 type AppInitializedState = 'idle' | 'pending' | 'pristine' | 'error';
 
@@ -57,7 +58,9 @@ const SplashScreen: FC = () => {
     if (me) {
         if (me.role != 'user') {
             return (
-                <AssistantSection assistant={me} />
+                <BrowserRouter>
+                    <AssistantSection assistant={me} />
+                </BrowserRouter>
             )
         }
         return (

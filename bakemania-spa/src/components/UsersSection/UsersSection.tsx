@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useState } from 'react';
 import './UsersSection.css';
 import FooterNav from '../FooterNav/FooterNav';
 import IconName from '../../icons/IconName';
@@ -10,82 +10,85 @@ import UsersList from './elements/UsersList';
 import Icon from '../../icons/Icon';
 import usersActions from '../../storage/users/users-actions';
 import useAppDispatch from '../../storage/useAppDispatch';
+import useAppNavigation from '../../tools/useAppNavigation';
 
-const UsersSection: FC<{
-    active: boolean;
-    goHistoryView: (userId: string) => void;
-    toggleActive: () => void;
-    toggleCardDetailsView: (details?: {
-        variant: "spend" | "earn";
-        userId: string,
-    }) => void
-}> = ({
-    active,
-    toggleActive,
-    toggleCardDetailsView,
-    goHistoryView
-}) => {
-        const { me } = useMeSelector();
-        const { appConfig } = useAppConfigSelector();
-        const dispatch = useAppDispatch();
+const UsersSection: FC = () => {
+    const { setScanningRoute, setHomeRoute, setCustomerRoute } = useAppNavigation();
 
-        useEffect(() => {
-            if (active) {
-                dispatch(usersActions.fetchUsers({ page: 1, size: 10, email: '' }));
-            }
-        }, [active, dispatch])
+    const { me } = useMeSelector();
+    const { appConfig } = useAppConfigSelector();
+    const dispatch = useAppDispatch();
 
+    useEffect(() => {
+        dispatch(usersActions.fetchUsers({ page: 1, size: 10, email: '' }));
+    }, [dispatch])
 
+    const [active, setActive] = useState(false);
+
+    useEffect(() => {
         if (!me || !appConfig) {
-            return 'Ładowanie...'
+            return
         }
+        setActive(true);
+    }, [me, appConfig])
 
-        return (
-            <AsidePanel
-                side='left'
-                active={active}
+    if (!me || !appConfig) {
+        return 'Ładowanie...'
+    }
+
+    return (
+        <AsidePanel
+            side='left'
+            active={active}
+        >
+            <PanelViewTemplate
+                title='Zarządzaj gośćmi'
+                appBar={(
+                    <>
+                        <FooterNav
+                            actions={[
+                                {
+                                    label: 'Wróć',
+                                    action: () => setHomeRoute({
+                                        delay: 250,
+                                        beforeNavigate: () => setActive(false)
+                                    }),
+                                    icon: IconName.ArrowDown,
+                                },
+                            ]}
+                        />
+                    </>
+                )}
             >
-                <PanelViewTemplate
-                    title='Zarządzaj gośćmi'
-                    appBar={(
-                        <>
-                            <FooterNav
-                                actions={[
-                                    {
-                                        label: 'Wróć',
-                                        action: toggleActive,
-                                        icon: IconName.ArrowDown,
-                                    },
-                                ]}
-                            />
-                        </>
-                    )}
-                >
 
-                    <UsersList
-                        headerElement={<strong>Zarządzaj gośćmi</strong>}
-                        userActions={[{
-                            label: 'Operacje',
-                            action: (user) => {
-                                toggleCardDetailsView({
-                                    variant: 'earn',
-                                    userId: user._id,
-                                })
-                            },
-                            icon: <Icon iconName={IconName.Cog} color="white" />
-                        }, {
-                            label: "Historia",
-                            action: (user) => goHistoryView(user._id),
-                            icon: IconName.History
-                        }]}
-                    />
+                <UsersList
+                    headerElement={<strong>Zarządzaj gośćmi</strong>}
+                    userActions={[{
+                        label: 'Operacje',
+                        action: (user) => {
+                            setScanningRoute({
+                                userId: user._id,
+                                operation: 'earn',
+                                cardId: 'change-force'
+                            });
+                        },
+                        icon: <Icon iconName={IconName.Cog} color="white" />
+                    }, {
+                        label: "Historia",
+                        action: (user) => setCustomerRoute(user._id, {
+                            delay: 250,
+                            beforeNavigate: () => setActive(false)
+                        }),
+                        icon: IconName.History
+                    }]}
+                />
 
-                    <br />
-                    <br />
+                <br />
+                <br />
 
-                </PanelViewTemplate>
-            </AsidePanel>
-        );
-    };
+            </PanelViewTemplate>
+        </AsidePanel>
+    );
+};
 
 export default UsersSection;
