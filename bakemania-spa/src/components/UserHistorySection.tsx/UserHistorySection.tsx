@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { OtherUser } from "../../storage/users/users-types";
 import AsidePanel from "../../atoms/AsidePanel/AsidePanel";
 import PanelViewTemplate from "../../atoms/PanelViewTemplate/PanelViewTemplate";
@@ -17,24 +17,28 @@ import useAppDispatch from "../../storage/useAppDispatch";
 import useAssistantsSelector from "../../storage/assistants/users-selectors";
 import AppUser from "../../atoms/AppUser/AppUser";
 import UserRole from "../../storage/me/me-types";
+import { useParams } from "react-router";
+import useAppNavigation from "../../tools/useAppNavigation";
 
-const UserHistorySection: FC<{
-    active: boolean,
-    toggleActive: () => void,
-    details: {
-        userId: string,
-    } | null,
-    toggleCardDetailsView: (details: {
-        userId: string,
-        variant: 'spend' | 'earn',
-        assistantId: string,
-        cardId: string,
-    }) => void,
-}> = ({ active, details, toggleActive, toggleCardDetailsView }) => {
-
-    const [user, setUser] = useState<OtherUser | null>(null);
+const UserHistorySection: FC = () => {
+    const { setScanningRoute } = useAppNavigation();
     const { appConfig } = useAppConfigSelector();
     const { me } = useMeSelector();
+    const params = useParams<{
+        userId: string
+    }>();
+
+    const [active, setActive] = useState(false);
+    const toggleActive = useCallback(() => setActive(prev => !prev), []);
+    useEffect(() => {
+        if (!me || !appConfig) {
+            return
+        }
+        setActive(true);
+    }, [me, appConfig])
+
+    const userId = params.userId ?? '';
+    const [user, setUser] = useState<OtherUser | null>(null);
     const dispatch = useAppDispatch();
     const { assistants, admins } = useAssistantsSelector();
 
@@ -48,13 +52,13 @@ const UserHistorySection: FC<{
 
     useEffect(() => {
         const fetchUser = async () => {
-            if (active && details?.userId) {
-                const user = await apiService.fetch(`user/${details?.userId}`) as OtherUser;
+            if (active && userId) {
+                const user = await apiService.fetch(`user/${userId}`) as OtherUser;
                 setUser(user ?? null);
             }
         }
         fetchUser();
-    }, [active, details?.userId]);
+    }, [active, userId]);
 
 
 
@@ -100,12 +104,11 @@ const UserHistorySection: FC<{
                             {
                                 label: "Idź do karty",
                                 onClick: () => {
-                                    toggleCardDetailsView({
-                                        userId: user._id,
-                                        variant: 'spend',
-                                        assistantId: '',
+                                    setScanningRoute({
                                         cardId: 'change-force',
-                                    })
+                                        userId: userId,
+                                        operation: 'spend',
+                                    });
                                 },
                                 icon: IconName.QrCode
                             }
@@ -129,15 +132,6 @@ const UserHistorySection: FC<{
                                 assistantEmail={allAssistants?.find(assistant => assistant._id === entry.assistantId)?.email ?? "(nieznany)"}
                                 userId={entry.userId}
                                 cardSize={appConfig.cardSize}
-                                toggleHistoryView={toggleActive}
-                                toggleCardDetailsView={() => {
-                                    toggleCardDetailsView({
-                                        userId: user._id,
-                                        variant: 'earn',
-                                        assistantId: me._id,
-                                        cardId: 'change-force',
-                                    })
-                                }}
                             />
                         ))}
                     </div>

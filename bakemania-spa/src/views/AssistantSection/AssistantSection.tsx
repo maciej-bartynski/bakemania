@@ -1,4 +1,4 @@
-import { FC, useCallback, useMemo } from "react";
+import { FC } from "react";
 import { useState, useRef, useEffect } from 'react';
 import QrScanner from 'qr-scanner';
 import "./AssistantSection.css";
@@ -11,10 +11,12 @@ import UsersSection from "../../components/UsersSection/UsersSection";
 import Icon from "../../icons/Icon";
 import useAppDispatch from "../../storage/useAppDispatch";
 import appConfigActions from "../../storage/appConfig/appConfig-actions";
-import AssistanContext, { AssistantContextType, OpenedSection } from "./AssistantContext";
 import UserRole, { Me } from "../../storage/me/me-types";
 import ManageSection from "../../components/ManageSection/ManageSection";
 import UserHistorySection from "../../components/UserHistorySection.tsx/UserHistorySection";
+import { Route, Routes } from "react-router";
+import useAppNavigation from "../../tools/useAppNavigation";
+import UserIcon from "../../icons/UserIcon";
 
 type ScannedData = {
     variant: 'spend' | 'earn',
@@ -31,16 +33,7 @@ const AssistantSection: FC<{
         const [isScanning, setIsScanning] = useState(false);
         const videoRef = useRef<HTMLVideoElement | null>(null);
         const scannerRef = useRef<QrScanner | null>(null);
-
-        const [openedSection, setOpenedSection] = useState<OpenedSection>({ title: 'home' })
-
-        const assistantContext: AssistantContextType = useMemo(() => {
-            const currentAssistantContext: AssistantContextType = {
-                assistantId: assistant._id,
-                openedSection,
-            };
-            return currentAssistantContext;
-        }, [assistant, openedSection]);
+        const { setScanningRoute, setSettingsRoute, setUsersRoute, setManageRoute } = useAppNavigation();
 
         const startScanning = () => {
             setIsScanning(true);
@@ -52,85 +45,6 @@ const AssistantSection: FC<{
             scannerRef.current?.stop();
         };
 
-        const toggleSettingsView = useCallback(() => {
-            stopScanning();
-            setOpenedSection(state => ({ title: state.title === 'settings' ? 'home' : 'settings' }))
-        }, []);
-
-        const toggleManageView = useCallback(() => {
-            stopScanning();
-            setOpenedSection(state => ({ title: state.title === 'manage' ? 'home' : 'manage' }))
-        }, []);
-
-        const toggleCardDetailsView = useCallback((details?: {
-            cardId: string,
-            variant: 'spend' | 'earn',
-            userId: string,
-            assistantId: string,
-        }) => {
-            setOpenedSection(state => {
-                if (state.title === 'card-details') {
-                    return {
-                        title: 'home'
-                    }
-                } else {
-                    if (details) {
-                        return {
-                            title: 'card-details',
-                            details: {
-                                cardId: details.cardId,
-                                variant: details.variant,
-                                userId: details.userId,
-                                assistantId: details.assistantId,
-                            }
-                        }
-                    } else {
-                        return {
-                            title: 'home'
-                        }
-                    }
-                }
-            });
-        }, []);
-
-        const toggleHistoryView = useCallback((userId: string) => {
-            setOpenedSection(state => {
-                if (state.title === 'history') {
-                    return {
-                        title: 'home'
-                    }
-                } else {
-                    return {
-                        title: 'history',
-                        details: {
-                            userId: userId
-                        }
-                    }
-                }
-            });
-        }, []);
-
-        const setVariantCardDetailsView = useCallback((newVariant: 'earn' | 'spend' | 'delete' | 'earn-for-amount') => {
-            setOpenedSection(state => {
-                if (state.title === 'card-details') {
-                    return {
-                        title: 'card-details',
-                        details: {
-                            ...state.details,
-                            variant: newVariant
-                        }
-                    }
-                } else {
-                    return state;
-                }
-            });
-        }, [])
-
-        const toggleCardListView = useCallback(() => {
-            stopScanning();
-            setOpenedSection(state => ({ title: state.title === 'card-list' ? 'home' : 'card-list' }))
-        }, []);
-
         useEffect(() => {
             const videoEl = videoRef.current;
             if (videoEl) {
@@ -138,17 +52,15 @@ const AssistantSection: FC<{
                     scannerRef.current?.stop();
                     try {
                         const scannedData = JSON.parse(result.data) as ScannedData;
-                        toggleCardDetailsView({
+                        setScanningRoute({
                             cardId: scannedData.cardId,
-                            variant: scannedData.variant,
                             userId: scannedData.userId,
-                            assistantId: assistant._id,
+                            operation: scannedData.variant,
                         });
                         stopScanning();
                     } catch (e) {
                         console.warn(e);
                         stopScanning();
-                        toggleCardDetailsView();
                     }
                     scannerRef.current?.stop();
                 }, {
@@ -163,7 +75,7 @@ const AssistantSection: FC<{
                     scannerRef.current.destroy();
                 }
             }
-        }, [toggleCardDetailsView, assistant]);
+        }, [assistant, setScanningRoute]);
 
         const dispatch = useAppDispatch();
 
@@ -172,129 +84,111 @@ const AssistantSection: FC<{
         }, [dispatch]);
 
         return (
-            <AssistanContext.Provider value={assistantContext}>
-                <Background
-                    appBar={
-                        <FooterNav
-                            actions={[
-                                {
-                                    label: 'Ustawienia',
-                                    action: toggleSettingsView,
-                                    icon: IconName.Cog,
-                                },
-                                isAdmin ? {
-                                    label: 'Zarządzaj',
-                                    action: toggleManageView,
-                                    icon: IconName.Cog,
-                                } : null,
-                                {
-                                    label: isScanning ? "Zatrzymaj" : "Skanuj",
-                                    action: isScanning ? stopScanning : startScanning,
-                                    icon: IconName.QrCode,
-                                    variant: 'primary'
-                                },
-                                {
-                                    label: 'Użytkownicy',
-                                    action: toggleCardListView,
-                                    icon: IconName.Users,
-                                },
-                            ].filter((item) => !!item) as NavAction[]}
-                        />
 
-                    }
-                >
-                    <div className="assistantSection__scanner-section">
-                        <div
+            <Background
+                appBar={
+                    <FooterNav
+                        actions={[
+                            {
+                                label: 'Ustawienia',
+                                action: () => setSettingsRoute({ delay: 0, beforeNavigate: stopScanning }),
+                                icon: IconName.Cog,
+                            },
+                            isAdmin ? {
+                                label: 'Zarządzaj',
+                                action: () => setManageRoute({ delay: 0, beforeNavigate: stopScanning }),
+                                icon: <UserIcon.Admin color="white" />,
+                            } : null,
+                            {
+                                label: isScanning ? "Zatrzymaj" : "Skanuj",
+                                action: isScanning ? stopScanning : startScanning,
+                                icon: IconName.QrCode,
+                                variant: 'primary'
+                            },
+                            {
+                                label: 'Użytkownicy',
+                                action: () => setUsersRoute({ delay: 0, beforeNavigate: stopScanning }),
+                                icon: IconName.Users,
+                            },
+                        ].filter((item) => !!item) as NavAction[]}
+                    />
+
+                }
+            >
+                <div className="assistantSection__scanner-section">
+                    <div
+                        style={{
+                            width: '200px',
+                            height: '200px',
+                            background: isScanning ? 'var(--bakemaniaGold)' : 'black',
+                            borderRadius: 6,
+                            overflow: 'hidden',
+                            position: 'relative'
+                        }}
+                    >
+                        <video
+                            ref={videoRef}
                             style={{
                                 width: '200px',
                                 height: '200px',
-                                background: isScanning ? 'var(--bakemaniaGold)' : 'black',
-                                borderRadius: 6,
-                                overflow: 'hidden',
-                                position: 'relative'
+                            }}
+                        />
+                        <div
+                            style={{
+                                width: 24,
+                                height: 24,
+                                position: 'absolute',
+                                top: 'calc(50% - 12px)',
+                                left: 'calc(50% - 12px)',
                             }}
                         >
-                            <video
-                                ref={videoRef}
-                                style={{
-                                    width: '200px',
-                                    height: '200px',
-                                }}
-                            />
-                            <div
-                                style={{
-                                    width: 24,
-                                    height: 24,
-                                    position: 'absolute',
-                                    top: 'calc(50% - 12px)',
-                                    left: 'calc(50% - 12px)',
-                                }}
-                            >
-                                <Icon iconName={IconName.QrCode} color="white" />
-                            </div>
+                            <Icon iconName={IconName.QrCode} color="white" />
                         </div>
-
-                        <button onClick={isScanning ? stopScanning : startScanning}>
-                            {isScanning ? "Zatrzymaj" : "Skanuj"}
-                        </button>
                     </div>
 
-                    <ScanningSection
-                        qrData={assistantContext.openedSection.title === 'card-details' ? assistantContext.openedSection.details : null}
-                        setVariant={setVariantCardDetailsView}
-                        returnHomeView={toggleCardDetailsView}
-                        goHistoryView={toggleHistoryView}
+                    <button onClick={isScanning ? stopScanning : startScanning}>
+                        {isScanning ? "Zatrzymaj" : "Skanuj"}
+                    </button>
+                </div>
+
+
+                <Routes>
+                    <Route
+                        path="/scan/:userId/:cardId/:operation"
+                        element={
+                            <ScanningSection />
+                        }
+                    />
+                    <Route
+                        path="/settings"
+                        element={
+                            <SettingsSection />
+                        }
+                    />
+                    <Route
+                        path="/manage"
+                        element={isAdmin ? (
+                            <ManageSection />
+                        ) : <>Nie jesteś administratorem</>
+                        }
+                    />
+                    <Route
+                        path="/users"
+                        element={
+                            <UsersSection />
+                        }
                     />
 
-                    <SettingsSection
-                        active={assistantContext.openedSection.title === 'settings'}
-                        toggleActive={toggleSettingsView}
-                        toggleCardDetailsView={toggleCardDetailsView}
-                        toggleHistoryView={toggleHistoryView}
+                    <Route
+                        path="/user/:userId"
+                        element={
+                            <UserHistorySection />
+                        }
                     />
+                </Routes>
 
-                    {isAdmin && (
-                        <ManageSection
-                            active={assistantContext.openedSection.title === 'manage'}
-                            toggleActive={toggleManageView}
-                        />
-                    )}
+            </Background>
 
-                    <UsersSection
-                        active={assistantContext.openedSection.title === 'card-list'}
-                        toggleActive={toggleCardListView}
-                        goHistoryView={toggleHistoryView}
-                        toggleCardDetailsView={async (details) => {
-                            if (details) {
-                                toggleCardDetailsView({
-                                    userId: details.userId,
-                                    variant: details.variant,
-                                    assistantId: assistant._id,
-                                    cardId: 'change-force',
-                                })
-                            }
-                        }}
-                    />
-
-
-                    <UserHistorySection
-                        active={assistantContext.openedSection.title === 'history'}
-                        details={assistantContext.openedSection.title === 'history' ? assistantContext.openedSection.details : null}
-                        toggleActive={() => toggleHistoryView(assistantContext.openedSection.details?.userId ?? '')}
-                        toggleCardDetailsView={async (details) => {
-                            if (details) {
-                                toggleCardDetailsView({
-                                    userId: details.userId,
-                                    variant: details.variant,
-                                    assistantId: assistant._id,
-                                    cardId: 'change-force',
-                                })
-                            }
-                        }}
-                    />
-
-                </Background>
-            </AssistanContext.Provider>
         )
     }
 
