@@ -17,6 +17,12 @@ import UsersIcon from "./UsersIcon";
 import StampRemoveIcon from "./StampRemoveIcon";
 import StampForCashIcon from "./StampForCash";
 import HistoryIcon from "./HistoryIcon";
+import Chevron from "./Chevron";
+import ChevronDouble from "./ChevronDouble";
+import ChevronLeft from "./ChevronLeft";
+import ChevronDoubleLeft from "./ChevronDoubleLeft";
+import ChevronTripleLeft from "./ChevronTripleLeft";
+import ChevronTriple from "./ChevronTriple";
 
 const Icon: FC<{
     width?: number;
@@ -103,6 +109,32 @@ const Icon: FC<{
             }
             case IconName.History: {
                 IconComponent = HistoryIcon
+                break;
+            }
+
+            case IconName.Chevron: {
+                IconComponent = Chevron
+                break;
+            }
+            case IconName.ChevronDouble: {
+                IconComponent = ChevronDouble
+                break;
+            }
+
+            case IconName.ChevronLeft: {
+                IconComponent = ChevronLeft
+                break;
+            }
+            case IconName.ChevronDoubleLeft: {
+                IconComponent = ChevronDoubleLeft
+                break;
+            }
+            case IconName.ChevronTripleLeft: {
+                IconComponent = ChevronTripleLeft
+                break;
+            }
+            case IconName.ChevronTriple: {
+                IconComponent = ChevronTriple
                 break;
             }
         }

@@ -3,8 +3,13 @@
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    padding: 10px;
-    gap: 10px;
+    padding: 0 10px;
+}
+
+@media (min-height: 500px) {
+    .ScanningSection {
+        padding: 10px;
+    }
 }
 
 .ScanningSection__app-bar-earn-for-amount {
@@ -37,18 +42,38 @@
 
 .ScanningSection__tabs-indicator {
     width: 100%;
-    height: 36px;
+    height: 20px;
     background-color: currentColor;
     transition: background-color 0.2s ease;
     display: flex;
     justify-content: center;
     align-items: center;
     color: white;
-    font-size: 12px;
+    font-size: 8px;
+    letter-spacing: 0.1px;
+    font-weight: 600;
+    text-transform: uppercase;
     gap: 4px;
 }
 
-.ScanningSection__tabs-indicator svg {
-    width: 16px;
-    height: 16px;
+.ScanningSection__tabs-indicator-short {
+    height: 2px;
+    width: 100%;
+    background-color: currentColor;
+    transition: background-color 0.2s ease;
+    display: flex;
+}
+
+.ScanningSection__tabs-indicator {
+    display: none;
+}
+
+@media (min-height: 500px) {
+    .ScanningSection__tabs-indicator {
+        display: flex;
+    }
+
+    .ScanningSection__tabs-indicator-short {
+        display: none;
+    }
 }

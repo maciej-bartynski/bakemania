@@ -45,7 +45,6 @@ const Delete: FC<{
                     key='stamps'
                     inputLabel="Ile pieczątek skasować?"
                     currencyIcon={<Icon iconName={IconName.StampRemove} color="var(--earn-stamp)" width={18} height={18} />}
-                    negativeCurrencyIcon={<Icon iconName={IconName.Stamp} color="var(--remove-stamp)" width={18} height={18} />}
                     buttonLabel={(submitValue: number) => {
                         return <strong style={{
                             display: "flex",

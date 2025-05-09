@@ -269,6 +269,12 @@ const ScanningSection: FC = () => {
                 >
                     {pageTitle}
                 </div>
+                <div
+                    className="ScanningSection__tabs-indicator-short"
+                    style={{
+                        backgroundColor: getTabColor(operation ?? 'earn'),
+                    }}
+                />
             </div>
 
         )
@@ -327,21 +333,21 @@ const ScanningSection: FC = () => {
     switch (operation) {
         case 'spend':
             pageTitle = <>
-                <Icon iconName={IconName.Gift} color='white' />Odbieranie rabatu</>;
+                <Icon iconName={IconName.Gift} color='white' width={12} height={12} />Odbieranie rabatu</>;
             break;
         case 'earn':
             pageTitle = <>
-                <Icon iconName={IconName.Stamp} color='white' />Nabijanie pieczątek
+                <Icon iconName={IconName.Stamp} color='white' width={12} height={12} />Nabijanie pieczątek
             </>;
             break;
         case 'delete':
             pageTitle = <>
-                <Icon iconName={IconName.StampRemove} color='white' />Kasowanie pieczątek
+                <Icon iconName={IconName.StampRemove} color='white' width={12} height={12} />Kasowanie pieczątek
             </>;
             break;
         case 'earn-for-amount':
             pageTitle = <>
-                <Icon iconName={IconName.StampForCash} color='white' />Nabijanie za kwotę
+                <Icon iconName={IconName.StampForCash} color='white' width={12} height={12} />Nabijanie za kwotę
             </>;
             break;
         default:

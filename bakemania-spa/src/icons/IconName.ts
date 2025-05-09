@@ -15,7 +15,13 @@ enum IconName {
     Users = 'Users',
     StampRemove = 'StampRemove',
     StampForCash = 'StampForCash',
-    History = 'History'
+    History = 'History',
+    Chevron = 'Chevron',
+    ChevronDouble = 'ChevronDouble',
+    ChevronLeft = 'ChevronLeft',
+    ChevronDoubleLeft = 'ChevronDoubleLeft',
+    ChevronTripleLeft = 'ChevronTripleLeft',
+    ChevronTriple = 'ChevronTriple',
 }
 
 export default IconName;

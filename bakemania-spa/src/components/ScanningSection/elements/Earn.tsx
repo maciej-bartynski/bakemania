@@ -57,7 +57,6 @@ const Earn: FC<{
                         </strong>
                     }}
                     currencyIcon={<Icon iconName={IconName.Stamp} color="var(--earn-stamp)" width={18} height={18} />}
-                    negativeCurrencyIcon={<Icon iconName={IconName.StampRemove} color="var(--remove-stamp)" width={18} height={18} />}
                     descriptionLabel={(submitValue: number) => (
                         <span>
                             Kwota zakupów:<br />

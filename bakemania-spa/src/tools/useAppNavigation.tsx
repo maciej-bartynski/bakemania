@@ -9,6 +9,7 @@ const useAppNavigation = () => {
         userId: string,
         operation: 'spend' | 'earn' | 'earn-for-amount' | 'delete'
     }) => {
+
         navigate(`/scan/${params.userId}/${params.cardId}/${params.operation}`);
     }, [navigate]);
 
@@ -16,7 +17,7 @@ const useAppNavigation = () => {
         beforeNavigate: () => void;
         delay: number
     }) => {
-        if (params) {
+        if (params && params.beforeNavigate && params.delay) {
             params.beforeNavigate();
             setTimeout(() => navigate(`/user/${userId}`), params.delay)
         } else {
@@ -28,7 +29,7 @@ const useAppNavigation = () => {
         beforeNavigate: () => void;
         delay: number
     }) => {
-        if (params) {
+        if (params && params.beforeNavigate && params.delay) {
             params.beforeNavigate();
             setTimeout(() => navigate('/users'), params.delay)
         } else {
@@ -40,7 +41,7 @@ const useAppNavigation = () => {
         beforeNavigate: () => void;
         delay: number
     }) => {
-        if (params) {
+        if (params && params.beforeNavigate && params.delay) {
             params.beforeNavigate();
             setTimeout(() => navigate('/settings'), params.delay)
         } else {
@@ -52,7 +53,7 @@ const useAppNavigation = () => {
         beforeNavigate: () => void;
         delay: number
     }) => {
-        if (params) {
+        if (params && params.beforeNavigate && params.delay) {
             params.beforeNavigate();
             setTimeout(() => navigate('/manage'), params.delay)
         } else {

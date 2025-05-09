@@ -2,19 +2,15 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 16px;
+    padding: 8px;
     border-radius: 12px;
-    gap: 16px;
-    margin: 8px 0;
+    gap: 8px;
+    margin: 6px 0;
     box-shadow: 0 0px 4px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
     background-color: white;
     position: relative;
     overflow: hidden;
-}
-
-.UserShort:hover {
-    transform: translateY(-2px);
 }
 
 .UserShort__icon {
@@ -32,14 +28,13 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
     min-width: 0;
 }
 
 .UserShort__details {
     display: flex;
     flex-direction: column;
-    gap: 4px;
 }
 
 .UserShort__row {
@@ -52,17 +47,17 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 14px;
+    font-size: 10px;
     color: var(--text);
 }
 
 .UserShort__row-line-text {
-    font-size: 14px;
+    font-size: 10px;
     color: var(--text);
 }
 
 .UserShort__row-email {
-    font-size: 18px;
+    font-size: 10px;
     font-weight: 600;
     color: var(--customer);
     margin-bottom: 2px;
@@ -70,7 +65,7 @@
 
 .UserShort__row-line.warning {
     color: var(--remove-stamp);
-    font-size: 13px;
+    font-size: 10px;
 }
 
 .UserShort__row-line.warning .UserShort__row-line-text {
@@ -79,7 +74,7 @@
 
 .UserShort__row-line.success {
     color: var(--customer);
-    font-size: 15px;
+    font-size: 10px;
 }
 
 .UserShort__row-line.success .UserShort__row-line-text {
@@ -89,11 +84,11 @@
 .UserShort__row-line.success .UserShort__row-line-text strong {
     color: var(--customer);
     font-weight: 600;
-    font-size: 16px;
+    font-size: 10px;
 }
 
 .UserShort__row-line.id {
-    font-size: 12px;
+    font-size: 10px;
     color: rgba(0, 0, 0, 0.5);
 }
 
@@ -143,7 +138,6 @@
     flex-direction: column;
     justify-content: center;
     height: 100%;
-    gap: 8px;
 }
 
 .UserShort__option {

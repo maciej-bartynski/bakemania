@@ -68,7 +68,6 @@ const Spend: FC<{
                     }}
                     minValue={0}
                     maxValue={appConfig.maxCardsPerTransaction}
-                    dynamicButtons={Array.from({ length: appConfig.maxCardsPerTransaction }, (_, i) => i + 1)}
                     currencyIcon={<Icon iconName={IconName.Gift} color="var(--earn-stamp)" width={18} height={18} />}
                 />
             </>

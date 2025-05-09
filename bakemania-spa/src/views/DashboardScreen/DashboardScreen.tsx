@@ -16,6 +16,8 @@ import Background from "../../atoms/Background/Background";
 import Stamp from "../../atoms/Stamp/Stamp";
 import iterateIcons from "../../atoms/Stamp/Stamp.helper";
 import LastHistoryEntry from "../../atoms/LastHistoryEntry/LastHistoryEntry";
+import { Route, Routes } from "react-router";
+import useAppNavigation from "../../tools/useAppNavigation";
 
 const DashboardScreen: FC<{
     me: Me,
@@ -25,8 +27,8 @@ const DashboardScreen: FC<{
 
         const [showStampQr, setShowStampQr] = useState(false);
         const [showGiftCardsSection, setShowGiftCardsSection] = useState(false);
-        const [showSettingsSection, setShowSettingsSection] = useState(false);
         const { stampsUpdated, dismissStampsUpdated } = useLiveUpdateContext();
+        const { setSettingsRoute } = useAppNavigation();
 
         useEffect(() => {
             if (!stampsUpdated) {
@@ -38,32 +40,17 @@ const DashboardScreen: FC<{
         const appConfigState = useAppConfigSelector();
 
         const toggleStampQr = useCallback(() => {
-            setShowSettingsSection(false);
             setShowStampQr(state => !state);
         }, [])
 
         const openGiftsSection = useCallback(() => {
             setShowStampQr(false);
-            setShowSettingsSection(false);
             setShowGiftCardsSection(true);
         }, []);
 
         const closeGiftsSection = useCallback(() => {
             setShowStampQr(false);
             setShowGiftCardsSection(false);
-            setShowSettingsSection(false);
-        }, []);
-
-        const openSettingsSection = useCallback(() => {
-            setShowStampQr(false);
-            setShowGiftCardsSection(false);
-            setShowSettingsSection(true);
-        }, []);
-
-        const closeSettingsSection = useCallback(() => {
-            setShowStampQr(false);
-            setShowGiftCardsSection(false);
-            setShowSettingsSection(false);
         }, []);
 
         useEffect(() => {
@@ -85,7 +72,7 @@ const DashboardScreen: FC<{
                         actions={[
                             {
                                 label: 'Ustawienia',
-                                action: openSettingsSection,
+                                action: setSettingsRoute,
                                 icon: IconName.Cog,
                             },
                             {
@@ -131,12 +118,14 @@ const DashboardScreen: FC<{
                         toggleActive={closeGiftsSection}
                     />
 
-                    <SettingsSection
-                        active={showSettingsSection}
-                        toggleActive={closeSettingsSection}
-                        toggleHistoryView={() => { }}
-                        toggleCardDetailsView={() => { }}
-                    />
+                    <Routes>
+                        <Route
+                            path="/settings"
+                            element={
+                                <SettingsSection />
+                            }
+                        />
+                    </Routes>
 
                     {(!appConfigState.appConfig || appConfigState.status === ReducerState.Pristine || appConfigState.status === ReducerState.Fetching) && (
                         <div className="splashScreen__loader-wrapper">

@@ -71,7 +71,8 @@ const EarnForAmount: FC<{
                         }
                     }}
                     minValue={0}
-                    maxValue={100}
+                    maxValue={2000}
+                    step={10}
                 />
             </>
         )
