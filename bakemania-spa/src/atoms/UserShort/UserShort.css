@@ -13,6 +13,13 @@
     overflow: hidden;
 }
 
+.UserShort.--operations {
+    padding: 0;
+    box-shadow: none;
+    background-color: transparent;
+    margin: 0;
+}
+
 .UserShort__icon {
     display: flex;
     align-items: center;
@@ -39,14 +46,14 @@
 
 .UserShort__row {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
+    flex-wrap: wrap;
+    gap: 6px;
 }
 
 .UserShort__row-line {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 2px;
     font-size: 10px;
     color: var(--text);
 }
@@ -97,6 +104,7 @@
 }
 
 .UserShort__detailsButton {
+    height: unset;
     background: none;
     border: none;
     cursor: pointer;
