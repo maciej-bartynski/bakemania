@@ -8,7 +8,8 @@ const RichNumberInput: FC<{
     setValue: (newValue: number) => void;
     label: string;
     minValue: number;
-    maxValue: number;
+    maxValue?: number;
+    rangeMaxValue: number;
     currencyIcon?: ReactNode;
     step?: number;
 }> = ({
@@ -17,14 +18,20 @@ const RichNumberInput: FC<{
     label,
     minValue,
     maxValue,
+    rangeMaxValue,
     currencyIcon,
     step = 1
 }) => {
 
         const changeBy = useCallback((by: number) => {
-            const nextValue = value + by < 0 ? 0 : value + by;
-            setValue(nextValue);
-        }, [setValue, value]);
+            const nextValuePositive = value + by < 0 ? 0 : value + by;
+            if (maxValue) {
+                const nextValueValidated = nextValuePositive > maxValue ? maxValue : nextValuePositive;
+                setValue(nextValueValidated);
+            } else {
+                setValue(nextValuePositive);
+            }
+        }, [setValue, value, maxValue]);
 
         return (
             <div className="RichNumberInput">
@@ -81,7 +88,7 @@ const RichNumberInput: FC<{
                     <input
                         type='range'
                         min={minValue}
-                        max={maxValue}
+                        max={rangeMaxValue}
                         step={step}
                         value={value}
                         onChange={(e) => {
@@ -90,105 +97,6 @@ const RichNumberInput: FC<{
                         }}
                     />
                 </div>
-
-                {/* <span className="RichNumberInput__label">
-                    Zwiększaj/zmniejszaj:
-                </span>
-                {!dynamicButtons && (
-                    <>
-                        <div className="RichNumberInput__input-wrapper">
-                            {!dynamicButtons && (
-                                [-3, -1].map(by => (
-                                    <button
-                                        key={by}
-                                        onClick={() => changeBy(by)}
-                                        className={'RichNumberInput__btn --negative '}
-                                    >
-                                        {by} {negativeCurrencyIcon ?? currencyIcon}
-                                    </button>
-                                ))
-                            )}
-
-                            {!dynamicButtons && (
-                                [1, 3].map(by => (
-                                    <button
-                                        key={by}
-                                        onClick={() => changeBy(by)}
-                                        className={'RichNumberInput__btn --positive '}
-                                    >
-                                        +{by} {currencyIcon}
-                                    </button>
-                                ))
-                            )}
-                        </div>
-                        <div className="RichNumberInput__input-wrapper">
-                            {!dynamicButtons && (
-                                [-7, -5].map(by => (
-                                    <button
-                                        key={by}
-                                        onClick={() => changeBy(by)}
-                                        className={'RichNumberInput__btn --negative '}
-                                    >
-                                        {by} {negativeCurrencyIcon ?? currencyIcon}
-                                    </button>
-                                ))
-                            )}
-
-                            {!dynamicButtons && (
-                                [5, 7].map(by => (
-                                    <button
-                                        key={by}
-                                        onClick={() => changeBy(by)}
-                                        className={'RichNumberInput__btn --positive '}
-                                    >
-                                        +{by} {currencyIcon}
-                                    </button>
-                                ))
-                            )}
-                        </div>
-                        <div className="RichNumberInput__input-wrapper">
-                            {!dynamicButtons && (
-                                [-10].map(by => (
-                                    <button
-                                        key={by}
-                                        onClick={() => changeBy(by)}
-                                        className={'RichNumberInput__btn --negative '}
-                                    >
-                                        {by} {negativeCurrencyIcon ?? currencyIcon}
-                                    </button>
-                                ))
-                            )}
-
-                            {!dynamicButtons && (
-                                [10].map(by => (
-                                    <button
-                                        key={by}
-                                        onClick={() => changeBy(by)}
-                                        className={'RichNumberInput__btn --positive '}
-                                    >
-                                        +{by} {currencyIcon}
-                                    </button>
-                                ))
-                            )}
-                        </div>
-                    </>
-                )}
-
-                {dynamicButtons && (
-                    <div className="RichNumberInput__buttons-row">
-                        {dynamicButtons.map(value => {
-                            return (
-                                <button
-                                    key={value}
-                                    onClick={() => setValue(value)}
-                                    className={'RichNumberInput__btn --positive'}
-                                >
-                                    {value} {currencyIcon}
-                                </button>
-                            )
-                        })}
-                    </div>
-                )} */}
             </div>
         )
     }

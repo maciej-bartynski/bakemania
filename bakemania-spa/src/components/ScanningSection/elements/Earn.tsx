@@ -24,6 +24,7 @@ const Earn: FC<{
         return (
             <>
                 <UserShort
+                    variant="operations"
                     hideId={true}
                     userId={user._id}
                     userEmail={user.email}
@@ -56,17 +57,15 @@ const Earn: FC<{
                             Nabij {submitValue}
                         </strong>
                     }}
-                    currencyIcon={<Icon iconName={IconName.Stamp} color="var(--earn-stamp)" width={18} height={18} />}
+                    currencyIcon={<Icon iconName={IconName.Stamp} color="var(--colorActive)" width={18} height={18} />}
                     descriptionLabel={(submitValue: number) => (
-                        <span>
-                            Kwota zakupów:<br />
-                            - od <strong>{submitValue * appConfig.discount}.00 PLN</strong><br />
-                            - do <strong>{((submitValue + 1) * appConfig.discount) - 0.01} PLN</strong>
-                        </span>
+                        <>
+                            Zakupy za <strong>{submitValue * appConfig.discount}.00 PLN</strong> do <strong>{((submitValue + 1) * appConfig.discount) - 0.01} PLN</strong>
+                        </>
                     )}
                     onSubmit={earnStamps}
                     minValue={0}
-                    maxValue={100}
+                    rangeMaxValue={100}
                 />
             </>
         )

@@ -24,6 +24,7 @@ const EarnForAmount: FC<{
         return (
             <>
                 <UserShort
+                    variant="operations"
                     hideId={true}
                     userId={user._id}
                     userEmail={user?.email}
@@ -42,7 +43,7 @@ const EarnForAmount: FC<{
                 />
                 {renderTabs()}
                 <RichNumberForm
-                    currencyIcon={"PLN"}
+                    currencyIcon={<span className="ScanningSection__pln-icon">PLN</span>}
                     key='stamps'
                     inputLabel="Za jaką kwotę nabić?"
                     buttonLabel={(submitValue: number) => {
@@ -58,11 +59,11 @@ const EarnForAmount: FC<{
                         </strong>
                     }}
                     descriptionLabel={(submitValue: number) => (
-                        <span>
-                            <strong>{Math.floor(submitValue / appConfig.discount)}</strong> pieczątek<br />
-                            - Przedział od <strong>{Math.floor(submitValue / appConfig.discount) * appConfig.discount}.00 PLN</strong><br />
-                            - Przedział do <strong>{(Math.floor(submitValue / appConfig.discount) * appConfig.discount + appConfig.discount) - 0.01} PLN</strong>
-                        </span>
+                        <>
+                            <strong>{Math.floor(submitValue / appConfig.discount)}</strong> pieczątki za{' '}
+                            <strong>{Math.floor(submitValue / appConfig.discount) * appConfig.discount}.00</strong> do{' '}
+                            <strong>{(Math.floor(submitValue / appConfig.discount) * appConfig.discount + appConfig.discount) - 0.01} PLN</strong>
+                        </>
                     )}
                     onSubmit={(submitValue: number) => {
                         const stampsAmount = Math.floor(submitValue / appConfig.discount);
@@ -71,7 +72,7 @@ const EarnForAmount: FC<{
                         }
                     }}
                     minValue={0}
-                    maxValue={2000}
+                    rangeMaxValue={500}
                     step={10}
                 />
             </>

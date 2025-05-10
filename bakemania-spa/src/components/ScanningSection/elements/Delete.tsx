@@ -24,6 +24,7 @@ const Delete: FC<{
         return (
             <>
                 <UserShort
+                    variant="operations"
                     hideId={true}
                     userId={user._id}
                     userEmail={user?.email}
@@ -41,30 +42,41 @@ const Delete: FC<{
                     ]}
                 />
                 {renderTabs()}
-                <RichNumberForm
-                    key='stamps'
-                    inputLabel="Ile pieczątek skasować?"
-                    currencyIcon={<Icon iconName={IconName.StampRemove} color="var(--earn-stamp)" width={18} height={18} />}
-                    buttonLabel={(submitValue: number) => {
-                        return <strong style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "4px",
-                            color: "white",
-                            justifyContent: "center"
-                        }}>
-                            Skasuj {submitValue}<Icon iconName={IconName.StampRemove} color="white" />
-                        </strong>
-                    }}
-                    descriptionLabel={(submitValue: number) => (
-                        <span>
-                            Usuniesz <strong>{submitValue}x</strong> pieczątek
-                        </span>
-                    )}
-                    onSubmit={deleteStamps}
-                    minValue={0}
-                    maxValue={100}
-                />
+
+                {(user?.stamps.amount ?? 0) > 0 ? (
+                    <RichNumberForm
+                        key='stamps'
+                        inputLabel="Ile pieczątek skasować?"
+                        currencyIcon={<Icon iconName={IconName.StampRemove} color="var(--colorActive)" width={18} height={18} />}
+                        buttonLabel={(submitValue: number) => {
+                            return <strong style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "4px",
+                                color: "white",
+                                justifyContent: "center"
+                            }}>
+                                Skasuj {submitValue}<Icon iconName={IconName.StampRemove} color="white" />
+                            </strong>
+                        }}
+                        descriptionLabel={(submitValue: number) => (
+                            <span>
+                                Usuniesz <strong>{submitValue}x</strong> pieczątek
+                            </span>
+                        )}
+                        onSubmit={deleteStamps}
+                        minValue={0}
+                        maxValue={(user?.stamps.amount ?? 0) > 100 ? 100 : (user?.stamps.amount ?? 0)}
+                        rangeMaxValue={(user?.stamps.amount ?? 0) > 100 ? 100 : (user?.stamps.amount ?? 0)}
+                    />
+                ) : (
+                    <span style={{
+                        textAlign: "center",
+                        padding: "10px",
+                    }}>
+                        Użytkownik nie ma pieczątek do skasowania
+                    </span>
+                )}
             </>
         )
     }

@@ -14,10 +14,10 @@ import Earn from './elements/Earn';
 import Spend from './elements/Spend';
 import Delete from './elements/Delete';
 import EarnForAmount from './elements/EarnForAmount';
-import Icon from '../../icons/Icon';
 import TabButton from '../../atoms/TabButton/TabButton';
 import { useParams } from 'react-router';
 import useAppNavigation from '../../tools/useAppNavigation';
+import UserIcon from '../../icons/UserIcon';
 
 const ScanningSection: FC = () => {
     const { appConfig } = useAppConfigSelector();
@@ -132,18 +132,27 @@ const ScanningSection: FC = () => {
             message: <>Dodałaś(eś)  <br /><strong>{amount}</strong>x pieczątki<br /> do konta klienta</>,
             variant: 'success'
         });
-
-        setHomeRoute({ delay: 250, beforeNavigate: () => setActive(false) });
-
-
-    }, [setUpdateOverlayConfig, cardId, userId, assistantId, setHomeRoute]);
+    }, [setUpdateOverlayConfig, cardId, userId, assistantId]);
 
     const spentStamps = useCallback(async (amount: number): Promise<void> => {
+        if (!appConfig) {
+            return;
+        }
 
         if (amount <= 0) {
             setUpdateOverlayConfig({
                 title: 'Ilość nie może być mniejsza od 1',
                 message: 'Wprowadź poprawną ilość',
+                variant: 'error',
+            });
+            return;
+        }
+
+        const userCardsAmount = amount / appConfig.cardSize;
+        if (userCardsAmount > appConfig.maxCardsPerTransaction) {
+            setUpdateOverlayConfig({
+                title: 'Ilość kart jest za duża',
+                message: 'W jednej transakcji można wymienić maksymalnie ' + appConfig?.maxCardsPerTransaction + ' kart',
                 variant: 'error',
             });
             return;
@@ -175,7 +184,6 @@ const ScanningSection: FC = () => {
                     message: <>Wymieniłaś(eś)<br /><strong>{amount}</strong>x<br />pieczątki klienta na zniżkę</>,
                     variant: 'success'
                 });
-                setHomeRoute({ delay: 250, beforeNavigate: () => setActive(false) });
                 return;
             }
         }
@@ -184,12 +192,8 @@ const ScanningSection: FC = () => {
             message: <>Odjęłaś(eś)<br /><strong>{amount}</strong>x<br />pieczątki od salda klienta</>,
             variant: 'success'
         });
-
-        setHomeRoute({ delay: 250, beforeNavigate: () => setActive(false) });
-
     }, [
         appConfig,
-        setHomeRoute,
         setUpdateOverlayConfig,
         cardId,
         userId,
@@ -224,10 +228,7 @@ const ScanningSection: FC = () => {
             message: <>Skasowałaś(eś)<br /><strong>{amount}</strong>x<br />pieczątki z konta klienta</>,
             variant: 'success'
         });
-
-        setHomeRoute({ delay: 250, beforeNavigate: () => setActive(false) });
-
-    }, [setHomeRoute, setUpdateOverlayConfig, cardId, userId, assistantId]);
+    }, [setUpdateOverlayConfig, cardId, userId, assistantId]);
 
     const renderTabs = () => {
         return (
@@ -261,14 +262,6 @@ const ScanningSection: FC = () => {
                     onClick={() => setVariant('delete')}
                     selected={operation === 'delete'}
                 />
-                <div
-                    className="ScanningSection__tabs-indicator"
-                    style={{
-                        backgroundColor: getTabColor(operation ?? 'earn'),
-                    }}
-                >
-                    {pageTitle}
-                </div>
                 <div
                     className="ScanningSection__tabs-indicator-short"
                     style={{
@@ -328,33 +321,6 @@ const ScanningSection: FC = () => {
         return 'Coś poszło nie tak...';
     };
 
-    let pageTitle: ReactNode = '';
-
-    switch (operation) {
-        case 'spend':
-            pageTitle = <>
-                <Icon iconName={IconName.Gift} color='white' width={12} height={12} />Odbieranie rabatu</>;
-            break;
-        case 'earn':
-            pageTitle = <>
-                <Icon iconName={IconName.Stamp} color='white' width={12} height={12} />Nabijanie pieczątek
-            </>;
-            break;
-        case 'delete':
-            pageTitle = <>
-                <Icon iconName={IconName.StampRemove} color='white' width={12} height={12} />Kasowanie pieczątek
-            </>;
-            break;
-        case 'earn-for-amount':
-            pageTitle = <>
-                <Icon iconName={IconName.StampForCash} color='white' width={12} height={12} />Nabijanie za kwotę
-            </>;
-            break;
-        default:
-            pageTitle = 'Nieznana operacja';
-            break;
-    }
-
     const getTabColor = (variant: 'spend' | 'earn' | 'delete' | 'earn-for-amount') => {
         switch (variant) {
             case 'earn':
@@ -370,13 +336,17 @@ const ScanningSection: FC = () => {
         }
     };
 
+    let pageTitle: ReactNode = "Operacje na karce";
+    if (userToManage) {
+        pageTitle = <><UserIcon.Customer color='white' /> {userToManage.email}</>
+    }
     return (
         <AsidePanel
             side='left'
             active={active}
         >
             <PanelViewTemplate
-                title={'Operacje na karcie'}
+                title={pageTitle}
                 appBar={(
                     <>
                         <FooterNav>

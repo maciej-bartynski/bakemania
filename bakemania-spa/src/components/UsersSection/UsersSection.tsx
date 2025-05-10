@@ -68,7 +68,7 @@ const UsersSection: FC = () => {
                         action: (user) => {
                             setScanningRoute({
                                 userId: user._id,
-                                operation: 'earn',
+                                operation: 'earn-for-amount',
                                 cardId: 'change-force'
                             });
                         },
