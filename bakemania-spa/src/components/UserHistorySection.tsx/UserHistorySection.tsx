@@ -24,7 +24,7 @@ import DateFormatter from "../../tools/formatCreatedAt";
 const { formatReadbleDateToOperationalDate, sortByDateDesc } = DateFormatter;
 
 const UserHistorySection: FC = () => {
-    const { setScanningRoute } = useAppNavigation();
+    const { setScanningForceRoute } = useAppNavigation();
     const { appConfig } = useAppConfigSelector();
     const { me } = useMeSelector();
     const params = useParams<{
@@ -109,10 +109,9 @@ const UserHistorySection: FC = () => {
                             {
                                 label: "Idź do karty",
                                 onClick: () => {
-                                    setScanningRoute({
-                                        cardId: 'change-force',
+                                    setScanningForceRoute({
                                         userId: userId,
-                                        operation: 'spend',
+                                        operation: 'earn-for-amount',
                                     });
                                 },
                                 icon: IconName.QrCode

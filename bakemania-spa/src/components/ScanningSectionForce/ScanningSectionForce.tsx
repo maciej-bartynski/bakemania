@@ -1,5 +1,5 @@
 import { FC, ReactNode, useCallback, useEffect, useState } from 'react';
-import './ScanningSection.css';
+import './../ScanningSection/ScanningSection.css';
 import FooterNav from '../FooterNav/FooterNav';
 import IconName from '../../icons/IconName';
 import AsidePanel from '../../atoms/AsidePanel/AsidePanel';
@@ -10,10 +10,10 @@ import { OtherUser } from '../../storage/users/users-types';
 import UpdateOverlay from '../../atoms/UpdateOverlay/UpdateOverlay';
 import useMeSelector from '../../storage/me/me-selectors';
 import IconButton from '../../atoms/IconButton/IconButton';
-import Earn from './elements/Earn';
-import Spend from './elements/Spend';
-import Delete from './elements/Delete';
-import EarnForAmount from './elements/EarnForAmount';
+import Earn from '../ScanningSection/elements/Earn';
+import Spend from '../ScanningSection/elements/Spend';
+import Delete from '../ScanningSection/elements/Delete';
+import EarnForAmount from '../ScanningSection/elements/EarnForAmount';
 import TabButton from '../../atoms/TabButton/TabButton';
 import { useParams } from 'react-router';
 import useAppNavigation from '../../tools/useAppNavigation';
@@ -22,11 +22,11 @@ import AppUser from '../../atoms/AppUser/AppUser';
 import OperationIcon from '../../atoms/OperationIcon/OperationIcon';
 import Operations from '../../tools/operations';
 
-const ScanningSection: FC = () => {
+const ScanningSectionForce: FC = () => {
     const { appConfig } = useAppConfigSelector();
     const me = useMeSelector();
     const [active, setActive] = useState(false);
-    const { setScanningRoute, setHomeRoute, setCustomerRoute } = useAppNavigation();
+    const { setScanningForceRoute, setHomeRoute, setCustomerRoute } = useAppNavigation();
     useEffect(() => {
         if (!me || !appConfig) {
             return
@@ -40,21 +40,18 @@ const ScanningSection: FC = () => {
         operation: 'spend' | 'earn' | 'delete' | 'earn-for-amount'
     }>();
 
-    const cardId = params.cardId;
     const userId = params.userId;
     const operation = params.operation as 'spend' | 'earn' | 'delete' | 'earn-for-amount';
     const assistantId = me.me?._id;
 
     const setVariant = useCallback((newVariant: 'spend' | 'earn' | 'delete' | 'earn-for-amount') => {
-        if (!userId || !cardId) {
-            return;
+        if (userId) {
+            setScanningForceRoute({
+                userId,
+                operation: newVariant
+            })
         }
-        setScanningRoute({
-            cardId,
-            userId,
-            operation: newVariant
-        })
-    }, [setScanningRoute, cardId, userId]);
+    }, [setScanningForceRoute, userId]);
 
     const [updateOverlayConfig, setUpdateOverlayConfig] = useState<{
         title?: ReactNode,
@@ -81,7 +78,6 @@ const ScanningSection: FC = () => {
     }, [userId]);
 
     const earnStamps = useCallback(async (amount: number): Promise<void> => {
-
         if (amount <= 0) {
             setUpdateOverlayConfig({
                 title: <div className='ScanningSection__updateOverlay-title-warning'>Niewłaściwa ilość</div>,
@@ -99,12 +95,11 @@ const ScanningSection: FC = () => {
         };
 
         setUserLoading(true);
-        await apiService.fetch('assistant/stamps/change', {
+        await apiService.fetch('assistant/stamps/change-force', {
             method: 'POST',
             body: JSON.stringify({
                 amount,
-                userId,
-                cardHash: cardId,
+                userId: userId,
                 assistantId
             })
         }).then(user => {
@@ -130,7 +125,7 @@ const ScanningSection: FC = () => {
             ),
             operation: Operations.StampAddition
         });
-    }, [setUpdateOverlayConfig, cardId, userId, assistantId, userToManage]);
+    }, [setUpdateOverlayConfig, userId, assistantId, userToManage]);
 
     const spentStamps = useCallback(async (amount: number): Promise<void> => {
         if (!appConfig) {
@@ -170,14 +165,12 @@ const ScanningSection: FC = () => {
             });
             return;
         }
-
         setUserLoading(true);
-        await apiService.fetch('assistant/stamps/change', {
+        await apiService.fetch('assistant/stamps/change-force', {
             method: 'POST',
             body: JSON.stringify({
                 amount: -amount,
                 userId,
-                cardHash: cardId,
                 assistantId
             })
         }).then(user => {
@@ -185,7 +178,6 @@ const ScanningSection: FC = () => {
         }).finally(() => {
             setUserLoading(false);
         });
-
         if (appConfig?.cardSize) {
             if (amount % appConfig.cardSize === 0) {
                 setUpdateOverlayConfig({
@@ -239,7 +231,6 @@ const ScanningSection: FC = () => {
     }, [
         appConfig,
         setUpdateOverlayConfig,
-        cardId,
         userId,
         assistantId,
         userToManage
@@ -262,12 +253,11 @@ const ScanningSection: FC = () => {
         }
 
         setUserLoading(true);
-        await apiService.fetch('assistant/stamps/change', {
+        await apiService.fetch('assistant/stamps/change-force', {
             method: 'POST',
             body: JSON.stringify({
                 amount: -amount,
                 userId,
-                cardHash: cardId,
                 assistantId
             })
         }).then(user => {
@@ -293,7 +283,7 @@ const ScanningSection: FC = () => {
             ),
             operation: Operations.StampRemoval
         });
-    }, [setUpdateOverlayConfig, cardId, userId, assistantId, userToManage]);
+    }, [setUpdateOverlayConfig, userId, assistantId, userToManage]);
 
     const renderTabs = () => {
         return (
@@ -338,14 +328,14 @@ const ScanningSection: FC = () => {
         )
     }
 
-    if (!userId || !cardId) {
+    if (!userId) {
         return (
             <AsidePanel
                 side='left'
                 active={active}
             >
                 <PanelViewTemplate
-                    title='Coś poszło nie źle'
+                    title='Coś poszło nie tak'
                     appBar={(
                         <>
                             <FooterNav>
@@ -360,9 +350,7 @@ const ScanningSection: FC = () => {
                         </>
                     )}
                 >
-                    Zeskanuj ponownie kartę użytkownika.<br />
-                    Jeśli problem będzie się powtarzał,<br />
-                    niech użytkownik zaloguje się ponownie.
+                    Nie znaleziono użytkownika
                 </PanelViewTemplate>
             </AsidePanel>
         );
@@ -431,9 +419,14 @@ const ScanningSection: FC = () => {
         }
     };
 
-    let pageTitle: ReactNode = "Operacje na karce";
+    let pageTitle: ReactNode = "Operacja bez zeskanowania karty";
     if (userToManage) {
-        pageTitle = <><Icon iconName={IconName.QrCode} width={20} height={20} color='white' /> {userToManage.email}</>
+        pageTitle = (
+            <>
+                <Icon iconName={IconName.QrCode} width={20} height={20} color='white' />
+                {userToManage.email}
+            </>
+        )
     }
     return (
         <AsidePanel
@@ -457,6 +450,19 @@ const ScanningSection: FC = () => {
                 )}
             >
                 <div className="ScanningSection">
+                    <span
+                        style={{
+                            fontSize: '10px',
+                            color: 'var(--warning)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            paddingTop: 8,
+                        }}
+                    >
+                        <Icon iconName={IconName.Warning} width={12} height={12} color='var(--warning)' />
+                        Wykonujesz operację bez zeskanowania karty użytkownika
+                    </span>
                     {renderActionPanel()}
                 </div>
             </PanelViewTemplate>
@@ -502,7 +508,7 @@ const ScanningSection: FC = () => {
     );
 };
 
-export default ScanningSection;
+export default ScanningSectionForce;
 
 const stampsLabel = (amount: number): string => {
     if (amount === 1) {

@@ -24,7 +24,7 @@ const { formatReadbleDateToOperationalDate } = DateFormatter;
 const SettingsSection: FC = () => {
     const { me } = useMeSelector();
     const { appConfig } = useAppConfigSelector();
-    const { setScanningRoute, setCustomerRoute, setHomeRoute } = useAppNavigation();
+    const { setScanningForceRoute, setCustomerRoute, setHomeRoute } = useAppNavigation();
     const [active, setActive] = useState(false);
     useEffect(() => {
         if (!me || !appConfig) {
@@ -271,10 +271,9 @@ const SettingsSection: FC = () => {
                                                                 strokeWidth: 2
                                                             }}
                                                             onClick={() => {
-                                                                setScanningRoute({
-                                                                    cardId: 'change-force',
+                                                                setScanningForceRoute({
                                                                     userId: entry.userId,
-                                                                    operation: 'spend',
+                                                                    operation: 'earn-for-amount',
                                                                 });
                                                             }}
                                                         >

@@ -17,6 +17,7 @@ import UserHistorySection from "../../components/UserHistorySection.tsx/UserHist
 import { Route, Routes } from "react-router";
 import useAppNavigation from "../../tools/useAppNavigation";
 import UserIcon from "../../icons/UserIcon";
+import ScanningSectionForce from "../../components/ScanningSectionForce/ScanningSectionForce";
 
 type ScannedData = {
     variant: 'spend' | 'earn',
@@ -93,6 +94,12 @@ const AssistantSection: FC<{
                                 path="/scan/:userId/:cardId/:operation"
                                 element={
                                     <ScanningSection />
+                                }
+                            />
+                            <Route
+                                path="/scan-force/:userId/:operation"
+                                element={
+                                    <ScanningSectionForce />
                                 }
                             />
                             <Route

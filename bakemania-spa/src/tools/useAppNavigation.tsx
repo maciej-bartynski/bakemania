@@ -13,6 +13,14 @@ const useAppNavigation = () => {
         navigate(`/scan/${params.userId}/${params.cardId}/${params.operation}`);
     }, [navigate]);
 
+    const setScanningForceRoute = useCallback((params: {
+        userId: string,
+        operation: 'spend' | 'earn' | 'earn-for-amount' | 'delete'
+    }) => {
+
+        navigate(`/scan-force/${params.userId}/${params.operation}`);
+    }, [navigate]);
+
     const setCustomerRoute = useCallback((userId: string, params?: {
         beforeNavigate: () => void;
         delay: number
@@ -75,6 +83,7 @@ const useAppNavigation = () => {
 
     return {
         setScanningRoute,
+        setScanningForceRoute,
         setUsersRoute,
         setHomeRoute,
         setCustomerRoute,
