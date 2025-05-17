@@ -48,3 +48,78 @@
     font-size: 10px;
     font-weight: 900;
 }
+
+/**
+    UpdateOverlay
+*/
+.ScanningSection__updateOverlay-stamps-earned {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.ScanningSection__updateOverlay-stamps-earned-text-small {
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.ScanningSection__updateOverlay-stamps-earned-text-big {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.ScanningSection__updateOverlay-title-gift {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--bakemaniaGold);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ScanningSection__updateOverlay-title-stamp-addition {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--earn-stamp);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ScanningSection__updateOverlay-title-stamp-removal {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--remove-stamp);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ScanningSection__updateOverlay-title-warning {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--warning);
+}
+
+.ScanningSection__bottom-panel-buttons {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+}
+
+.action-btn {
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    gap: 12px;
+}

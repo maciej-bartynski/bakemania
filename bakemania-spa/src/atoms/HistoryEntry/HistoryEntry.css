@@ -5,7 +5,6 @@
     padding: 16px;
     border-radius: 12px;
     gap: 16px;
-    margin: 8px 0;
     box-shadow: 0 0px 4px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
     background-color: white;
@@ -17,50 +16,37 @@
     transform: translateY(-2px);
 }
 
-.HistoryEntry__icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: var(--icon-background);
-    flex-shrink: 0;
-}
-
 .HistoryEntry__content {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 8px;
     min-width: 0;
 }
 
 .HistoryEntry__details {
     display: flex;
     flex-direction: column;
-    gap: 4px;
 }
 
 .HistoryEntry__operation {
-    font-size: 16px;
+    font-size: 10px;
     font-weight: 600;
     color: var(--text-color);
 }
 
 .HistoryEntry__date {
-    font-size: 14px;
+    font-size: 10px;
     color: rgba(0, 0, 0, 0.6);
 }
 
 .HistoryEntry__userEmail {
-    font-size: 14px;
+    font-size: 10px;
     color: var(--text-color);
     font-weight: 500;
 }
 
 .HistoryEntry__assistantEmail {
-    font-size: 14px;
+    font-size: 10px;
     color: rgba(0, 0, 0, 0.6);
     font-style: italic;
 }
@@ -72,13 +58,13 @@
 }
 
 .HistoryEntry__change {
-    font-size: 16px;
+    font-size: 10px;
     font-weight: 600;
     color: var(--text-color);
 }
 
 .HistoryEntry__balance {
-    font-size: 15px;
+    font-size: 10px;
     color: rgba(0, 0, 0, 0.8);
     font-weight: 500;
     background-color: rgba(0, 0, 0, 0.03);
@@ -128,20 +114,19 @@
     flex-direction: column;
     justify-content: center;
     height: 100%;
-    gap: 8px;
 }
 
 .HistoryEntry__option {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 12px 16px;
+    padding: 0px 16px;
     width: 100%;
     border: none;
     background: none;
     cursor: pointer;
     color: rgba(0, 0, 0, 0.8);
-    font-size: 14px;
+    font-size: 10px;
     transition: background-color 0.2s ease;
     text-align: left;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);

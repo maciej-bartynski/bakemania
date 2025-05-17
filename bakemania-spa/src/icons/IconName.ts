@@ -22,6 +22,7 @@ enum IconName {
     ChevronDoubleLeft = 'ChevronDoubleLeft',
     ChevronTripleLeft = 'ChevronTripleLeft',
     ChevronTriple = 'ChevronTriple',
+    Warning = 'Warning',
 }
 
 export default IconName;

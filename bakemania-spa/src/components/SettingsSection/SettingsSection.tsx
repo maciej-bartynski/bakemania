@@ -17,6 +17,9 @@ import useAppDispatch from "../../storage/useAppDispatch";
 import meActions from "../../storage/me/me-actions";
 import UserRole from "../../storage/me/me-types";
 import useAppNavigation from "../../tools/useAppNavigation";
+import DateFormatter from "../../tools/formatCreatedAt";
+
+const { formatReadbleDateToOperationalDate } = DateFormatter;
 
 const SettingsSection: FC = () => {
     const { me } = useMeSelector();
@@ -231,7 +234,7 @@ const SettingsSection: FC = () => {
                     <div className="settings-section-field">
                         <h2 className="settings-section-field__history-header">
                             <div className="settings-section-field__history-header-content">
-                                <span>Operacje moderowane przez </span>
+                                <span>Twoje operacje</span>
                                 <AppUser email={me.email} role={me.role} />
                             </div>
                         </h2>
@@ -239,7 +242,7 @@ const SettingsSection: FC = () => {
                             {me.transactionsHistory?.length ? [...me.transactionsHistory].reverse().map(entry => (
                                 <HistoryEntry
                                     key={entry._id}
-                                    createdAt={entry.createdAt}
+                                    createdAt={formatReadbleDateToOperationalDate(entry.createdAt)}
                                     by={entry.by}
                                     balance={entry.balance}
                                     userEmail={users.find(user => user._id === entry.userId)?.email ?? '-'}

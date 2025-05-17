@@ -44,6 +44,7 @@ const RichNumberForm: FC<{
 
                 <button
                     onClick={() => onSubmit(value)}
+                    disabled={value === 0}
                 >
                     {buttonLabel(value)}
                 </button>

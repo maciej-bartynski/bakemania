@@ -10,7 +10,8 @@ const CustomerItem: FC<{
     userActions: {
         label: string;
         action: (user: OtherUser) => void;
-        icon: React.ReactNode;
+        icon?: IconName;
+        iconElement?: React.ReactNode;
     }[]
 }> = ({
     user,
@@ -61,7 +62,8 @@ const CustomerItem: FC<{
                                         color: 'var(--customer)'
                                     }}
                                 >
-                                    <Icon iconName={IconName.Cog} color='var(--customer)' width={16} height={16} />
+                                    {userAction.icon ? <Icon iconName={userAction.icon} color='var(--customer)' width={16} height={16} /> : null}
+                                    {userAction.iconElement ? userAction.iconElement : null}
                                     {userAction.label}
                                 </button>
                             )

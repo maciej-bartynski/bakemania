@@ -83,14 +83,14 @@ const UserShort: React.FC<UserShortProps> = ({
                                 <div className="UserShort__row-line success">
                                     <Icon iconName={IconName.Stamp} color="var(--customer)" width={12} height={12} />
                                     <span className="UserShort__row-line-text">
-                                        <strong>{userStampsAmount}</strong> pieczątek
+                                        <strong>{userStampsAmount}</strong> {stampsLabel(userStampsAmount)}
                                     </span>
                                 </div>
 
                                 <div className="UserShort__row-line success">
                                     <Icon iconName={IconName.Gift} color="var(--customer)" width={12} height={12} />
                                     <span className="UserShort__row-line-text">
-                                        <strong>{userGiftsAmount}</strong> kart
+                                        <strong>{userGiftsAmount}</strong> {cardsLabel(userGiftsAmount)}
                                     </span>
                                 </div>
                             </>
@@ -162,3 +162,39 @@ const UserShort: React.FC<UserShortProps> = ({
 }
 
 export default UserShort;
+
+const stampsLabel = (amount: number): string => {
+
+    if (amount === 1) {
+        return 'pieczątka';
+    }
+
+    if ([12, 13, 14].includes(amount)) {
+        return 'pieczątek';
+    }
+
+    const toStr = `${amount}`;
+    if (["2", "3", "4"].includes(toStr[toStr.length - 1])) {
+        return 'pieczątki';
+    }
+
+    return 'pieczątek';
+}
+
+const cardsLabel = (amount: number): string => {
+
+    if (amount === 1) {
+        return 'karta';
+    }
+
+    if ([12, 13, 14].includes(amount)) {
+        return 'kart';
+    }
+
+    const toStr = `${amount}`;
+    if (["2", "3", "4"].includes(toStr[toStr.length - 1])) {
+        return 'karty';
+    }
+
+    return 'kart';
+}
