@@ -15,7 +15,7 @@ const createCardId = async (): Promise<UserCard> => {
     }
 }
 
-const validateCard = async (storedCard: UserCard, requestHash: string) => {
+const validateCard = (storedCard: UserCard, requestHash: string) => {
     const { createdAt, hash } = storedCard;
     if (requestHash === hash) {
         return validateCardIssuedDate(createdAt);

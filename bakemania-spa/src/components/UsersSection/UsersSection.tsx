@@ -12,7 +12,7 @@ import useAppDispatch from '../../storage/useAppDispatch';
 import useAppNavigation from '../../tools/useAppNavigation';
 
 const UsersSection: FC = () => {
-    const { setScanningRoute, setHomeRoute, setCustomerRoute } = useAppNavigation();
+    const { setScanningForceRoute, setHomeRoute, setCustomerRoute } = useAppNavigation();
 
     const { me } = useMeSelector();
     const { appConfig } = useAppConfigSelector();
@@ -64,10 +64,9 @@ const UsersSection: FC = () => {
                     userActions={[{
                         label: 'Operacje',
                         action: (user) => {
-                            setScanningRoute({
+                            setScanningForceRoute({
                                 userId: user._id,
                                 operation: 'earn-for-amount',
-                                cardId: 'change-force'
                             });
                         },
                         icon: IconName.QrCode

@@ -44,7 +44,7 @@ const AuthLogin: FC = () => {
                 : null;
 
             const cardId: string | null = (typeof loginResponse?.cardId === 'string' && loginResponse?.cardId?.trim())
-                ? loginResponse.token as string
+                ? loginResponse.cardId as string
                 : null;
 
             if (!token) {
