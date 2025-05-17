@@ -1,11 +1,11 @@
-name: Staging Deployment
+name: Production Deployment
 
 on:
   pull_request:
     types:
       - closed
     branches:
-      - develop
+      - master
 
 jobs:
   deploy:
@@ -21,8 +21,8 @@ jobs:
           username: ${{ secrets.OVH_USERNAME }}
           key: ${{ secrets.OVH_SSH_KEY }}
           script: |
-            cd /home/ubuntu/staging-bakemania
-            git checkout develop
-            git pull origin develop
+            cd /home/ubuntu/bakemania
+            git checkout master
+            git pull origin master
             make build
             make start
