@@ -7,7 +7,6 @@ import useAppConfigSelector from '../../storage/appConfig/appConfig-selectors';
 import AsidePanel from '../../atoms/AsidePanel/AsidePanel';
 import PanelViewTemplate from '../../atoms/PanelViewTemplate/PanelViewTemplate';
 import UsersList from './elements/UsersList';
-import Icon from '../../icons/Icon';
 import usersActions from '../../storage/users/users-actions';
 import useAppDispatch from '../../storage/useAppDispatch';
 import useAppNavigation from '../../tools/useAppNavigation';
@@ -62,7 +61,6 @@ const UsersSection: FC = () => {
             >
 
                 <UsersList
-                    headerElement={<strong>Zarządzaj gośćmi</strong>}
                     userActions={[{
                         label: 'Operacje',
                         action: (user) => {
@@ -72,7 +70,7 @@ const UsersSection: FC = () => {
                                 cardId: 'change-force'
                             });
                         },
-                        icon: <Icon iconName={IconName.Cog} color="white" />
+                        icon: IconName.QrCode
                     }, {
                         label: "Historia",
                         action: (user) => setCustomerRoute(user._id, {

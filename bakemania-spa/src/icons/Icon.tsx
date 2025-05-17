@@ -23,6 +23,7 @@ import ChevronLeft from "./ChevronLeft";
 import ChevronDoubleLeft from "./ChevronDoubleLeft";
 import ChevronTripleLeft from "./ChevronTripleLeft";
 import ChevronTriple from "./ChevronTriple";
+import WarningIcon from "./WarningIcon";
 
 const Icon: FC<{
     width?: number;
@@ -135,6 +136,10 @@ const Icon: FC<{
             }
             case IconName.ChevronTriple: {
                 IconComponent = ChevronTriple
+                break;
+            }
+            case IconName.Warning: {
+                IconComponent = WarningIcon
                 break;
             }
         }

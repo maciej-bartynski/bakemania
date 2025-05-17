@@ -1,10 +1,14 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import UserShort from "../../../atoms/UserShort/UserShort";
 import RichNumberForm from "../../RichNumberForm/RichNumberForm";
 import { OtherUser } from "../../../storage/users/users-types";
 import { AppConfig } from "../../../storage/appConfig/appConfig-types";
 import Icon from "../../../icons/Icon";
 import IconName from "../../../icons/IconName";
+import BottomPanel from "../../../atoms/BottomPanel/BottomPanel";
+import OperationIcon from "../../../atoms/OperationIcon/OperationIcon";
+import Operations from "../../../tools/operations";
+import AppUser from "../../../atoms/AppUser/AppUser";
 
 const Spend: FC<{
     user: OtherUser,
@@ -21,6 +25,7 @@ const Spend: FC<{
     renderTabs
 }) => {
         const userGiftsAmount = Math.floor((user?.stamps.amount ?? 0) / appConfig.cardSize);
+        const [showConfirmationPanelWithAmount, setShowConfirmationPanelWithAmount] = useState(0);
 
         return (
             <>
@@ -66,7 +71,7 @@ const Spend: FC<{
                         )}
                         onSubmit={(submitValue) => {
                             const stampsAmount = submitValue * appConfig.cardSize;
-                            spendStamps(stampsAmount);
+                            setShowConfirmationPanelWithAmount(stampsAmount);
                         }}
                         minValue={0}
                         maxValue={userGiftsAmount > appConfig.maxCardsPerTransaction ? appConfig.maxCardsPerTransaction : userGiftsAmount}
@@ -81,8 +86,51 @@ const Spend: FC<{
                         Użytkownik nie ma kart do wymiany
                     </span>
                 )}
+
+                <BottomPanel
+                    title={(
+                        <div className="ScanningSection__updateOverlay-title-gift">
+                            <OperationIcon operation={Operations.GiftExchange} />
+                            Wymiana {showConfirmationPanelWithAmount / appConfig.cardSize} {giftLabelForSpendPanel(showConfirmationPanelWithAmount / appConfig.cardSize)}
+                        </div>
+                    )}
+                    show={!!showConfirmationPanelWithAmount}
+                    toggleBottomPanel={() => setShowConfirmationPanelWithAmount(0)}
+                >
+                    <span style={{ alignSelf: 'center' }} >
+                        na rabat <strong>{(showConfirmationPanelWithAmount / appConfig.cardSize) * appConfig.discount} PLN</strong>
+                    </span>
+                    <AppUser email={user.email} role={user.role} />
+                    <button
+                        type="button"
+                        className="action-btn"
+                        style={{
+                            backgroundColor: 'var(--bakemaniaGold)',
+                        }}
+                        onClick={async () => {
+                            if (showConfirmationPanelWithAmount > 0) {
+                                spendStamps(showConfirmationPanelWithAmount);
+                                setShowConfirmationPanelWithAmount(0)
+                            } else {
+                                setShowConfirmationPanelWithAmount(0);
+                            }
+                        }}
+
+                    >
+                        <Icon iconName={IconName.Gift} color="white" />Wymieniam {(showConfirmationPanelWithAmount / appConfig.cardSize)}
+                    </button>
+                </BottomPanel >
             </>
         );
     }
 
 export default Spend;
+
+
+const giftLabelForSpendPanel = (amount: number): string => {
+    if (amount === 1) {
+        return 'karty';
+    }
+
+    return 'kart';
+}

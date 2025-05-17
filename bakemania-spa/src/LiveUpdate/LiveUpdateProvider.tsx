@@ -12,28 +12,15 @@ const LiveUpdateProvider: FC<PropsWithChildren> = ({ children }) => {
     const { me } = useMeSelector();
     const dispatch = useAppDispatch();
 
-    const stampsUpdationRef = useRef<NodeJS.Timeout | null>(null);
     const [stampsUpdated, _setStampsUpdated] = useState(false);
+
     const setStampsUpdated = useCallback(() => {
         _setStampsUpdated(true);
-        stampsUpdationRef.current = setTimeout(() => {
-            _setStampsUpdated(false);
-        }, 5000);
     }, []);
 
     const dismissStampsUpdated = useCallback(() => {
-        if (stampsUpdationRef.current) {
-            clearTimeout(stampsUpdationRef.current)
-        }
         _setStampsUpdated(false);
-
     }, []);
-
-    useEffect(() => {
-        return () => {
-            if (stampsUpdationRef.current) clearTimeout(stampsUpdationRef.current);
-        }
-    }, [])
 
     const webSocketServerRef = useRef<WebSocket | null>(null);
     const sessionIdRef = useRef<string>(uuid.v4());

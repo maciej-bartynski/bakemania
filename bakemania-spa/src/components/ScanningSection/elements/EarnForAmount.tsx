@@ -1,10 +1,14 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import UserShort from "../../../atoms/UserShort/UserShort";
 import { OtherUser } from "../../../storage/users/users-types";
 import RichNumberForm from "../../RichNumberForm/RichNumberForm";
 import { AppConfig } from "../../../storage/appConfig/appConfig-types";
 import Icon from "../../../icons/Icon";
 import IconName from "../../../icons/IconName";
+import BottomPanel from "../../../atoms/BottomPanel/BottomPanel";
+import OperationIcon from "../../../atoms/OperationIcon/OperationIcon";
+import Operations from "../../../tools/operations";
+import AppUser from "../../../atoms/AppUser/AppUser";
 
 const EarnForAmount: FC<{
     user: OtherUser,
@@ -20,6 +24,7 @@ const EarnForAmount: FC<{
     renderTabs
 }) => {
         const userGiftsAmount = Math.floor((user?.stamps.amount ?? 0) / appConfig.cardSize);
+        const [showConfirmationPanelWithAmount, setShowConfirmationPanelWithAmount] = useState(0);
 
         return (
             <>
@@ -68,15 +73,54 @@ const EarnForAmount: FC<{
                     onSubmit={(submitValue: number) => {
                         const stampsAmount = Math.floor(submitValue / appConfig.discount);
                         if (stampsAmount > 0) {
-                            earnStamps(stampsAmount)
+                            setShowConfirmationPanelWithAmount(stampsAmount)
                         }
                     }}
                     minValue={0}
                     rangeMaxValue={500}
                     step={10}
                 />
+
+                <BottomPanel
+                    title={(
+                        <div className="ScanningSection__updateOverlay-title-stamp-addition">
+                            <OperationIcon operation={Operations.StampAddition} />
+                            Dodawanie {showConfirmationPanelWithAmount} {stampsLabelForEarnForAmountPanel(showConfirmationPanelWithAmount)}
+                        </div>
+                    )}
+                    show={!!showConfirmationPanelWithAmount}
+                    toggleBottomPanel={() => setShowConfirmationPanelWithAmount(0)}
+                >
+                    <AppUser email={user.email} role={user.role} />
+                    <button
+                        type="button"
+                        className="action-btn"
+                        style={{
+                            backgroundColor: 'var(--earn-stamp)',
+                        }}
+                        onClick={async () => {
+                            if (showConfirmationPanelWithAmount > 0) {
+                                earnStamps(showConfirmationPanelWithAmount)
+                                setShowConfirmationPanelWithAmount(0)
+                            } else {
+                                setShowConfirmationPanelWithAmount(0);
+                            }
+                        }}
+
+                    >
+                        <Icon iconName={IconName.StampForCash} color="white" />Dodaję {showConfirmationPanelWithAmount}
+                    </button>
+                </BottomPanel>
             </>
         )
     }
 
 export default EarnForAmount;
+
+const stampsLabelForEarnForAmountPanel = (amount: number): string => {
+    if (amount === 1) {
+        return 'pieczątki';
+    }
+
+    return 'pieczątek';
+}

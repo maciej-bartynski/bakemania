@@ -13,11 +13,9 @@ import IconName from "../../icons/IconName";
 import SettingsSection from "../../components/SettingsSection/SettingsSection";
 import { useLiveUpdateContext } from "../../LiveUpdate/LiveUpdateContext";
 import Background from "../../atoms/Background/Background";
-import Stamp from "../../atoms/Stamp/Stamp";
-import iterateIcons from "../../atoms/Stamp/Stamp.helper";
-import LastHistoryEntry from "../../atoms/LastHistoryEntry/LastHistoryEntry";
 import { Route, Routes } from "react-router";
 import useAppNavigation from "../../tools/useAppNavigation";
+import CustomerLiveUpdate from "../../atoms/CustomerLiveUpdate/CustomerLiveUpdate";
 
 const DashboardScreen: FC<{
     me: Me,
@@ -27,7 +25,7 @@ const DashboardScreen: FC<{
 
         const [showStampQr, setShowStampQr] = useState(false);
         const [showGiftCardsSection, setShowGiftCardsSection] = useState(false);
-        const { stampsUpdated, dismissStampsUpdated } = useLiveUpdateContext();
+        const { stampsUpdated } = useLiveUpdateContext();
         const { setSettingsRoute } = useAppNavigation();
 
         useEffect(() => {
@@ -65,6 +63,7 @@ const DashboardScreen: FC<{
             callToAction = <>Twoja karta jest gotowa!</>;
         }
 
+        const currentGiftsAmount = Math.floor(me.stamps.amount / cardSize);
         return (
             <Background
                 appBar={
@@ -84,10 +83,43 @@ const DashboardScreen: FC<{
                                 label: (me.stamps.amount > (appConfigState.appConfig?.cardSize ?? 7)) ? 'Zobacz nagrody' : 'Nagrody',
                                 action: openGiftsSection,
                                 icon: IconName.Gift,
-                                variant: (me.stamps.amount > (appConfigState.appConfig?.cardSize ?? 7)) ? 'primary' : undefined
+                                variant: (me.stamps.amount > (appConfigState.appConfig?.cardSize ?? 7)) ? 'primary' : undefined,
+                                badge: currentGiftsAmount > 0 ? currentGiftsAmount : undefined
                             },
                         ]}
                     />
+                }
+                panels={
+                    <>
+                        <QrBottomPanel
+                            userId={me._id}
+                            show={showStampQr}
+                            toggleBottomPanel={toggleStampQr}
+                        />
+
+                        <DiscountSection
+                            active={showGiftCardsSection}
+                            toggleActive={closeGiftsSection}
+                        />
+
+                        <Routes>
+                            <Route
+                                path="/settings"
+                                element={
+                                    <SettingsSection />
+                                }
+                            />
+                        </Routes>
+
+                        {(!appConfigState.appConfig || appConfigState.status === ReducerState.Pristine || appConfigState.status === ReducerState.Fetching) && (
+                            <div className="splashScreen__loader-wrapper">
+                                <div className={`global-loader-spinner --active`} />
+                            </div>
+                        )}
+                        <CustomerLiveUpdate
+                            openGiftsSection={openGiftsSection}
+                        />
+                    </>
                 }
             >
                 <div className="dashboardScreen">
@@ -106,99 +138,6 @@ const DashboardScreen: FC<{
                         </div>
                         <p className="dashboardScreen__message">{callToAction}<br />{me.email}</p>
                     </section>
-
-                    <QrBottomPanel
-                        userId={me._id}
-                        show={showStampQr}
-                        toggleBottomPanel={toggleStampQr}
-                    />
-
-                    <DiscountSection
-                        active={showGiftCardsSection}
-                        toggleActive={closeGiftsSection}
-                    />
-
-                    <Routes>
-                        <Route
-                            path="/settings"
-                            element={
-                                <SettingsSection />
-                            }
-                        />
-                    </Routes>
-
-                    {(!appConfigState.appConfig || appConfigState.status === ReducerState.Pristine || appConfigState.status === ReducerState.Fetching) && (
-                        <div className="splashScreen__loader-wrapper">
-                            <div className={`global-loader-spinner --active`} />
-                        </div>
-                    )}
-
-                    <div
-                        onClick={dismissStampsUpdated}
-                        style={{
-                            position: 'fixed',
-                            top: stampsUpdated ? '50%' : 0,
-                            left: stampsUpdated ? '50%' : 0,
-                            transform: stampsUpdated ? 'translate(-50%, -50%)' : 'translate(0%, 0%)',
-                            background: 'white',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            overflow: 'hidden',
-                            maxWidth: '80vw',
-                            maxHeight: '70vh',
-                            borderRadius: 16,
-                            boxShadow: stampsUpdated ? '0 0 10px 120px rgba(0, 0, 0, 0.5)' : undefined,
-                            ...(stampsUpdated ? {
-                                width: '100%',
-                                height: '100%',
-                                animation: 'ping-animation 5000ms linear',
-                                right: 0,
-                                bottom: 0,
-                            } : {
-                                width: 0,
-                                height: 0,
-                                animation: undefined,
-                                right: undefined,
-                                bottom: undefined,
-                            }),
-
-                        }}
-                    >
-                        {appConfigState.appConfig && me.stamps.history[me.stamps.history.length - 1] && (
-                            <LastHistoryEntry
-                                historyEntry={me.stamps.history[me.stamps.history.length - 1]}
-                                appConfig={appConfigState.appConfig}
-                            />
-                        )}
-
-                        <button
-                            onClick={dismissStampsUpdated}
-                            className="secondary"
-                            style={{
-                                marginTop: 16,
-                                paddingLeft: 16,
-                                paddingRight: 16,
-                            }}
-                        >
-                            Rozumiem!
-                        </button>
-                        {!appConfigState.appConfig && (
-                            <>
-                                <span>
-                                    <Stamp stampConfig={iterateIcons(3)[2]} />
-                                </span>
-                                <br />
-                                <div>
-                                    PING
-                                </div>
-                                <div>
-                                    Coś fajnego!
-                                </div>
-                            </>
-                        )}
-                    </div>
                 </div>
             </Background>
         )

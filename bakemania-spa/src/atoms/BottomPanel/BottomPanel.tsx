@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren } from "react";
+import { FC, PropsWithChildren, ReactNode } from "react";
 import './BottomPanel.css';
 import Config from "../../config";
 import Icon from "../../icons/Icon";
@@ -9,7 +9,7 @@ type BottomPanelVariant = 'default' | 'danger';
 const BottomPanel: FC<PropsWithChildren<{
     show: boolean,
     toggleBottomPanel: () => void,
-    title: string,
+    title: ReactNode,
     variant?: BottomPanelVariant
 }>> = ({ show, toggleBottomPanel, title, children, variant = 'default' }) => {
     return (

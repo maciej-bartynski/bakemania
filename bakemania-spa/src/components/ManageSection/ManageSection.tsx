@@ -98,7 +98,7 @@ const ManageSection: FC = () => {
                                 userActions={[{
                                     label: 'Zatrudnij',
                                     action: setSelectedCustomer,
-                                    icon: <UserIcon.Promote color="white" />
+                                    iconElement: <UserIcon.Promote color="var(--manager)" />
                                 }]}
                                 headerElement={(
                                     <div className='manage-section-form__header --customer'>

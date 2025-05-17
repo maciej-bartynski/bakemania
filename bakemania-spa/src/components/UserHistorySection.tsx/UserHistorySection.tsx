@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { OtherUser } from "../../storage/users/users-types";
 import AsidePanel from "../../atoms/AsidePanel/AsidePanel";
 import PanelViewTemplate from "../../atoms/PanelViewTemplate/PanelViewTemplate";
@@ -16,9 +16,12 @@ import assistantsAction from "../../storage/assistants/assistants-actions";
 import useAppDispatch from "../../storage/useAppDispatch";
 import useAssistantsSelector from "../../storage/assistants/users-selectors";
 import AppUser from "../../atoms/AppUser/AppUser";
-import UserRole from "../../storage/me/me-types";
+import UserRole, { StampsHistoryEntry } from "../../storage/me/me-types";
 import { useParams } from "react-router";
 import useAppNavigation from "../../tools/useAppNavigation";
+import DateFormatter from "../../tools/formatCreatedAt";
+
+const { formatReadbleDateToOperationalDate, sortByDateDesc } = DateFormatter;
 
 const UserHistorySection: FC = () => {
     const { setScanningRoute } = useAppNavigation();
@@ -60,7 +63,9 @@ const UserHistorySection: FC = () => {
         fetchUser();
     }, [active, userId]);
 
-
+    const sortedHistory: StampsHistoryEntry[] = useMemo(() => {
+        return sortByDateDesc(user?.stamps.history ?? []);
+    }, [user?.stamps.history]) as StampsHistoryEntry[]
 
     if (!appConfig || !user || !me) {
         return null;
@@ -70,7 +75,7 @@ const UserHistorySection: FC = () => {
 
     return (
         <AsidePanel
-            side='left'
+            side='right'
             active={active}
         >
             <PanelViewTemplate
@@ -122,10 +127,10 @@ const UserHistorySection: FC = () => {
                         </div>
                     </div>
                     <div className="HistorySection__list">
-                        {user?.stamps.history.map(entry => (
+                        {sortedHistory.map(entry => (
                             <HistoryEntry
                                 key={entry._id}
-                                createdAt={entry.createdAt}
+                                createdAt={formatReadbleDateToOperationalDate(entry.createdAt)}
                                 by={entry.by}
                                 balance={entry.balance}
                                 assistantId={entry.assistantId}

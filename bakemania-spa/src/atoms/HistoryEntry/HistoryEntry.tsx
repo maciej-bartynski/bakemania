@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './HistoryEntry.css';
-import Icon from '../../icons/Icon';
-import IconName from '../../icons/IconName';
+import OperationIcon from '../OperationIcon/OperationIcon';
+import Operations from '../../tools/operations';
 
 const HistoryEntry: React.FC<{
     createdAt: string;
@@ -24,24 +24,18 @@ const HistoryEntry: React.FC<{
         const [isExpanded, setIsExpanded] = useState(false);
         const isGift = by < 0 && by % cardSize === 0;
         const isStampRemoval = by < 0 && by % cardSize !== 0;
-
-        const getIcon = () => {
-            if (isGift) return <Icon iconName={IconName.Gift} color='white' width={24} height={24} />;
-            if (isStampRemoval) return <Icon iconName={IconName.StampRemove} color='white' width={24} height={24} />;
-            return <Icon iconName={IconName.Stamp} color='white' width={24} height={24} />;
-        };
+        let operation = Operations.StampAddition;
+        if (isGift) operation = Operations.GiftExchange;
+        if (isStampRemoval) operation = Operations.StampRemoval;
 
         const getColors = () => {
             if (isGift) return {
-                iconBackground: 'var(--bakemaniaGold)',
                 textColor: 'var(--bakemaniaGold)'
             };
             if (isStampRemoval) return {
-                iconBackground: 'var(--remove-stamp)',
                 textColor: 'var(--remove-stamp)'
             };
             return {
-                iconBackground: 'var(--earn-stamp)',
                 textColor: 'var(--earn-stamp)'
             };
         };
@@ -62,13 +56,10 @@ const HistoryEntry: React.FC<{
             <div
                 className="HistoryEntry"
                 style={{
-                    '--icon-background': colors.iconBackground,
                     '--text-color': colors.textColor
                 } as React.CSSProperties}
             >
-                <div className="HistoryEntry__icon">
-                    {getIcon()}
-                </div>
+                <OperationIcon operation={operation} />
 
                 <div className="HistoryEntry__content">
                     <div className="HistoryEntry__details">

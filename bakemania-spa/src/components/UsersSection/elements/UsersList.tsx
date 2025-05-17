@@ -6,13 +6,15 @@ import CustomerItem from "./CustomerItem";
 import useUsersSelector from "../../../storage/users/users-selectors";
 import './UsersList.css'
 import { OtherUser } from "../../../storage/users/users-types";
+import IconName from "../../../icons/IconName";
 
 const UsersList: FC<{
-    headerElement: React.ReactNode;
+    headerElement?: React.ReactNode;
     userActions: {
         label: string,
         action: (user: OtherUser) => void;
-        icon: React.ReactNode
+        icon?: IconName;
+        iconElement?: React.ReactNode;
     }[];
 }> = ({
     headerElement,
@@ -36,7 +38,7 @@ const UsersList: FC<{
                     placeholder='Wyszukaj użytkownika po emailu'
                     value={userEmail ?? ""}
                     onChange={(e) => {
-                        setUserEmail(e.target.value);
+                        setUserEmail(e.target.value.toLowerCase());
                     }}
                 />
 

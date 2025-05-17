@@ -28,6 +28,7 @@ const FooterNav: FC<PropsWithChildren<{
                             iconColor={action.variant === 'primary' ? "white" : undefined}
                             textColor={action.variant === 'primary' ? "var(--bakemaniaGold)" : undefined}
                             bgColor={action.variant === 'primary' ? "var(--bakemaniaGold)" : undefined}
+                            badge={action.badge}
                         />
                     )
                 })}
@@ -42,4 +43,5 @@ export type NavAction = {
     action: () => void;
     icon: IconName | React.ReactNode;
     variant?: 'primary' | 'secondary';
+    badge?: React.ReactNode;
 }

@@ -27,6 +27,13 @@ assistantRouter.post('/stamps/change', async (req, res) => {
             cardHash: string,
         };
 
+        if (amount === 0) {
+            res.status(400).json({
+                message: 'Ilość pieczątek musi być różna od 0.'
+            });
+            return;
+        }
+
         if (typeof amount !== 'number' || Math.floor(amount) !== amount) {
             res.status(400).json({
                 message: 'Ilość pieczątek musi być liczbą całkowitą.'
@@ -119,6 +126,13 @@ assistantRouter.post('/stamps/change-force', async (req, res) => {
             amount: number,
             assistantId: string,
         };
+
+        if (amount === 0) {
+            res.status(400).json({
+                message: 'Ilość pieczątek musi być różna od 0.'
+            });
+            return;
+        }
 
         if (typeof amount !== 'number' || Math.floor(amount) !== amount) {
             res.status(400).json({

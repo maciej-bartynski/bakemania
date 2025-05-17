@@ -12,6 +12,7 @@ const IconButton: FC<{
     label?: string;
     onClick: () => void;
     variant?: 'primary' | 'secondary';
+    badge?: React.ReactNode;
 }> = ({
     iconName,
     iconElement,
@@ -20,7 +21,8 @@ const IconButton: FC<{
     bgColor = "var(--text)",
     label,
     onClick,
-    variant = 'primary'
+    variant = 'primary',
+    badge
 }) => {
         return (
             <button
@@ -48,6 +50,11 @@ const IconButton: FC<{
                         }}
                     >
                         {label}
+                    </span>
+                )}
+                {badge && (
+                    <span className='icon-button__badge'>
+                        {badge}
                     </span>
                 )}
             </button>

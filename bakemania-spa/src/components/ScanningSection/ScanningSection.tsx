@@ -1,4 +1,4 @@
-import { FC, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, ReactNode, useCallback, useEffect, useState } from 'react';
 import './ScanningSection.css';
 import FooterNav from '../FooterNav/FooterNav';
 import IconName from '../../icons/IconName';
@@ -17,7 +17,10 @@ import EarnForAmount from './elements/EarnForAmount';
 import TabButton from '../../atoms/TabButton/TabButton';
 import { useParams } from 'react-router';
 import useAppNavigation from '../../tools/useAppNavigation';
-import UserIcon from '../../icons/UserIcon';
+import Icon from '../../icons/Icon';
+import AppUser from '../../atoms/AppUser/AppUser';
+import OperationIcon from '../../atoms/OperationIcon/OperationIcon';
+import Operations from '../../tools/operations';
 
 const ScanningSection: FC = () => {
     const { appConfig } = useAppConfigSelector();
@@ -37,9 +40,6 @@ const ScanningSection: FC = () => {
         operation: 'spend' | 'earn' | 'delete' | 'earn-for-amount'
     }>();
 
-    const overlayTimerRef = useRef<NodeJS.Timeout | null>(null);
-
-
     const cardId = params.cardId ?? 'card-id-placeholder';
     const userId = params.userId ?? 'user-id-placeholder';
     const operation = params.operation as 'spend' | 'earn' | 'delete' | 'earn-for-amount';
@@ -53,32 +53,13 @@ const ScanningSection: FC = () => {
         })
     }, [setScanningRoute, cardId, userId]);
 
-    useEffect(() => {
-        return () => {
-            if (overlayTimerRef.current) {
-                clearTimeout(overlayTimerRef.current);
-            }
-        }
-    }, []);
-
-    const [updateOverlayConfig, _setUpdateOverlayConfig] = useState<{
-        title: ReactNode,
+    const [updateOverlayConfig, setUpdateOverlayConfig] = useState<{
+        title?: ReactNode,
         message: ReactNode,
-        variant: 'success' | 'error'
+        operation: Operations | 'warning'
     } | null>(null);
 
-    const setUpdateOverlayConfig = useCallback((param: {
-        title: ReactNode,
-        message: ReactNode,
-        variant: 'success' | 'error'
-    }) => {
-        _setUpdateOverlayConfig(param);
-        overlayTimerRef.current = setTimeout(() => {
-            _setUpdateOverlayConfig(null)
-        }, 3000);
-    }, []);
-
-    const [, setUserLoading] = useState(false);
+    const [isUserLoading, setUserLoading] = useState(false);
     const [userToManage, setUserToManage] = useState<OtherUser | null>(null);
 
     useEffect(() => {
@@ -97,16 +78,25 @@ const ScanningSection: FC = () => {
     }, [userId]);
 
     const earnStamps = useCallback(async (amount: number): Promise<void> => {
+
         if (amount <= 0) {
             setUpdateOverlayConfig({
-                title: 'Ilość nie może być mniejsza od 1',
-                message: 'Wprowadź poprawną ilość',
-                variant: 'error',
+                title: <div className='ScanningSection__updateOverlay-title-warning'>Niewłaściwa ilość</div>,
+                message: (
+                    <div className='ScanningSection__updateOverlay-stamps-earned'>
+                        <span className='ScanningSection__updateOverlay-stamps-earned-text-big'>
+                            Wprowadź poprawną ilość
+                        </span>
+                    </div>
+                ),
+                operation: 'warning'
             });
+
             return;
         };
 
         if (cardId === 'change-force') {
+            setUserLoading(true);
             await apiService.fetch('assistant/stamps/change-force', {
                 method: 'POST',
                 body: JSON.stringify({
@@ -114,8 +104,13 @@ const ScanningSection: FC = () => {
                     userId: userId,
                     assistantId
                 })
+            }).then(user => {
+                setUserToManage(user);
+            }).finally(() => {
+                setUserLoading(false);
             });
         } else {
+            setUserLoading(true);
             await apiService.fetch('assistant/stamps/change', {
                 method: 'POST',
                 body: JSON.stringify({
@@ -124,15 +119,31 @@ const ScanningSection: FC = () => {
                     cardHash: cardId,
                     assistantId
                 })
+            }).then(user => {
+                setUserToManage(user);
+            }).finally(() => {
+                setUserLoading(false);
             });
         }
 
         setUpdateOverlayConfig({
-            title: 'Pieczątki nabite!',
-            message: <>Dodałaś(eś)  <br /><strong>{amount}</strong>x pieczątki<br /> do konta klienta</>,
-            variant: 'success'
+            title: <div className='ScanningSection__updateOverlay-title-stamp-addition'>Dodano</div>,
+            message: (
+                <div className='ScanningSection__updateOverlay-stamps-earned'>
+                    <span className='ScanningSection__updateOverlay-stamps-earned-text-big'>
+                        <strong>{amount}</strong> {stampsLabel(amount)}
+                    </span>
+                    <span className='ScanningSection__updateOverlay-stamps-earned-text-small'>
+                        do konta
+                    </span>{userToManage ? <AppUser
+                        email={userToManage?.email}
+                        role={userToManage?.role}
+                    /> : 'klienta'}
+                </div>
+            ),
+            operation: Operations.StampAddition
         });
-    }, [setUpdateOverlayConfig, cardId, userId, assistantId]);
+    }, [setUpdateOverlayConfig, cardId, userId, assistantId, userToManage]);
 
     const spentStamps = useCallback(async (amount: number): Promise<void> => {
         if (!appConfig) {
@@ -141,9 +152,15 @@ const ScanningSection: FC = () => {
 
         if (amount <= 0) {
             setUpdateOverlayConfig({
-                title: 'Ilość nie może być mniejsza od 1',
-                message: 'Wprowadź poprawną ilość',
-                variant: 'error',
+                title: <div className='ScanningSection__updateOverlay-title-warning'>Niewłaściwa ilość</div>,
+                message: (
+                    <div className='ScanningSection__updateOverlay-stamps-earned'>
+                        <span className='ScanningSection__updateOverlay-stamps-earned-text-big'>
+                            Wprowadź poprawną ilość
+                        </span>
+                    </div>
+                ),
+                operation: 'warning'
             });
             return;
         }
@@ -151,13 +168,23 @@ const ScanningSection: FC = () => {
         const userCardsAmount = amount / appConfig.cardSize;
         if (userCardsAmount > appConfig.maxCardsPerTransaction) {
             setUpdateOverlayConfig({
-                title: 'Ilość kart jest za duża',
-                message: 'W jednej transakcji można wymienić maksymalnie ' + appConfig?.maxCardsPerTransaction + ' kart',
-                variant: 'error',
+                title: <div className='ScanningSection__updateOverlay-title-warning'>Ilość kart jest za duża</div>,
+                message: (
+                    <div className='ScanningSection__updateOverlay-stamps-earned'>
+                        <span className='ScanningSection__updateOverlay-stamps-earned-text-small'>
+                            W jednej transakcji można wymienić maksymalnie
+                        </span>
+                        <span className='ScanningSection__updateOverlay-stamps-earned-text-big'>
+                            <strong>{appConfig?.maxCardsPerTransaction}</strong> {cardsLabelForWarning(appConfig?.maxCardsPerTransaction)}
+                        </span>
+                    </div>
+                ),
+                operation: 'warning'
             });
             return;
         }
         if (cardId === 'change-force') {
+            setUserLoading(true);
             await apiService.fetch('assistant/stamps/change-force', {
                 method: 'POST',
                 body: JSON.stringify({
@@ -165,8 +192,13 @@ const ScanningSection: FC = () => {
                     userId,
                     assistantId
                 })
+            }).then(user => {
+                setUserToManage(user);
+            }).finally(() => {
+                setUserLoading(false);
             });
         } else {
+            setUserLoading(true);
             await apiService.fetch('assistant/stamps/change', {
                 method: 'POST',
                 body: JSON.stringify({
@@ -175,34 +207,89 @@ const ScanningSection: FC = () => {
                     cardHash: cardId,
                     assistantId
                 })
+            }).then(user => {
+                setUserToManage(user);
+            }).finally(() => {
+                setUserLoading(false);
             });
         }
         if (appConfig?.cardSize) {
-            if (amount % appConfig?.cardSize === 0) {
+            if (amount % appConfig.cardSize === 0) {
                 setUpdateOverlayConfig({
-                    title: 'Rabat przyznany!',
-                    message: <>Wymieniłaś(eś)<br /><strong>{amount}</strong>x<br />pieczątki klienta na zniżkę</>,
-                    variant: 'success'
+                    title: <div className='ScanningSection__updateOverlay-title-gift'>Przyznano rabat</div>,
+                    message: (
+                        <div className='ScanningSection__updateOverlay-stamps-earned'>
+                            <span className='ScanningSection__updateOverlay-stamps-earned-text-small'>
+                                dla
+                            </span>
+                            {userToManage ? <AppUser
+                                email={userToManage?.email}
+                                role={userToManage?.role}
+                            /> : 'klienta'}
+                            <div />
+                            <div>
+                                <span className='ScanningSection__updateOverlay-stamps-earned-text-big'>
+                                    <strong>{amount / appConfig.cardSize}</strong> {cardsLabel(amount / appConfig.cardSize)}
+                                </span>
+                                <span className='ScanningSection__updateOverlay-stamps-earned-text-small'>
+                                    {' '}={' '}
+                                </span>
+                                <span className='ScanningSection__updateOverlay-stamps-earned-text-big'>
+                                    <strong>{(amount / appConfig.cardSize) * appConfig.discount}</strong> PLN
+                                </span>
+                            </div>
+                        </div>
+                    ),
+                    operation: Operations.GiftExchange
                 });
                 return;
             }
         }
+
         setUpdateOverlayConfig({
-            title: 'Odjęto pieczątki!',
-            message: <>Odjęłaś(eś)<br /><strong>{amount}</strong>x<br />pieczątki od salda klienta</>,
-            variant: 'success'
+            title: <div className='ScanningSection__updateOverlay-title-stamp-removal'>Odjęto</div>,
+            message: (
+                <div className='ScanningSection__updateOverlay-stamps-earned'>
+                    <span className='ScanningSection__updateOverlay-stamps-earned-text-big'>
+                        <strong>{amount}</strong> {stampsLabel(amount)}
+                    </span>
+                    <span className='ScanningSection__updateOverlay-stamps-earned-text-small'>
+                        z konta
+                    </span>{userToManage ? <AppUser
+                        email={userToManage?.email}
+                        role={userToManage?.role}
+                    /> : 'klienta'}
+                </div>
+            ),
+            operation: Operations.StampRemoval
         });
     }, [
         appConfig,
         setUpdateOverlayConfig,
         cardId,
         userId,
-        assistantId
+        assistantId,
+        userToManage
     ]);
 
     const deleteStamps = useCallback(async (amount: number): Promise<void> => {
+        if (amount <= 0) {
+            setUpdateOverlayConfig({
+                title: <div className='ScanningSection__updateOverlay-title-warning'>Niewłaściwa ilość</div>,
+                message: (
+                    <div className='ScanningSection__updateOverlay-stamps-earned'>
+                        <span className='ScanningSection__updateOverlay-stamps-earned-text-big'>
+                            Wprowadź poprawną ilość
+                        </span>
+                    </div>
+                ),
+                operation: 'warning'
+            });
+            return;
+        }
 
         if (cardId === 'change-force') {
+            setUserLoading(true);
             await apiService.fetch('assistant/stamps/change-force', {
                 method: 'POST',
                 body: JSON.stringify({
@@ -210,8 +297,13 @@ const ScanningSection: FC = () => {
                     userId,
                     assistantId
                 })
+            }).then(user => {
+                setUserToManage(user);
+            }).finally(() => {
+                setUserLoading(false);
             });
         } else {
+            setUserLoading(true);
             await apiService.fetch('assistant/stamps/change', {
                 method: 'POST',
                 body: JSON.stringify({
@@ -220,15 +312,31 @@ const ScanningSection: FC = () => {
                     cardHash: cardId,
                     assistantId
                 })
+            }).then(user => {
+                setUserToManage(user);
+            }).finally(() => {
+                setUserLoading(false);
             });
         }
 
         setUpdateOverlayConfig({
-            title: 'Pieczątki skasowane!',
-            message: <>Skasowałaś(eś)<br /><strong>{amount}</strong>x<br />pieczątki z konta klienta</>,
-            variant: 'success'
+            title: <div className='ScanningSection__updateOverlay-title-stamp-removal'>Odjęto</div>,
+            message: (
+                <div className='ScanningSection__updateOverlay-stamps-earned'>
+                    <span className='ScanningSection__updateOverlay-stamps-earned-text-big'>
+                        <strong>{amount}</strong> {stampsLabel(amount)}
+                    </span>
+                    <span className='ScanningSection__updateOverlay-stamps-earned-text-small'>
+                        z konta
+                    </span>{userToManage ? <AppUser
+                        email={userToManage?.email}
+                        role={userToManage?.role}
+                    /> : 'klienta'}
+                </div>
+            ),
+            operation: Operations.StampRemoval
         });
-    }, [setUpdateOverlayConfig, cardId, userId, assistantId]);
+    }, [setUpdateOverlayConfig, cardId, userId, assistantId, userToManage]);
 
     const renderTabs = () => {
         return (
@@ -338,7 +446,7 @@ const ScanningSection: FC = () => {
 
     let pageTitle: ReactNode = "Operacje na karce";
     if (userToManage) {
-        pageTitle = <><UserIcon.Customer color='white' /> {userToManage.email}</>
+        pageTitle = <><Icon iconName={IconName.QrCode} width={20} height={20} color='white' /> {userToManage.email}</>
     }
     return (
         <AsidePanel
@@ -365,19 +473,98 @@ const ScanningSection: FC = () => {
                     {renderActionPanel()}
                 </div>
             </PanelViewTemplate>
-            <UpdateOverlay
-                title={updateOverlayConfig?.title ?? "-"}
-                message={updateOverlayConfig?.message ?? "-"}
-                variant={updateOverlayConfig?.variant ?? 'success'}
-                timeout={5000}
-                updated={!!updateOverlayConfig}
-                onClose={() => {
-                    _setUpdateOverlayConfig(null)
-                    if (overlayTimerRef.current) clearTimeout(overlayTimerRef.current);
-                }}
-            />
+            {isUserLoading && (
+                <div className="global-loader-wrapper">
+                    <div className={`global-loader-spinner --active`} />
+                </div>
+            )}
+            {!!updateOverlayConfig && (
+                <UpdateOverlay
+                    title={updateOverlayConfig.title}
+                    message={updateOverlayConfig.message}
+                    icon={(
+                        updateOverlayConfig.operation === 'warning'
+                            ? (
+                                <Icon
+                                    iconName={IconName.Warning}
+                                    width={30}
+                                    height={30}
+                                    color={'var(--warning)'}
+                                />
+                            )
+                            : <OperationIcon
+                                operation={updateOverlayConfig.operation}
+                            />
+                    )}
+                    onPrimaryAction={() => {
+                        if (userToManage) {
+                            setCustomerRoute(userToManage?._id, { delay: 250, beforeNavigate: () => setActive(false) });
+                        } else {
+                            setHomeRoute({ delay: 250, beforeNavigate: () => setActive(false) });
+                        }
+                    }}
+                    onSecondaryAction={() => {
+                        setHomeRoute({ delay: 250, beforeNavigate: () => setActive(false) });
+                    }}
+                    onWarningAction={updateOverlayConfig.operation === 'warning' ? () => {
+                        setUpdateOverlayConfig(null);
+                    } : undefined}
+                />
+            )}
         </AsidePanel>
     );
 };
 
 export default ScanningSection;
+
+const stampsLabel = (amount: number): string => {
+    if (amount === 1) {
+        return 'pieczątkę';
+    }
+
+    if ([12, 13, 14].includes(amount)) {
+        return 'pieczątek';
+    }
+
+    const toStr = `${amount}`;
+    if (["2", "3", "4"].includes(toStr[toStr.length - 1])) {
+        return 'pieczątki';
+    }
+
+    return 'pieczątek';
+}
+
+const cardsLabel = (amount: number): string => {
+    if (amount === 1) {
+        return 'karta';
+    }
+
+    if ([12, 13, 14].includes(amount)) {
+        return 'kart';
+    }
+
+    const toStr = `${amount}`;
+    if (["2", "3", "4"].includes(toStr[toStr.length - 1])) {
+        return 'karty';
+    }
+
+    return 'kart';
+}
+
+
+const cardsLabelForWarning = (amount: number): string => {
+    if (amount === 1) {
+        return 'kartę';
+    }
+
+    if ([12, 13, 14].includes(amount)) {
+        return 'kart';
+    }
+
+    const toStr = `${amount}`;
+    if (["2", "3", "4"].includes(toStr[toStr.length - 1])) {
+        return 'karty';
+    }
+
+    return 'kart';
+}

@@ -86,6 +86,44 @@ const AssistantSection: FC<{
         return (
 
             <Background
+                panels={
+                    <>
+                        <Routes>
+                            <Route
+                                path="/scan/:userId/:cardId/:operation"
+                                element={
+                                    <ScanningSection />
+                                }
+                            />
+                            <Route
+                                path="/settings"
+                                element={
+                                    <SettingsSection />
+                                }
+                            />
+                            <Route
+                                path="/manage"
+                                element={isAdmin ? (
+                                    <ManageSection />
+                                ) : <>Nie jesteś administratorem</>
+                                }
+                            />
+                            <Route
+                                path="/users"
+                                element={
+                                    <UsersSection />
+                                }
+                            />
+
+                            <Route
+                                path="/user/:userId"
+                                element={
+                                    <UserHistorySection />
+                                }
+                            />
+                        </Routes>
+                    </>
+                }
                 appBar={
                     <FooterNav
                         actions={[
@@ -151,41 +189,6 @@ const AssistantSection: FC<{
                     </button>
                 </div>
 
-
-                <Routes>
-                    <Route
-                        path="/scan/:userId/:cardId/:operation"
-                        element={
-                            <ScanningSection />
-                        }
-                    />
-                    <Route
-                        path="/settings"
-                        element={
-                            <SettingsSection />
-                        }
-                    />
-                    <Route
-                        path="/manage"
-                        element={isAdmin ? (
-                            <ManageSection />
-                        ) : <>Nie jesteś administratorem</>
-                        }
-                    />
-                    <Route
-                        path="/users"
-                        element={
-                            <UsersSection />
-                        }
-                    />
-
-                    <Route
-                        path="/user/:userId"
-                        element={
-                            <UserHistorySection />
-                        }
-                    />
-                </Routes>
 
             </Background>
 
