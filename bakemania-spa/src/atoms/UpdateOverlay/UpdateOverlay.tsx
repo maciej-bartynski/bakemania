@@ -1,58 +1,90 @@
-import { FC } from "react";
-import Stamp from "../Stamp/Stamp";
-import iterateIcons from "../Stamp/Stamp.helper";
+import { FC, ReactNode, useRef } from "react";
 import './UpdateOverlay.css';
+import Icon from "../../icons/Icon";
+import IconName from "../../icons/IconName";
+import UserIcon from "../../icons/UserIcon";
 
 const UpdateOverlay: FC<{
-    updated: boolean;
-    title: string,
-    message: string,
-    timeout: number
+    title: ReactNode,
+    message: ReactNode,
+    onPrimaryAction: () => void,
+    onSecondaryAction: () => void,
+    icon: ReactNode,
+    onWarningAction?: () => void
 }> = ({
-    updated,
     title,
     message,
-    timeout
+    onPrimaryAction,
+    onSecondaryAction,
+    icon,
+    onWarningAction
 }) => {
-        return (
-            <div
-                style={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    background: 'white',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    overflow: 'hidden',
-                    ...(updated ? {
-                        width: undefined,
-                        height: undefined,
-                        animation: `ping-animation ${timeout}ms linear`,
-                        right: 0,
-                        bottom: 0,
-                    } : {
-                        width: 0,
-                        height: 0,
-                        animation: undefined,
-                        right: undefined,
-                        bottom: undefined,
-                    }),
+        const ref = useRef<HTMLDivElement>(null);
 
-                }}
-            >
-                <span>
-                    <Stamp stampConfig={iterateIcons(1)[0]} />
-                    <Stamp stampConfig={iterateIcons(7)[3]} />
-                    <Stamp stampConfig={iterateIcons(3)[2]} />
-                </span>
-                <br />
-                <div>
-                    {title}
-                </div>
-                <div>
-                    {message}
+        const _onPrimaryAction = () => {
+            ref.current?.classList.add('--reverse-animation');
+            onPrimaryAction();
+        }
+
+        const _onSecondaryAction = () => {
+            ref.current?.classList.add('--reverse-animation');
+            onSecondaryAction();
+        }
+
+        return (
+            <div className="UpdateOverlay" ref={ref}>
+                <div className='UpdateOverlay__modal'>
+                    <div className='UpdateOverlay__header'>
+                        {icon}
+                    </div>
+                    <div className='UpdateOverlay__body'>
+                        {title && (
+                            <div style={{
+                                textAlign: 'center',
+                                fontSize: '20px',
+                                fontWeight: 'bold',
+                            }}>
+                                {title}
+                            </div>
+                        )}
+                        <div style={{
+                            textAlign: 'center',
+                            fontSize: '16px',
+                        }}>
+                            {message}
+                        </div>
+
+                    </div>
+                    <div className='UpdateOverlay__footer'>
+                        {onWarningAction ? (
+                            <button
+                                onClick={onWarningAction}
+                                style={{
+                                    backgroundColor: 'var(--warning)',
+                                    border: 'none',
+                                }}
+                            >
+                                Rozumiem
+                            </button>
+                        ) : (
+                            <>
+                                <button
+                                    onClick={_onSecondaryAction}
+                                    className="secondary"
+                                >
+                                    <Icon iconName={IconName.ArrowDown} />
+                                    Główna
+                                </button>
+
+                                <button
+                                    onClick={_onPrimaryAction}
+                                >
+                                    <UserIcon.Customer color="white" />
+                                    Konto klienta
+                                </button>
+                            </>
+                        )}
+                    </div>
                 </div>
             </div>
         )

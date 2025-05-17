@@ -7,7 +7,11 @@ import usersActions from "./users-actions";
 const initialState: UsersState = {
     status: ReducerState.Pristine,
     error: null,
-    users: []
+    users: [],
+    hasMore: true,
+    page: 1,
+    size: 10,
+    email: "",
 };
 
 const usersSlice = createSlice({
@@ -26,12 +30,20 @@ const usersSlice = createSlice({
             })
             .addCase(usersActions.fetchUsers.fulfilled, (state, action) => {
                 state.status = ReducerState.Idle;
-                state.users = action.payload;
+                state.users = action.payload.users;
+                state.hasMore = action.payload.hasMore;
+                state.page = action.payload.page;
+                state.size = action.payload.size;
+                state.email = action.payload.email;
                 state.error = null;
             })
             .addCase(usersActions.fetchUsers.rejected, (state, action) => {
                 state.status = ReducerState.Error;
                 state.users = [];
+                state.hasMore = true;
+                state.page = 1;
+                state.size = 10;
+                state.email = "";
                 state.error = (action.payload as string) || "Nieznany błąd przy pobieraniu danych innych użytkowników.";
             })
     }

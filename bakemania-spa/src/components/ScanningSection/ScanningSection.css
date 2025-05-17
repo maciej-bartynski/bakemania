@@ -3,7 +3,123 @@
     display: flex;
     flex-direction: column;
     align-items: stretch;
+    padding: 0 10px;
+}
+
+.ScanningSection__app-bar-earn-for-amount {
+    background-color: white;
+    border: solid 2px var(--earn-stamp);
+    color: var(--earn-stamp);
+}
+
+.ScanningSection__app-bar-earn {
+    background-color: var(--earn-stamp);
+    color: white;
+}
+
+.ScanningSection__app-bar-spend {
+    background-color: var(--bakemaniaGold);
+    color: white;
+}
+
+.ScanningSection__app-bar-delete {
+    background-color: var(--remove-stamp);
+    color: white;
+}
+
+.ScanningSection__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: white;
+    position: relative;
+    margin-top: 10px;
+}
+
+.ScanningSection__tabs-indicator-short {
+    height: 2px;
+    width: 100%;
+    background-color: currentColor;
+    transition: background-color 0.2s ease;
+    display: flex;
+}
+
+.ScanningSection__pln-icon {
+    color: var(--colorActive);
+    font-size: 10px;
+    font-weight: 900;
+}
+
+/**
+    UpdateOverlay
+*/
+.ScanningSection__updateOverlay-stamps-earned {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
-    padding: 10px;
     gap: 10px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.ScanningSection__updateOverlay-stamps-earned-text-small {
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.ScanningSection__updateOverlay-stamps-earned-text-big {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.ScanningSection__updateOverlay-title-gift {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--bakemaniaGold);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ScanningSection__updateOverlay-title-stamp-addition {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--earn-stamp);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ScanningSection__updateOverlay-title-stamp-removal {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--remove-stamp);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ScanningSection__updateOverlay-title-warning {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--warning);
+}
+
+.ScanningSection__bottom-panel-buttons {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+}
+
+.action-btn {
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    gap: 12px;
 }

@@ -1,0 +1,57 @@
+.dashboardScreen {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    animation: fade-in 1250ms ease-in forwards;
+    width: 100%;
+
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1
+    }
+}
+
+.dashboardScreen__stamps-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 40px 0;
+    position: relative;
+
+}
+
+.dashboardScreen__message {
+    padding: 10px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.dashboardScreen__message span {
+    font-size: 12px;
+    font-weight: bolder;
+}
+
+.dashboardScreen__clickable {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+@keyframes stamps-updated-ping-animation {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

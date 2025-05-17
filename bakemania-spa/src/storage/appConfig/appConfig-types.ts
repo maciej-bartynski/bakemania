@@ -4,6 +4,7 @@ type AppConfig = {
     cardSize: number,
     discount: number,
     stampsInRow: number,
+    maxCardsPerTransaction: number,
 }
 
 interface AppConfigState {

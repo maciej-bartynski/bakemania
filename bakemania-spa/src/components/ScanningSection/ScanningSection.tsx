@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, ReactNode, useCallback, useEffect, useState } from 'react';
 import './ScanningSection.css';
 import FooterNav from '../FooterNav/FooterNav';
 import IconName from '../../icons/IconName';
@@ -6,212 +6,552 @@ import AsidePanel from '../../atoms/AsidePanel/AsidePanel';
 import PanelViewTemplate from '../../atoms/PanelViewTemplate/PanelViewTemplate';
 import apiService from '../../services/ApiService';
 import useAppConfigSelector from '../../storage/appConfig/appConfig-selectors';
-import RichNumberForm from '../RichNumberForm/RichNumberForm';
 import { OtherUser } from '../../storage/users/users-types';
-import UserShort from '../../atoms/UserShort/UserShort';
 import UpdateOverlay from '../../atoms/UpdateOverlay/UpdateOverlay';
+import useMeSelector from '../../storage/me/me-selectors';
+import IconButton from '../../atoms/IconButton/IconButton';
+import Earn from './elements/Earn';
+import Spend from './elements/Spend';
+import Delete from './elements/Delete';
+import EarnForAmount from './elements/EarnForAmount';
+import TabButton from '../../atoms/TabButton/TabButton';
+import { useParams } from 'react-router';
+import useAppNavigation from '../../tools/useAppNavigation';
+import Icon from '../../icons/Icon';
+import AppUser from '../../atoms/AppUser/AppUser';
+import OperationIcon from '../../atoms/OperationIcon/OperationIcon';
+import Operations from '../../tools/operations';
 
-type ScannedData = {
-    variant: 'spend' | 'earn',
-    cardId: string,
-}
+const ScanningSection: FC = () => {
+    const { appConfig } = useAppConfigSelector();
+    const me = useMeSelector();
+    const [active, setActive] = useState(false);
+    const { setScanningRoute, setHomeRoute, setCustomerRoute } = useAppNavigation();
+    useEffect(() => {
+        if (!me || !appConfig) {
+            return
+        }
+        setActive(true);
+    }, [me, appConfig])
 
-const ScanningSection: FC<{
-    qrData: ScannedData | null,
-    setVariant: (newVariant: 'spend' | 'earn') => void;
-    returnHomeView: () => void;
-}> = ({
-    qrData,
-    setVariant,
-    returnHomeView
-}) => {
-        const overlayTimerRef = useRef<NodeJS.Timeout | null>(null);
+    const params = useParams<{
+        userId: string,
+        cardId: string,
+        operation: 'spend' | 'earn' | 'delete' | 'earn-for-amount'
+    }>();
 
-        useEffect(() => {
-            return () => {
-                if (overlayTimerRef.current) {
-                    clearTimeout(overlayTimerRef.current);
+    const cardId = params.cardId;
+    const userId = params.userId;
+    const operation = params.operation as 'spend' | 'earn' | 'delete' | 'earn-for-amount';
+    const assistantId = me.me?._id;
+
+    const setVariant = useCallback((newVariant: 'spend' | 'earn' | 'delete' | 'earn-for-amount') => {
+        if (!userId || !cardId) {
+            return;
+        }
+        setScanningRoute({
+            cardId,
+            userId,
+            operation: newVariant
+        })
+    }, [setScanningRoute, cardId, userId]);
+
+    const [updateOverlayConfig, setUpdateOverlayConfig] = useState<{
+        title?: ReactNode,
+        message: ReactNode,
+        operation: Operations | 'warning'
+    } | null>(null);
+
+    const [isUserLoading, setUserLoading] = useState(false);
+    const [userToManage, setUserToManage] = useState<OtherUser | null>(null);
+
+    useEffect(() => {
+        async function fetchUserToManage() {
+            if (userId) {
+                setUserLoading(true);
+                const userToManage = await apiService.fetch(`user/${userId}`) as OtherUser;
+                if (userToManage) {
+                    setUserToManage(userToManage);
                 }
+                setUserLoading(false);
             }
-        }, []);
+        }
 
-        const [updateOverlayConfig, _setUpdateOverlayConfig] = useState<{
-            title: string,
-            message: string,
-        } | null>(null);
+        if (userId) fetchUserToManage();
+    }, [userId]);
 
-        const setUpdateOverlayConfig = useCallback((param: {
-            title: string,
-            message: string,
-        }) => {
-            _setUpdateOverlayConfig(param);
-            overlayTimerRef.current = setTimeout(() => {
-                _setUpdateOverlayConfig(null)
-            }, 3000);
-        }, []);
+    const earnStamps = useCallback(async (amount: number): Promise<void> => {
 
-        const { appConfig } = useAppConfigSelector();
-        const [, setUserLoading] = useState(false);
-        const [userToManage, setUserToManage] = useState<OtherUser | null>(null);
+        if (amount <= 0) {
+            setUpdateOverlayConfig({
+                title: <div className='ScanningSection__updateOverlay-title-warning'>Niewłaściwa ilość</div>,
+                message: (
+                    <div className='ScanningSection__updateOverlay-stamps-earned'>
+                        <span className='ScanningSection__updateOverlay-stamps-earned-text-big'>
+                            Wprowadź poprawną ilość
+                        </span>
+                    </div>
+                ),
+                operation: 'warning'
+            });
 
-        useEffect(() => {
-            async function fetchUserToManage() {
-                if (qrData?.cardId) {
-                    setUserLoading(true);
-                    const userToManage = await apiService.fetch(`admin/users/get-user/${qrData?.cardId}`) as OtherUser;
-                    if (userToManage) {
-                        setUserToManage(userToManage);
-                    }
-                    setUserLoading(false);
-                }
-            }
-
-            if (qrData?.cardId) fetchUserToManage();
-        }, [qrData?.cardId]);
-
-        const earnStamps = useCallback(async (amount: number): Promise<void> => {
-            if (qrData) {
-                await apiService.fetch('admin/stamps/increment', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        amount,
-                        userId: qrData?.cardId
-                    })
-                });
-
-                setUpdateOverlayConfig({
-                    title: 'Pieczątki nabite!',
-                    message: `Dodałaś(eś) ${amount}x pieczątki do konta klienta`
-                });
-
-                returnHomeView();
-            }
-        }, [qrData, returnHomeView, setUpdateOverlayConfig]);
-
-        const spentStamps = useCallback(async (amount: number): Promise<void> => {
-            if (qrData) {
-                await apiService.fetch('admin/stamps/decrement', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        amount,
-                        userId: qrData?.cardId
-                    })
-                });
-
-                setUpdateOverlayConfig({
-                    title: 'Rabat przyznany!',
-                    message: `Wymieniłaś(eś) ${amount}x pieczątki klienta na zniżkę`
-                });
-
-                returnHomeView();
-            }
-        }, [qrData, returnHomeView, setUpdateOverlayConfig]);
-
-        const renderActionPanel = () => {
-            if (qrData && appConfig) {
-
-                const userGiftsAmount = Math.floor((userToManage?.stamps.amount ?? 0) / appConfig.cardSize);
-
-                if (qrData.variant === 'earn') {
-                    return (
-                        <div className='ScanningSection'>
-                            <UserShort
-                                userId={qrData.cardId}
-                                userEmail={userToManage?.email}
-                                userStampsAmount={userToManage?.stamps.amount}
-                                userGiftsAmount={userGiftsAmount}
-                            />
-                            <RichNumberForm
-                                key='stamps'
-                                inputLabel="Ile pieczątek nabić?"
-                                buttonLabel={(submitValue: number) => `Nabij ${submitValue}`}
-                                descriptionLabel={(submitValue: number) => (
-                                    <span>
-                                        Kwota zakupów:<br />
-                                        - od <strong>{submitValue * appConfig.cardSize}.00 PLN</strong><br />
-                                        - do <strong>{((submitValue + 1) * appConfig.cardSize) - 0.01} PLN</strong>
-                                    </span>
-                                )}
-                                onSubmit={earnStamps}
-                                minValue={1}
-                                maxValue={100}
-                            />
-                        </div>
-                    );
-                } else if (qrData.variant === 'spend') {
-                    return (
-                        <div className='ScanningSection'>
-                            <UserShort
-                                userId={qrData.cardId}
-                                userEmail={userToManage?.email}
-                                userStampsAmount={userToManage?.stamps.amount}
-                                userGiftsAmount={Math.floor((userToManage?.stamps.amount ?? 0) / appConfig.cardSize)}
-                            />
-                            <RichNumberForm
-                                key='gifts'
-                                inputLabel="Ile kart rabatowych użyć?"
-                                buttonLabel={(submitValue: number) => `Przyznaj rabat ${submitValue * appConfig.discount}.00 PLN (${submitValue} karty)`}
-                                descriptionLabel={(submitValue: number) => (
-                                    <span>
-                                        Przyznajesz rabat:<br />
-                                        - <strong>{submitValue * appConfig.discount}.00 PLN</strong><br />
-                                        - <strong>{submitValue} karty</strong>
-                                    </span>
-                                )}
-                                onSubmit={(submitValue: number) => spentStamps(submitValue * appConfig.cardSize)}
-                                minValue={userGiftsAmount >= 1 ? 1 : 0}
-                                maxValue={userGiftsAmount >= 1 ? userGiftsAmount : 0}
-                            />
-                        </div>
-                    );
-                }
-            }
-
-            return 'Coś poszło nie tak...';
+            return;
         };
 
+        setUserLoading(true);
+        await apiService.fetch('assistant/stamps/change', {
+            method: 'POST',
+            body: JSON.stringify({
+                amount,
+                userId,
+                cardHash: cardId,
+                assistantId
+            })
+        }).then(user => {
+            setUserToManage(user);
+        }).finally(() => {
+            setUserLoading(false);
+        });
+
+        setUpdateOverlayConfig({
+            title: <div className='ScanningSection__updateOverlay-title-stamp-addition'>Dodano</div>,
+            message: (
+                <div className='ScanningSection__updateOverlay-stamps-earned'>
+                    <span className='ScanningSection__updateOverlay-stamps-earned-text-big'>
+                        <strong>{amount}</strong> {stampsLabel(amount)}
+                    </span>
+                    <span className='ScanningSection__updateOverlay-stamps-earned-text-small'>
+                        do konta
+                    </span>{userToManage ? <AppUser
+                        email={userToManage?.email}
+                        role={userToManage?.role}
+                    /> : 'klienta'}
+                </div>
+            ),
+            operation: Operations.StampAddition
+        });
+    }, [setUpdateOverlayConfig, cardId, userId, assistantId, userToManage]);
+
+    const spentStamps = useCallback(async (amount: number): Promise<void> => {
+        if (!appConfig) {
+            return;
+        }
+
+        if (amount <= 0) {
+            setUpdateOverlayConfig({
+                title: <div className='ScanningSection__updateOverlay-title-warning'>Niewłaściwa ilość</div>,
+                message: (
+                    <div className='ScanningSection__updateOverlay-stamps-earned'>
+                        <span className='ScanningSection__updateOverlay-stamps-earned-text-big'>
+                            Wprowadź poprawną ilość
+                        </span>
+                    </div>
+                ),
+                operation: 'warning'
+            });
+            return;
+        }
+
+        const userCardsAmount = amount / appConfig.cardSize;
+        if (userCardsAmount > appConfig.maxCardsPerTransaction) {
+            setUpdateOverlayConfig({
+                title: <div className='ScanningSection__updateOverlay-title-warning'>Ilość kart jest za duża</div>,
+                message: (
+                    <div className='ScanningSection__updateOverlay-stamps-earned'>
+                        <span className='ScanningSection__updateOverlay-stamps-earned-text-small'>
+                            W jednej transakcji można wymienić maksymalnie
+                        </span>
+                        <span className='ScanningSection__updateOverlay-stamps-earned-text-big'>
+                            <strong>{appConfig?.maxCardsPerTransaction}</strong> {cardsLabelForWarning(appConfig?.maxCardsPerTransaction)}
+                        </span>
+                    </div>
+                ),
+                operation: 'warning'
+            });
+            return;
+        }
+
+        setUserLoading(true);
+        await apiService.fetch('assistant/stamps/change', {
+            method: 'POST',
+            body: JSON.stringify({
+                amount: -amount,
+                userId,
+                cardHash: cardId,
+                assistantId
+            })
+        }).then(user => {
+            setUserToManage(user);
+        }).finally(() => {
+            setUserLoading(false);
+        });
+
+        if (appConfig?.cardSize) {
+            if (amount % appConfig.cardSize === 0) {
+                setUpdateOverlayConfig({
+                    title: <div className='ScanningSection__updateOverlay-title-gift'>Przyznano rabat</div>,
+                    message: (
+                        <div className='ScanningSection__updateOverlay-stamps-earned'>
+                            <span className='ScanningSection__updateOverlay-stamps-earned-text-small'>
+                                dla
+                            </span>
+                            {userToManage ? <AppUser
+                                email={userToManage?.email}
+                                role={userToManage?.role}
+                            /> : 'klienta'}
+                            <div />
+                            <div>
+                                <span className='ScanningSection__updateOverlay-stamps-earned-text-big'>
+                                    <strong>{amount / appConfig.cardSize}</strong> {cardsLabel(amount / appConfig.cardSize)}
+                                </span>
+                                <span className='ScanningSection__updateOverlay-stamps-earned-text-small'>
+                                    {' '}={' '}
+                                </span>
+                                <span className='ScanningSection__updateOverlay-stamps-earned-text-big'>
+                                    <strong>{(amount / appConfig.cardSize) * appConfig.discount}</strong> PLN
+                                </span>
+                            </div>
+                        </div>
+                    ),
+                    operation: Operations.GiftExchange
+                });
+                return;
+            }
+        }
+
+        setUpdateOverlayConfig({
+            title: <div className='ScanningSection__updateOverlay-title-stamp-removal'>Odjęto</div>,
+            message: (
+                <div className='ScanningSection__updateOverlay-stamps-earned'>
+                    <span className='ScanningSection__updateOverlay-stamps-earned-text-big'>
+                        <strong>{amount}</strong> {stampsLabel(amount)}
+                    </span>
+                    <span className='ScanningSection__updateOverlay-stamps-earned-text-small'>
+                        z konta
+                    </span>{userToManage ? <AppUser
+                        email={userToManage?.email}
+                        role={userToManage?.role}
+                    /> : 'klienta'}
+                </div>
+            ),
+            operation: Operations.StampRemoval
+        });
+    }, [
+        appConfig,
+        setUpdateOverlayConfig,
+        cardId,
+        userId,
+        assistantId,
+        userToManage
+    ]);
+
+    const deleteStamps = useCallback(async (amount: number): Promise<void> => {
+        if (amount <= 0) {
+            setUpdateOverlayConfig({
+                title: <div className='ScanningSection__updateOverlay-title-warning'>Niewłaściwa ilość</div>,
+                message: (
+                    <div className='ScanningSection__updateOverlay-stamps-earned'>
+                        <span className='ScanningSection__updateOverlay-stamps-earned-text-big'>
+                            Wprowadź poprawną ilość
+                        </span>
+                    </div>
+                ),
+                operation: 'warning'
+            });
+            return;
+        }
+
+        setUserLoading(true);
+        await apiService.fetch('assistant/stamps/change', {
+            method: 'POST',
+            body: JSON.stringify({
+                amount: -amount,
+                userId,
+                cardHash: cardId,
+                assistantId
+            })
+        }).then(user => {
+            setUserToManage(user);
+        }).finally(() => {
+            setUserLoading(false);
+        });
+
+        setUpdateOverlayConfig({
+            title: <div className='ScanningSection__updateOverlay-title-stamp-removal'>Odjęto</div>,
+            message: (
+                <div className='ScanningSection__updateOverlay-stamps-earned'>
+                    <span className='ScanningSection__updateOverlay-stamps-earned-text-big'>
+                        <strong>{amount}</strong> {stampsLabel(amount)}
+                    </span>
+                    <span className='ScanningSection__updateOverlay-stamps-earned-text-small'>
+                        z konta
+                    </span>{userToManage ? <AppUser
+                        email={userToManage?.email}
+                        role={userToManage?.role}
+                    /> : 'klienta'}
+                </div>
+            ),
+            operation: Operations.StampRemoval
+        });
+    }, [setUpdateOverlayConfig, cardId, userId, assistantId, userToManage]);
+
+    const renderTabs = () => {
+        return (
+
+            <div className="ScanningSection__tabs">
+                <TabButton
+                    activeColor={"var(--earn-stamp)"}
+                    iconName={IconName.Stamp}
+                    label="Nabij"
+                    onClick={() => setVariant('earn')}
+                    selected={operation === 'earn'}
+                />
+                <TabButton
+                    activeColor={"var(--earn-stamp)"}
+                    iconName={IconName.StampForCash}
+                    label="Za kwotę"
+                    onClick={() => setVariant('earn-for-amount')}
+                    selected={operation === 'earn-for-amount'}
+                />
+                <TabButton
+                    activeColor={"var(--bakemaniaGold)"}
+                    iconName={IconName.Gift}
+                    label="Rabat"
+                    onClick={() => setVariant('spend')}
+                    selected={operation === 'spend'}
+                />
+                <TabButton
+                    activeColor={"var(--remove-stamp)"}
+                    iconName={IconName.StampRemove}
+                    label="Skasuj"
+                    onClick={() => setVariant('delete')}
+                    selected={operation === 'delete'}
+                />
+                <div
+                    className="ScanningSection__tabs-indicator-short"
+                    style={{
+                        backgroundColor: getTabColor(operation ?? 'earn'),
+                    }}
+                />
+            </div>
+
+        )
+    }
+
+    if (!userId || !cardId) {
         return (
             <AsidePanel
                 side='left'
-                active={!!qrData}
+                active={active}
             >
                 <PanelViewTemplate
-                    title={qrData?.variant === 'spend' ? 'Odbieranie rabatu' : 'Nabijanie pieczątek'}
+                    title='Coś poszło nie źle'
                     appBar={(
                         <>
-                            <FooterNav
-                                actions={[
-                                    qrData?.variant === 'earn' ? {
-                                        label: 'Rabaty klienta',
-                                        action: () => setVariant('spend'),
-                                        icon: IconName.Gift,
-                                    } : {
-                                        label: 'Nabij pieczątki',
-                                        action: () => setVariant('earn'),
-                                        icon: IconName.Stamp,
-                                    },
-                                    {
-                                        label: 'Wróć',
-                                        action: () => returnHomeView(),
-                                        icon: IconName.ArrowDown,
-                                    },
-                                ]}
-                            />
+                            <FooterNav>
+                                <IconButton
+                                    iconColor='white'
+                                    bgColor='var(--text)'
+                                    onClick={() => setHomeRoute({ delay: 250, beforeNavigate: () => setActive(false) })}
+                                    label='Wróć'
+                                    iconName={IconName.ArrowDown}
+                                />
+                            </FooterNav>
                         </>
                     )}
                 >
-                    <div className="ScanningSection">
-                        {renderActionPanel()}
-                    </div>
+                    Zeskanuj ponownie kartę użytkownika.<br />
+                    Jeśli problem będzie się powtarzał,<br />
+                    niech użytkownik zaloguje się ponownie.
                 </PanelViewTemplate>
-                <UpdateOverlay
-                    title={updateOverlayConfig?.title ?? "-"}
-                    message={updateOverlayConfig?.message ?? "-"}
-                    timeout={5000}
-                    updated={!!updateOverlayConfig}
-                />
             </AsidePanel>
         );
+    }
+
+    const renderActionPanel = () => {
+        if (appConfig && userToManage) {
+            if (operation === 'earn') {
+                return (
+                    <Earn
+                        user={userToManage}
+                        appConfig={appConfig}
+                        earnStamps={earnStamps}
+                        goHistoryView={() => setCustomerRoute(userId, { delay: 250, beforeNavigate: () => setActive(false) })}
+                        renderTabs={renderTabs}
+                    />
+                );
+            } else if (operation === 'spend') {
+                return (
+                    <Spend
+                        user={userToManage}
+                        appConfig={appConfig}
+                        spendStamps={spentStamps}
+                        goHistoryView={() => setCustomerRoute(userId, { delay: 250, beforeNavigate: () => setActive(false) })}
+                        renderTabs={renderTabs}
+                    />
+                );
+            } else if (operation === 'delete') {
+                return (
+                    <Delete
+                        user={userToManage}
+                        deleteStamps={deleteStamps}
+                        appConfig={appConfig}
+                        goHistoryView={() => setCustomerRoute(userId, { delay: 250, beforeNavigate: () => setActive(false) })}
+                        renderTabs={renderTabs}
+                    />
+                );
+            } else if (operation === 'earn-for-amount') {
+                return (
+                    <EarnForAmount
+                        user={userToManage}
+                        appConfig={appConfig}
+                        earnStamps={earnStamps}
+                        goHistoryView={() => setCustomerRoute(userId, { delay: 250, beforeNavigate: () => setActive(false) })}
+                        renderTabs={renderTabs}
+                    />
+                );
+            }
+        }
+
+        return 'Coś poszło nie tak...';
     };
 
+    const getTabColor = (variant: 'spend' | 'earn' | 'delete' | 'earn-for-amount') => {
+        switch (variant) {
+            case 'earn':
+                return 'var(--earn-stamp)';
+            case 'spend':
+                return 'var(--bakemaniaGold)';
+            case 'delete':
+                return '#ff4444';
+            case 'earn-for-amount':
+                return 'var(--earn-stamp)';
+            default:
+                return 'var(--text)';
+        }
+    };
+
+    let pageTitle: ReactNode = "Operacje na karce";
+    if (userToManage) {
+        pageTitle = <><Icon iconName={IconName.QrCode} width={20} height={20} color='white' /> {userToManage.email}</>
+    }
+    return (
+        <AsidePanel
+            side='left'
+            active={active}
+        >
+            <PanelViewTemplate
+                title={pageTitle}
+                appBar={(
+                    <>
+                        <FooterNav>
+                            <IconButton
+                                iconColor='white'
+                                bgColor='var(--text)'
+                                onClick={() => setHomeRoute({ delay: 250, beforeNavigate: () => setActive(false) })}
+                                label='Wróć'
+                                iconName={IconName.ArrowDown}
+                            />
+                        </FooterNav>
+                    </>
+                )}
+            >
+                <div className="ScanningSection">
+                    {renderActionPanel()}
+                </div>
+            </PanelViewTemplate>
+            {isUserLoading && (
+                <div className="global-loader-wrapper">
+                    <div className={`global-loader-spinner --active`} />
+                </div>
+            )}
+            {!!updateOverlayConfig && (
+                <UpdateOverlay
+                    title={updateOverlayConfig.title}
+                    message={updateOverlayConfig.message}
+                    icon={(
+                        updateOverlayConfig.operation === 'warning'
+                            ? (
+                                <Icon
+                                    iconName={IconName.Warning}
+                                    width={30}
+                                    height={30}
+                                    color={'var(--warning)'}
+                                />
+                            )
+                            : <OperationIcon
+                                operation={updateOverlayConfig.operation}
+                            />
+                    )}
+                    onPrimaryAction={() => {
+                        if (userToManage) {
+                            setCustomerRoute(userToManage?._id, { delay: 250, beforeNavigate: () => setActive(false) });
+                        } else {
+                            setHomeRoute({ delay: 250, beforeNavigate: () => setActive(false) });
+                        }
+                    }}
+                    onSecondaryAction={() => {
+                        setHomeRoute({ delay: 250, beforeNavigate: () => setActive(false) });
+                    }}
+                    onWarningAction={updateOverlayConfig.operation === 'warning' ? () => {
+                        setUpdateOverlayConfig(null);
+                    } : undefined}
+                />
+            )}
+        </AsidePanel>
+    );
+};
+
 export default ScanningSection;
+
+const stampsLabel = (amount: number): string => {
+    if (amount === 1) {
+        return 'pieczątkę';
+    }
+
+    if ([12, 13, 14].includes(amount)) {
+        return 'pieczątek';
+    }
+
+    const toStr = `${amount}`;
+    if (["2", "3", "4"].includes(toStr[toStr.length - 1])) {
+        return 'pieczątki';
+    }
+
+    return 'pieczątek';
+}
+
+const cardsLabel = (amount: number): string => {
+    if (amount === 1) {
+        return 'karta';
+    }
+
+    if ([12, 13, 14].includes(amount)) {
+        return 'kart';
+    }
+
+    const toStr = `${amount}`;
+    if (["2", "3", "4"].includes(toStr[toStr.length - 1])) {
+        return 'karty';
+    }
+
+    return 'kart';
+}
+
+
+const cardsLabelForWarning = (amount: number): string => {
+    if (amount === 1) {
+        return 'kartę';
+    }
+
+    if ([12, 13, 14].includes(amount)) {
+        return 'kart';
+    }
+
+    const toStr = `${amount}`;
+    if (["2", "3", "4"].includes(toStr[toStr.length - 1])) {
+        return 'karty';
+    }
+
+    return 'kart';
+}

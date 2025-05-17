@@ -1,11 +1,91 @@
 .settings-section-field {
     width: 100%;
-    padding: 6px;
     display: flex;
-    gap: 6px;
-    align-items: center;
+    flex-direction: column;
+    align-items: stretch;
 }
 
-.settings-section-field button .icon-button__label {
-    display: none;
+.settings-section-field__account-button {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    padding: 12px 20px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    margin: 8px 16px;
+    margin-bottom: 0px;
+}
+
+.settings-section-field__account-button:hover {
+    background: rgba(0, 0, 0, 0.02);
+    transform: translateY(-1px);
+}
+
+.settings-section-field__account-button span {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.settings-section-field__account-button--logout {
+    border-color: rgba(0, 0, 0, 0.2);
+}
+
+.settings-section-field__account-button--delete {
+    border-color: rgba(255, 0, 0, 0.2);
+    background: rgba(255, 0, 0, 0.02);
+}
+
+.settings-section-field__account-button--delete:hover {
+    background: rgba(255, 0, 0, 0.05);
+}
+
+.settings-section-field__account-button--delete span {
+    color: #ff4444;
+}
+
+.settings-section-field__history-header {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 16px 0 8px 0;
+    padding: 0 16px;
+}
+
+.settings-section-field__history-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.settings-section-field__history-header-email {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.08);
+    padding: 4px 8px;
+    border-radius: 4px;
+    gap: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.settings-section-field__history-header-email strong {
+    color: var(--text);
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.settings-section-field__history-header-email svg {
+    width: 16px;
+    height: 16px;
+}
+
+.settings-section-field__history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0 16px;
 }

@@ -1,0 +1,9 @@
+node_modules
+server-dist
+bakemania-spa/dist
+bakemania-spa/dev-dist
+.git
+.env
+.env.*
+*.pem
+README.md

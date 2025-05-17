@@ -4,9 +4,11 @@ import './DiscountCard.css';
 const DiscountCard: FC<{
     onClick?: () => void;
     disabled?: boolean;
+    additional?: string;
 }> = ({
     onClick,
     disabled = false,
+    additional = ''
 }) => {
         return (
             <div
@@ -21,7 +23,7 @@ const DiscountCard: FC<{
                     <div className="discount-card__title">
                         <span>bakeMAnia</span>
                     </div>
-                    <span className="discount-card__subtitle">twój rabat</span>
+                    <span className="discount-card__subtitle">twój rabat {additional}</span>
 
                     <div className="discount-icon">
                         <svg
@@ -31,7 +33,7 @@ const DiscountCard: FC<{
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke=" var(--bakemaniaGold)"
-                            stroke-width="1"
+                            strokeWidth="1"
                             strokeLinecap="round"
                             strokeLinejoin="round"
                         >

@@ -4,18 +4,20 @@ import Config from "../../config";
 import SafeAreaView from "../SafeAreaView/SafeAreaView";
 
 const PanelViewTemplate: FC<PropsWithChildren<{
-    title: string;
-    appBar?: ReactNode
+    title: ReactNode;
+    appBar?: ReactNode;
+    appBarClassName?: string;
 }>> = ({
     title,
     children,
     appBar = null,
+    appBarClassName = '',
 }) => {
         return (
             <SafeAreaView>
                 <section className="panelViewTemplate">
                     <h2
-                        className={"panelViewTemplate__title"}
+                        className={"panelViewTemplate__title " + appBarClassName}
                         style={{
                             height: Config.HeaderHeight,
                             lineHeight: Config.HeaderHeight + 'px',

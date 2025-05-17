@@ -12,19 +12,31 @@ enum UserRole {
     User = 'user'
 }
 
+type StampsHistoryEntry = {
+    _id: string,
+    createdAt: string,
+    by: number,
+    balance: number,
+    assistantId: string,
+    userId: string,
+}
+
 type Me = {
     _id: string,
     email: string,
     stamps: {
         amount: number,
+        history: StampsHistoryEntry[]
     },
-    role: UserRole
+    role: UserRole,
+    transactionsHistory?: StampsHistoryEntry[],
 }
 
 export type {
     Me,
     MeState,
-    UserRole
+    UserRole,
+    StampsHistoryEntry
 }
 
 export default UserRole

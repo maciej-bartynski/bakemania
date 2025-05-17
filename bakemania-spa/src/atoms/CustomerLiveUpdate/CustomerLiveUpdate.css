@@ -1,0 +1,57 @@
+.CustomerLiveUpdate__wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translate(0%, 0%);
+    background: white;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 360px;
+    max-height: 500px;
+    overflow: auto;
+    border-radius: 20px;
+    width: 0;
+    height: 0;
+    padding: 20px;
+}
+
+.CustomerLiveUpdate__wrapper--expanded {
+    display: flex;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 10px 120px rgba(0, 0, 0, 0.5);
+    width: 90vw;
+    height: 90vh;
+    animation: stamps-updated-ping-animation 250ms linear;
+    right: 0;
+    bottom: 0;
+}
+
+.CustomerLiveUpdate__content {
+    align-self: stretch;
+    flex: 1;
+}
+
+.CustomerLiveUpdate__button {
+    margin-top: 16px;
+    padding-left: 16px;
+    padding-right: 16px;
+    align-self: stretch;
+}
+
+@keyframes stamps-updated-ping-animation {
+    0% {
+        transform: translate(-50%, -50%) scale(0.95);
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.05);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+}

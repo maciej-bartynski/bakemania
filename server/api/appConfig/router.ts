@@ -1,15 +1,19 @@
 
 import express, { Request, Response } from 'express';
-import Middleware from '../../lib/middleware';
-import appConfigQuery from './query';
+import appConfigDb from '../../services/DbService/instances/AppConfigDb';
+import { AppConfig } from '../../services/DbService/instances/AppConfigDb.types';
 
 const appConfigRouter = express.Router();
 
 appConfigRouter.get('/get', async (req: Request, res: Response): Promise<void> => {
     try {
 
-        const appConfig = await appConfigQuery.findAppConfig();
-
+        //const appConfig = await appConfigQuery.findAppConfig();
+        const { items: appConfigs, hasMore } = await appConfigDb.getAll<AppConfig>({
+            page: 1,
+            size: 1,
+        });
+        const appConfig = appConfigs[0];
         if (appConfig) {
             res
                 .status(200)

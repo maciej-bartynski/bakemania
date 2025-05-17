@@ -2,8 +2,8 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import mkcert from 'vite-plugin-mkcert'
 import os from 'os';
+import { VitePWA } from 'vite-plugin-pwa';
 
-console.log("pro", process.env.NODE_ENV)
 // https://vite.dev/config/
 export default defineConfig({
   server: {
@@ -16,6 +16,7 @@ export default defineConfig({
       "Access-Control-Allow-Origin": "*",
     },
     host: getLocalIP(),
+
     proxy: {
       '/api': {
         target: `https://${getLocalIP()}:4040`,
@@ -23,21 +24,111 @@ export default defineConfig({
         secure: false,
       },
       '/ws': {
-        target: `https://${getLocalIP()}:4040`,
+        target: `wss://${getLocalIP()}:4040`,
         changeOrigin: true,
         secure: false,
         ws: true,
       },
     }
   },
-  plugins: [react(), mkcert()],
-  define: process.env.NODE_ENV === 'development' ? {
-    "import.meta.env.VITE_API_URL": `"https://${getLocalIP()}:3000/api"`,
-    "import.meta.env.VITE_WS_URL": `"https://${getLocalIP()}:3000/ws"`,
-  } : {
-    "import.meta.env.VITE_API_URL": `"https://bakemania.ovh/api"`,
-    "import.meta.env.VITE_WS_URL": `"https://bakemania.ovh/ws"`,
-  },
+
+  plugins: [react(), mkcert(), VitePWA({
+    registerType: 'autoUpdate', // Autoaktualizacja service workera
+    devOptions: {
+      enabled: true, // Działa w dev
+    },
+    manifest: {
+      name: 'bakeMAnia',
+      short_name: 'MAnia!',
+      description: 'bakeMAnia - zbieraj pieczątki, odbieraj rabaty',
+      theme_color: '#ffffff',
+      background_color: '#ffffff',
+      display: 'standalone',
+      icons: [
+        {
+          "src": "/web-app-manifest-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png",
+          "purpose": "any"
+        },
+        {
+          "src": "/web-app-manifest-512x512.png",
+          "sizes": "512x512",
+          "type": "image/png",
+          "purpose": "any"
+        },
+      ],
+      "screenshots": [
+        {
+          "src": "/images/card-screen.png",
+          "sizes": "706x1494",
+          "type": "image/png",
+          "form_factor": "narrow"
+        },
+        {
+          "src": "/images/gift-screen.png",
+          "sizes": "696x1486",
+          "type": "image/png"
+        }],
+
+    },
+
+
+    workbox: {
+      clientsClaim: true,
+      skipWaiting: true,
+      cleanupOutdatedCaches: true,
+      disableDevLogs: false,
+      navigateFallbackDenylist: [/\.pdf$/],
+      // Dodaj to:
+      globIgnores: ['**/*.pdf'],
+
+      // globPatterns: ['**/*.{ico,png,svg}'],
+      runtimeCaching: [
+        {
+          urlPattern: /^https:\/\/.*\.(js|css)$/,
+          handler: 'NetworkOnly',
+        },
+        {
+          urlPattern: /.*\.pdf$/,
+          handler: 'NetworkOnly'
+        },
+        {
+          // Dla plików HTML zawsze pobieraj świeżą wersję
+          urlPattern: /.*\.html$/,
+          handler: 'NetworkOnly'
+        },
+        {
+          // Dla API zawsze pobieraj świeżą wersję
+          urlPattern: /^https:\/\/api\..*/,
+          handler: 'NetworkOnly'
+        },
+        {
+          urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'google-fonts',
+            expiration: {
+              maxEntries: 10,
+              maxAgeSeconds: 60 * 60 * 24 * 365,
+            },
+          },
+        },
+        {
+          urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'google-fonts-static',
+            expiration: {
+              maxEntries: 10,
+              maxAgeSeconds: 60 * 60 * 24 * 365,
+            },
+          },
+        },
+      ],
+    },
+
+  })],
 })
 
 function getLocalIP() {

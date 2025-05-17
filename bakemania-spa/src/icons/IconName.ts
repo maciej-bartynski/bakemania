@@ -12,7 +12,17 @@ enum IconName {
     CookieMan = 'CookieMan',
     CookieManFill = 'CookieManFill',
     QrCode = 'QrCode',
-    Users = 'Users'
+    Users = 'Users',
+    StampRemove = 'StampRemove',
+    StampForCash = 'StampForCash',
+    History = 'History',
+    Chevron = 'Chevron',
+    ChevronDouble = 'ChevronDouble',
+    ChevronLeft = 'ChevronLeft',
+    ChevronDoubleLeft = 'ChevronDoubleLeft',
+    ChevronTripleLeft = 'ChevronTripleLeft',
+    ChevronTriple = 'ChevronTriple',
+    Warning = 'Warning',
 }
 
 export default IconName;

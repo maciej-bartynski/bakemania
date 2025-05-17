@@ -17,6 +17,15 @@
   --colorActive: #646cff;
   --colorText: #213547;
 
+  /** operations colors */
+  --manager: #067604;
+  --admin: #a47206;
+  --customer: #3f6185;
+  --spend-card: #00b1fc;
+  --earn-stamp: #2e7416;
+  --remove-stamp: #ff4444;
+  --warning: #fb6400;
+
   --bakemania-dark-color: black;
   --bakemania-light-color: white;
   --flour-dark-color: #a0958d;
@@ -41,6 +50,20 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: transparent;
+}
+
+.global-loader-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, .9), rgba(255, 255, 255, 1));
+  animation: global-fade-in 250ms ease-in-out forwards;
 }
 
 .global-loader-spinner {
@@ -138,6 +161,24 @@ a {
   font-size: 12px;
   border: solid 1px black;
   font-weight: 900;
+  cursor: pointer;
+}
+
+a {
+  padding: 16px 20px 0px 20px;
+  text-decoration: none;
+}
+
+a.tertiary {
+  background-color: transparent;
+  color: var(--flour-dark-color);
+  font-size: 12px;
+  border: none;
+  font-weight: 500;
+  text-align: center;
+  border: solid 1px var(--flour-dark-color);
+  height: 20px;
+  padding: 0;
 }
 
 button.secondary,
@@ -163,6 +204,7 @@ a:disabled {
   border-color: #bfbfbf;
   background-color: #bfbfbf;
   color: white;
+  cursor: not-allowed;
 }
 
 label {

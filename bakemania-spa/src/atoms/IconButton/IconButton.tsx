@@ -4,19 +4,25 @@ import Icon from "../../icons/Icon";
 import IconName from "../../icons/IconName";
 
 const IconButton: FC<{
-    iconName: IconName;
+    iconName?: IconName;
+    iconElement?: React.ReactNode;
     iconColor?: string;
     textColor?: string;
     bgColor?: string;
-    label: string;
+    label?: string;
     onClick: () => void;
+    variant?: 'primary' | 'secondary';
+    badge?: React.ReactNode;
 }> = ({
     iconName,
+    iconElement,
     iconColor = "white",
     textColor = "var(--text)",
     bgColor = "var(--text)",
     label,
-    onClick
+    onClick,
+    variant = 'primary',
+    badge
 }) => {
         return (
             <button
@@ -26,22 +32,31 @@ const IconButton: FC<{
                 <span
                     className='icon-button__icon'
                     style={{
-                        background: bgColor
+                        background: variant === 'primary' ? bgColor : 'transparent',
+                        border: 'solid 2px ' + bgColor,
+                        strokeWidth: variant === 'primary' ? 1 : 2
                     }}
                 >
-                    <Icon
-                        iconName={iconName}
-                        color={iconColor}
-                    />
+                    {iconElement || <Icon
+                        iconName={iconName ?? IconName.ArrowDown}
+                        color={variant === 'primary' ? iconColor : bgColor}
+                    />}
                 </span>
-                <span
-                    className='icon-button__label'
-                    style={{
-                        color: textColor
-                    }}
-                >
-                    {label}
-                </span>
+                {label && (
+                    <span
+                        className='icon-button__label'
+                        style={{
+                            color: textColor
+                        }}
+                    >
+                        {label}
+                    </span>
+                )}
+                {badge && (
+                    <span className='icon-button__badge'>
+                        {badge}
+                    </span>
+                )}
             </button>
         );
     }

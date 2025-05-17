@@ -1,13 +1,17 @@
 # misc
 node_modules
 .DS_Store
+notions.md
 
 # builds:
 bakemania-spa/dist
+bakemania-spa/dev-dist
 server-dist
 
 # data
 db
+defaults
+logs
 
 # certs
 cert.pem

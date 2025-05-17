@@ -4,12 +4,14 @@ import bakemaniaBannerUrl from '../../assets/bakemania-rectangle.jpg'
 import Config from "../../config";
 
 const Background: FC<PropsWithChildren<{
-    appBar?: ReactNode
+    appBar?: ReactNode,
+    panels?: ReactNode,
 }>> = ({
     children,
     appBar = null,
+    panels = null
 }) => {
-        console.log("app", appBar)
+
         const titleRef = useRef<HTMLTitleElement | null>(null);
         return (
             <main className="appBackground">
@@ -51,6 +53,7 @@ const Background: FC<PropsWithChildren<{
                         {appBar}
                     </div>
                 )}
+                {panels}
             </main>
         )
     }

@@ -1,0 +1,166 @@
+.customer-item__customer-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 16px;
+    border-radius: 12px;
+    min-height: 100px;
+    gap: 16px;
+    box-shadow: 0 0px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    background-color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.customer-item__customer-item:hover {
+    transform: translateY(-2px);
+}
+
+.customer-item__customer-col-1 {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+}
+
+.customer-item__customer-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--customer);
+    flex-shrink: 0;
+}
+
+.customer-item__customer-data {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.customer-item__customer-email {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.customer-item__customer-created-at {
+    font-size: 10px;
+    color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.customer-item__customer-created-at strong {
+    font-weight: 500;
+    color: var(--text);
+}
+
+.customer-item__customer-col-2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.customer-item__customer-col-2 button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    background-color: var(--customer);
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.customer-item__customer-col-2 button:hover {
+    background-color: var(--customer-dark);
+    transform: translateY(-1px);
+}
+
+.customer-item__customer-col-2 button:active {
+    transform: translateY(0);
+}
+
+.customer-item__customer-actions svg {
+    stroke-width: 2px;
+}
+
+.customer-item__detailsButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.customer-item__detailsButton:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.customer-item__options {
+    position: absolute;
+    right: -200px;
+    top: -8px;
+    bottom: -8px;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    box-shadow: inset 4px 0 12px rgba(0, 0, 0, 0.1);
+    transform: translateX(0);
+    transition: transform 0.3s ease;
+    z-index: 10;
+    width: 200px;
+    padding: 8px 0;
+}
+
+.customer-item__options--expanded {
+    transform: translateX(-200px);
+}
+
+.customer-item__optionsContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+
+.customer-item__option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0px 16px;
+    width: 100%;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: rgba(0, 0, 0, 0.8);
+    font-size: 12px;
+    transition: background-color 0.2s ease;
+    text-align: left;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.customer-item__option:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.customer-item__option:last-child {
+    border-bottom: none;
+}

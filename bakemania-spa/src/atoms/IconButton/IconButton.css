@@ -7,9 +7,10 @@
     padding: 0;
     justify-content: space-between;
     background-color: transparent;
-    overflow: hidden;
+    /* overflow: hidden; */
     gap: 6px;
     border: none;
+    position: relative;
 }
 
 .icon-button__icon {
@@ -25,4 +26,36 @@
     color: white;
     font-size: 8px;
     flex: 1;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(100, 108, 255, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(100, 108, 255, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(100, 108, 255, 0);
+    }
+}
+
+.icon-button__badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: var(--colorActive);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    color: white;
+    font-weight: 900;
+    animation: pulse 2s infinite;
+    /* c: rgb(100, 108, 255); */
 }

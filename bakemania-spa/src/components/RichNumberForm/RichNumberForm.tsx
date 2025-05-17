@@ -5,10 +5,13 @@ import RichNumberInput from '../../atoms/RichNumberInput/RichNumberInput';
 const RichNumberForm: FC<{
     onSubmit: (submitValue: number) => void;
     inputLabel: string;
-    buttonLabel?: (submitValue: number) => string;
+    buttonLabel?: (submitValue: number) => ReactNode;
     descriptionLabel?: (submitValue: number) => ReactNode;
     minValue: number,
-    maxValue: number,
+    maxValue?: number,
+    rangeMaxValue: number,
+    currencyIcon?: ReactNode,
+    step?: number,
 }> = ({
     onSubmit,
     inputLabel,
@@ -19,7 +22,10 @@ const RichNumberForm: FC<{
         </span>
     ),
     minValue,
-    maxValue
+    maxValue,
+    currencyIcon,
+    rangeMaxValue,
+    step = 1
 }) => {
         const [value, setValue] = useState(minValue);
 
@@ -31,10 +37,14 @@ const RichNumberForm: FC<{
                     label={inputLabel}
                     minValue={minValue}
                     maxValue={maxValue}
+                    rangeMaxValue={rangeMaxValue}
+                    currencyIcon={currencyIcon}
+                    step={step}
                 />
 
                 <button
                     onClick={() => onSubmit(value)}
+                    disabled={value === 0}
                 >
                     {buttonLabel(value)}
                 </button>

@@ -1,85 +1,120 @@
 import { noticesStore } from "../storage/notices-store";
 import noticesSlice from "../storage/notices/notices-reducer";
 import * as uuid from 'uuid';
+import ClientLogsService from "./LogsService";
+import getConsole from "../tools/getConsole";
+import clearSession from "../tools/clearSession";
+import Config from "../config";
+import PathsModule from "../tools/paths";
 
 interface ApiServiceInterface {
-    baseUrl: string;
     fetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response>;
 }
 
 class ApiService implements ApiServiceInterface {
-    baseUrl = import.meta.env.VITE_API_URL;
-
-
-    fetch(input: RequestInfo | URL, init?: RequestInit, expectedStatuses = [200]) {
+    fetch(input: RequestInfo | URL, init?: RequestInit, expectedStatuses = [200], returnIf401 = false) {
 
         const options = {
             ...(init || {}),
             method: init?.method ?? 'get',
             body: init?.body ?? undefined,
             headers: init?.headers ? {
-                ...init.headers,
                 'content-type': 'application/json',
-                'Authorization': `Bearer ${window.localStorage.getItem('token')}`
+                'Authorization': `Bearer ${window.localStorage.getItem(Config.sessionKeys.Token)}`,
+                ...init.headers,
             } : {
                 'content-type': 'application/json',
-                'Authorization': `Bearer ${window.localStorage.getItem('token')}`
+                'Authorization': `Bearer ${window.localStorage.getItem(Config.sessionKeys.Token)}`
             }
         };
 
-        return window.fetch(`${this.baseUrl}/${input}`, options)
+        return window.fetch(`/api/${input}`, options)
             .then(async response => {
+
                 if (expectedStatuses.includes(response.status)) {
+
                     if (response.status === 204) {
                         /** 
                          * Success status code, no body 
                          * */
                         return response.statusText ?? 'Success';
                     }
+
                     /** 
                      * Success status code, expect body 
                      * */
                     return response.json();
                 }
+
                 /** 
                  * Rejection status code, body expected 
                  * */
-                const rejectionData = await response.json();
-                throw rejectionData;
-            })
-            .catch(rejectionData => {
 
+                if (response.status === 401) {
+                    try {
+                        const rejectionData = await response.json();
+                        noticesStore.dispatch(noticesSlice.actions.addNotice({
+                            _id: uuid.v4(),
+                            header: 'Aby kontynuować zaloguj się (ponownie).',
+                            body: rejectionData.message,
+                        }))
 
-                let errorMessage = "";
+                        if (rejectionData.code === 'TOKEN_EXPIRED') {
+                            clearSession();
+                            PathsModule.redirect(PathsModule.Paths.SessionExpired);
+                        }
+                    } catch (e) {
+                        getConsole().error('Something wrong when parsing 401: ', e);
+                        noticesStore.dispatch(noticesSlice.actions.addNotice({
+                            _id: uuid.v4(),
+                            header: 'Aby kontynuować zaloguj się (ponownie).',
+                            body: 'Obecna sesja wygasła.',
+                        }));
+                        clearSession();
+                    } finally {
+                        clearSession();
+                    }
 
-                if (typeof rejectionData === 'string') {
-                    /**
-                     * Api error with status text only
-                     */
-                    errorMessage += `${rejectionData}`;
-                } else if (rejectionData && rejectionData.message) {
-                    /**
-                     * Api error with data
-                     */
-                    errorMessage += `${rejectionData.message}`;
+                    if (returnIf401) {
+                        return 401;
+                    }
                 } else {
-                    /**
-                     * Parsing errors, network errors etc
-                     */
-                    errorMessage += `${rejectionData}`;
+                    try {
+                        const rejectionData = await response.json();
+                        const clientLogs = new ClientLogsService();
+                        clientLogs.report('Rejection on ApiService', {
+                            Url: input,
+                            'Request data': init,
+                            'Expected statuses': expectedStatuses,
+                            'Response status': response.status,
+                            'Response status text': response.statusText,
+                            'What happend': rejectionData?.message || rejectionData || `${rejectionData}`
+                        });
+                        noticesStore.dispatch(noticesSlice.actions.addNotice({
+                            _id: uuid.v4(),
+                            header: `${response.status}: ${input}`,
+                            body: rejectionData?.message || rejectionData || `${rejectionData}`,
+                        }))
+                    } catch (err) {
+                        getConsole().error('Something wrong when parsing rejection: ', err);
+                        const clientLogs = new ClientLogsService();
+                        clientLogs.report('Rejection on ApiService, error on parsing rejection', {
+                            Url: input,
+                            'Request data': init,
+                            'Expected statuses': expectedStatuses,
+                            'Response status': response.status,
+                            'Response status text': response.statusText,
+                            // eslint-disable-next-line
+                            'Catched error': `${(err as any)?.message ?? err}`
+                        });
+                        noticesStore.dispatch(noticesSlice.actions.addNotice({
+                            _id: uuid.v4(),
+                            header: `${response.status}: ${input}`,
+                            body: 'Coś poszło źle',
+                        }))
+                    }
+                    throw response;
                 }
-
-                console.error(errorMessage);
-
-                try {
-                    noticesStore.dispatch(noticesSlice.actions.addNotice({
-                        _id: uuid.v4(),
-                        body: errorMessage,
-                    }))
-                } catch (e) {
-                    console.warn(e);
-                }
-
             });
     }
 }
