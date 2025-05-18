@@ -42,7 +42,7 @@ export default defineConfig(({ mode }) => {
         enabled: true, // Działa w dev
       },
       manifest: {
-        name: env.VITE_APP_RUNTIME === 'production' ? 'BakeMAnia' : `BakeMAnia ${env.VITE_APP_RUNTIME}`,
+        name: env.VITE_APP_RUNTIME === 'production' ? 'bakeMAnia' : `bakeMAnia ${env.VITE_APP_RUNTIME}`,
         short_name: env.VITE_APP_RUNTIME === 'production' ? 'MAnia!' : 'MAnia! stg',
         description: 'bakeMAnia - zbieraj pieczątki, odbieraj rabaty',
         theme_color: '#ffffff',
@@ -136,7 +136,7 @@ export default defineConfig(({ mode }) => {
 
     define: {
       'import.meta.env.VITE_APP_NAME': JSON.stringify(
-        env.VITE_APP_RUNTIME === 'production' ? 'BakeMAnia' : `BakeMAnia ${env.VITE_APP_RUNTIME}`
+        env.VITE_APP_RUNTIME === 'production' ? 'bakeMAnia' : `bakeMAnia ${env.VITE_APP_RUNTIME}`
       )
     },
   })
