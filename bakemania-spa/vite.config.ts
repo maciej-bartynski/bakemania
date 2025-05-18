@@ -38,8 +38,8 @@ export default defineConfig({
       enabled: true, // Działa w dev
     },
     manifest: {
-      name: 'bakeMAnia',
-      short_name: 'MAnia!',
+      name: process.env.VITE_APP_RUNTIME === 'production' ? 'BakeMAnia' : `BakeMAnia ${process.env.VITE_APP_RUNTIME}`,
+      short_name: process.env.VITE_APP_RUNTIME === 'production' ? 'MAnia!' : 'MAnia! stg',
       description: 'bakeMAnia - zbieraj pieczątki, odbieraj rabaty',
       theme_color: '#ffffff',
       background_color: '#ffffff',
@@ -129,6 +129,12 @@ export default defineConfig({
     },
 
   })],
+
+  define: {
+    'import.meta.env.VITE_APP_NAME': JSON.stringify(
+      process.env.VITE_APP_RUNTIME === 'production' ? 'BakeMAnia' : `BakeMAnia ${process.env.VITE_APP_RUNTIME}`
+    )
+  },
 })
 
 function getLocalIP() {
