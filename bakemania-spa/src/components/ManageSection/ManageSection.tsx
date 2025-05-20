@@ -75,6 +75,8 @@ const ManageSection: FC = () => {
     const [showFileRestorePanel, setShowFileRestorePanel] = useState(false);
     const [dbCopyExists, setDbCopyExists] = useState(false);
     const [showRemovePanel, setShowRemovePanel] = useState(false);
+    const [showFlushLogsPanel, setShowFlushLogsPanel] = useState(false);
+    const [isFlushingLogs, setIsFlushingLogs] = useState(false);
 
     const checkDbCopy = useCallback(async () => {
         try {
@@ -92,6 +94,35 @@ const ManageSection: FC = () => {
             checkDbCopy();
         }
     }, [active, checkDbCopy]);
+
+    const handleFlushLogs = async () => {
+        setIsFlushingLogs(true);
+
+        try {
+            const response = await apiService.fetch('admin/flush-logs', {
+                method: 'DELETE'
+            });
+
+            if (response.success) {
+                alert('Logi zostały wyczyszczone.');
+                setShowFlushLogsPanel(false);
+            } else {
+                noticesStore.dispatch(noticesSlice.actions.addNotice({
+                    _id: uuid.v4(),
+                    header: 'Nie udało się wyczyścić logów.',
+                    body: response.message,
+                }));
+            }
+        } catch (error) {
+            noticesStore.dispatch(noticesSlice.actions.addNotice({
+                _id: uuid.v4(),
+                header: 'Nieokreślony błąd',
+                body: `Wystąpił błąd podczas czyszczenia logów. ${error}`,
+            }));
+        } finally {
+            setIsFlushingLogs(false);
+        }
+    };
 
     return (
         <AsidePanel
@@ -614,6 +645,51 @@ const ManageSection: FC = () => {
                         </div>
                     </div>
                 </BottomPanel>
+
+                <div className="manage-section-form">
+                    <div className='manage-section-form__header --admin'>
+                        <UserIcon.Admin />
+                        <strong>Czyszczenie logów</strong>
+                        <span>
+                            Usuń wszystkie pliki logów i odtwórz strukturę katalogów.
+                        </span>
+                    </div>
+
+                    <button onClick={() => setShowFlushLogsPanel(true)}>
+                        Wyczyść logi
+                    </button>
+                </div>
+
+                <BottomPanel
+                    title="Potwierdź czyszczenie logów"
+                    show={showFlushLogsPanel}
+                    toggleBottomPanel={() => setShowFlushLogsPanel(false)}
+                >
+                    <div style={{ padding: '20px' }}>
+                        <p style={{ marginBottom: '20px' }}>Czy na pewno chcesz wyczyścić wszystkie logi? Ta operacja jest nieodwracalna.</p>
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                            <button
+                                onClick={handleFlushLogs}
+                                disabled={isFlushingLogs}
+                                style={{
+                                    backgroundColor: 'var(--bakemaniaGold)',
+                                    flex: 1
+                                }}
+                            >
+                                {isFlushingLogs ? 'Czyszczenie...' : 'Wyczyść'}
+                            </button>
+                            <button
+                                onClick={() => setShowFlushLogsPanel(false)}
+                                disabled={isFlushingLogs}
+                                style={{ flex: 1 }}
+                            >
+                                Anuluj
+                            </button>
+                        </div>
+                    </div>
+                </BottomPanel>
+
+
             </PanelViewTemplate>
         </AsidePanel >
     );
