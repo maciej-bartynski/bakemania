@@ -286,45 +286,39 @@ adminRouter.post('/db-copy/restore', async (req, res) => {
             return;
         }
 
-        try {
-            // Usuń zawartość folderu db jeśli istnieje
-            if (fs.existsSync(dbPath)) {
-                fs.rmSync(dbPath, { recursive: true });
-            }
 
-            // Utwórz nowy folder db
-            fs.mkdirSync(dbPath);
-
-            // Skopiuj zawartość db-backup do db
-            const copyRecursive = (src: string, dest: string) => {
-                const entries = fs.readdirSync(src, { withFileTypes: true });
-
-                for (const entry of entries) {
-                    const srcPath = path.join(src, entry.name);
-                    const destPath = path.join(dest, entry.name);
-
-                    if (entry.isDirectory()) {
-                        fs.mkdirSync(destPath);
-                        copyRecursive(srcPath, destPath);
-                    } else {
-                        fs.copyFileSync(srcPath, destPath);
-                    }
-                }
-            };
-
-            copyRecursive(dbBackupPath, dbPath);
-
-            res.status(200).json({
-                message: 'Baza danych została przywrócona.',
-                success: true
-            });
-        } catch (error) {
-            res.status(500).json({
-                message: 'Wystąpił błąd podczas przywracania bazy danych.',
-                error: (error as any)?.message ?? error,
-                success: false
-            });
+        // Usuń zawartość folderu db jeśli istnieje
+        if (fs.existsSync(dbPath)) {
+            fs.rmSync(dbPath, { recursive: true });
         }
+
+        // Utwórz nowy folder db
+        fs.mkdirSync(dbPath);
+
+        // Skopiuj zawartość db-backup do db
+        const copyRecursive = (src: string, dest: string) => {
+            const entries = fs.readdirSync(src, { withFileTypes: true });
+
+            for (const entry of entries) {
+                const srcPath = path.join(src, entry.name);
+                const destPath = path.join(dest, entry.name);
+
+                if (entry.isDirectory()) {
+                    fs.mkdirSync(destPath);
+                    copyRecursive(srcPath, destPath);
+                } else {
+                    fs.copyFileSync(srcPath, destPath);
+                }
+            }
+        };
+
+        copyRecursive(dbBackupPath, dbPath);
+
+        res.status(200).json({
+            message: 'Baza danych została przywrócona.',
+            success: true
+        });
+
     }, (e) => {
         res.status(500).json({
             message: 'Error while restoring database.',
