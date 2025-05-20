@@ -12,6 +12,7 @@ server-dist
 db
 defaults
 logs
+db-copy
 
 # certs
 cert.pem

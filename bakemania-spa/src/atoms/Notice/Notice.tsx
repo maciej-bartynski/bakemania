@@ -18,9 +18,9 @@ const Notice: FC<PropsWithChildren<{
                 onClick={onClick}
                 style={style}
             >
-                <span>
+                <div className="notice__content">
                     {children}
-                </span>
+                </div>
             </button>
         )
     }
