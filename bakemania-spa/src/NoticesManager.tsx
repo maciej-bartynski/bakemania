@@ -69,7 +69,8 @@ const NoticesManager: FC = () => {
                             delete TIMER_DICT[notice._id];
                         }}
                     >
-                        {notice.body}
+                        <strong>{notice.header}</strong>
+                        <span>{notice.body}</span>
                     </Notice>
                 )
             })}

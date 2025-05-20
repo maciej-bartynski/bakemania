@@ -139,6 +139,25 @@ class EmailService {
             return false;
         }) ?? false;
     }
+
+    async sendBackup(zipBuffer: Buffer): Promise<boolean> {
+        return await Logs.emailLogs.catchUnhandled<boolean>('[EmailService] sendBackup() failure', async () => {
+            await this.transporter.sendMail({
+                from: process.env.SMTP_FROM,
+                to: process.env.EMAIL_USER,
+                subject: 'Backup bazy danych',
+                text: 'W załączniku znajduje się backup bazy danych.',
+                attachments: [{
+                    filename: 'db-backup.zip',
+                    content: zipBuffer
+                }]
+            });
+
+            return true;
+        }, async () => {
+            return false;
+        }) ?? false;
+    }
 }
 
 export default new EmailService();
