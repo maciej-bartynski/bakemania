@@ -385,4 +385,51 @@ adminRouter.get('/db-copy/confirm-exists', async (req, res) => {
     });
 });
 
+adminRouter.delete('/flush-logs', async (req, res) => {
+    Logs.appLogs.catchUnhandled('Handler /flush-logs', async () => {
+        const logsPath = path.resolve(process.cwd(), './logs');
+        const requiredDirs = ['app', 'email', 'client', 'ws-server'];
+
+
+        // Usuń zawartość folderu logs pojedynczo
+        const deleteRecursive = (dir: string) => {
+            if (fs.existsSync(dir)) {
+                const entries = fs.readdirSync(dir, { withFileTypes: true });
+                for (const entry of entries) {
+                    const fullPath = path.join(dir, entry.name);
+                    if (entry.isDirectory()) {
+                        deleteRecursive(fullPath);
+                        fs.rmdirSync(fullPath);
+                    } else {
+                        fs.unlinkSync(fullPath);
+                    }
+                }
+            }
+        };
+
+        // Usuń zawartość folderu logs
+        deleteRecursive(logsPath);
+
+        // Utwórz wymagane katalogi
+        for (const dir of requiredDirs) {
+            const dirPath = path.join(logsPath, dir);
+            if (!fs.existsSync(dirPath)) {
+                fs.mkdirSync(dirPath, { recursive: true });
+            }
+        }
+
+        res.status(200).json({
+            message: 'Logi zostały wyczyszczone i struktura katalogów została odtworzona.',
+            success: true
+        });
+
+    }, (e) => {
+        res.status(500).json({
+            message: 'Error while flushing logs.',
+            error: (e as any)?.message ?? e,
+            success: false
+        });
+    });
+});
+
 export default adminRouter;
