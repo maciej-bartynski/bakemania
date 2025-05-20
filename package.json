@@ -8,7 +8,8 @@
     "build": "tsc",
     "start": "NODE_ENV=production node ./server-dist/app.js",
     "reset-db": "NODE_ENV=development node ./server-dist/DbFixtures.js",
-    "copy-db": "NODE_ENV=development node ./server-dist/copyDb.js"
+    "copy-db": "NODE_ENV=development node ./server-dist/copyDb.js",
+    "create-admin": "NODE_ENV=development node ./server-dist/CreateAdmin.js"
   },
   "author": "",
   "license": "ISC",
