@@ -269,6 +269,7 @@ adminRouter.post('/db-copy/restore', async (req, res) => {
         const dbCopyPath = path.resolve(process.cwd(), './db-copy');
         const dbBackupPath = path.join(dbCopyPath, 'db-backup');
         const dbPath = path.resolve(process.cwd(), './db');
+        const tempPath = path.join(os.tmpdir(), 'db-restore-temp');
 
         if (!fs.existsSync(dbCopyPath)) {
             res.status(404).json({
@@ -286,39 +287,77 @@ adminRouter.post('/db-copy/restore', async (req, res) => {
             return;
         }
 
+        try {
+            // Utwórz tymczasowy folder
+            if (fs.existsSync(tempPath)) {
+                fs.rmSync(tempPath, { recursive: true });
+            }
+            fs.mkdirSync(tempPath);
 
-        // Usuń zawartość folderu db jeśli istnieje
-        if (fs.existsSync(dbPath)) {
-            fs.rmSync(dbPath, { recursive: true });
-        }
+            // Skopiuj zawartość db-backup do tymczasowego folderu
+            const copyRecursive = (src: string, dest: string) => {
+                const entries = fs.readdirSync(src, { withFileTypes: true });
 
-        // Utwórz nowy folder db
-        fs.mkdirSync(dbPath);
+                for (const entry of entries) {
+                    const srcPath = path.join(src, entry.name);
+                    const destPath = path.join(dest, entry.name);
 
-        // Skopiuj zawartość db-backup do db
-        const copyRecursive = (src: string, dest: string) => {
-            const entries = fs.readdirSync(src, { withFileTypes: true });
+                    if (entry.isDirectory()) {
+                        fs.mkdirSync(destPath);
+                        copyRecursive(srcPath, destPath);
+                    } else {
+                        fs.copyFileSync(srcPath, destPath);
+                    }
+                }
+            };
 
-            for (const entry of entries) {
-                const srcPath = path.join(src, entry.name);
-                const destPath = path.join(dest, entry.name);
+            copyRecursive(dbBackupPath, tempPath);
 
-                if (entry.isDirectory()) {
-                    fs.mkdirSync(destPath);
-                    copyRecursive(srcPath, destPath);
-                } else {
-                    fs.copyFileSync(srcPath, destPath);
+            // Usuń pliki z folderu db pojedynczo
+            const deleteRecursive = (dir: string) => {
+                if (fs.existsSync(dir)) {
+                    const entries = fs.readdirSync(dir, { withFileTypes: true });
+                    for (const entry of entries) {
+                        const fullPath = path.join(dir, entry.name);
+                        if (entry.isDirectory()) {
+                            deleteRecursive(fullPath);
+                            fs.rmdirSync(fullPath);
+                        } else {
+                            fs.unlinkSync(fullPath);
+                        }
+                    }
+                }
+            };
+
+            // Usuń zawartość folderu db
+            deleteRecursive(dbPath);
+
+            // Przenieś pliki z tymczasowego folderu do db
+            copyRecursive(tempPath, dbPath);
+
+            // Usuń tymczasowy folder
+            fs.rmSync(tempPath, { recursive: true });
+
+            res.status(200).json({
+                message: 'Baza danych została przywrócona.',
+                success: true
+            });
+        } catch (error) {
+            // W przypadku błędu, spróbuj wyczyścić tymczasowy folder
+            if (fs.existsSync(tempPath)) {
+                try {
+                    fs.rmSync(tempPath, { recursive: true });
+                } catch (e) {
+                    // Ignoruj błędy podczas czyszczenia
                 }
             }
-        };
 
-        copyRecursive(dbBackupPath, dbPath);
-
-        res.status(200).json({
-            message: 'Baza danych została przywrócona.',
-            success: true
-        });
-
+            res.status(500).json({
+                message: 'Wystąpił błąd podczas przywracania bazy danych.',
+                error: (error as any)?.message ?? error,
+                success: false
+            });
+        }
     }, (e) => {
         res.status(500).json({
             message: 'Error while restoring database.',
