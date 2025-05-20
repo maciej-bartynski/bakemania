@@ -1,0 +1,31 @@
+{
+  "_id": "1101282a-cbc0-4be6-b90c-5cdac7b3bacb",
+  "email": "klient78@gmail.com",
+  "password": "$2a$10$dtTNs2RAUHdQik1bz9G7s.xaFOrKQ/0vACG0jWeqpZy9gJLkUQYsC",
+  "role": "user",
+  "agreements": true,
+  "verification": {
+    "isVerified": true
+  },
+  "card": {
+    "hash": "$2a$10$ryBqkYnMSeSceES43jlVv.WW/OtpExH9ca9Ms3lgZR8oDS7K6EE92",
+    "createdAt": 1743844728495
+  },
+  "stamps": {
+    "amount": 0,
+    "history": [
+      {
+        "_id": "76c34f4d-ff05-4f86-9024-438f8479c576",
+        "by": 0,
+        "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+        "balance": 0,
+        "createdAt": "12.04.2025 12:09:25",
+        "userId": "1101282a-cbc0-4be6-b90c-5cdac7b3bacb"
+      }
+    ]
+  },
+  "metadata": {
+    "createdAt": "05.04.2025 11:18:48",
+    "updatedAt": "12.04.2025 12:09:25"
+  }
+}

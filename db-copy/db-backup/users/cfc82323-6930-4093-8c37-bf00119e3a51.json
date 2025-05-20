@@ -1,0 +1,17 @@
+{
+  "_id": "cfc82323-6930-4093-8c37-bf00119e3a51",
+  "email": "klient7@gmail.com",
+  "password": "$2a$10$3pN50aZ1fZ4AoKDn3OLPl.H2//z7Uc2lceDtR0Pu1ztQz4LeEELgC",
+  "role": "user",
+  "agreements": true,
+  "verification": {
+    "isVerified": true
+  },
+  "stamps": {
+    "amount": 0,
+    "history": []
+  },
+  "metadata": {
+    "createdAt": "03.04.2025 15:52:30"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "_id": "167200e7-35db-497d-bd94-3d6e892fdbf2",
+  "email": "klient100@gmail.com",
+  "password": "$2a$10$1Lhn4XEreAa5opfS0vDz7eaCDNp8zLnSqd.u3UE9OGmJ7uyOVeHvS",
+  "role": "user",
+  "agreements": true,
+  "verification": {
+    "isVerified": true
+  },
+  "stamps": {
+    "amount": 30,
+    "history": [
+      {
+        "_id": "cba48138-0531-49ca-b685-7dfe40040165",
+        "by": 21,
+        "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+        "balance": 21,
+        "createdAt": "08.04.2025 14:36:42",
+        "userId": "167200e7-35db-497d-bd94-3d6e892fdbf2"
+      },
+      {
+        "_id": "a2b4d607-82e7-426e-9f2a-fec7ae55a86c",
+        "by": 9,
+        "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+        "balance": 30,
+        "createdAt": "17.05.2025 13:08:14",
+        "userId": "167200e7-35db-497d-bd94-3d6e892fdbf2"
+      }
+    ]
+  },
+  "metadata": {
+    "createdAt": "03.04.2025 15:52:35",
+    "updatedAt": "17.05.2025 13:08:14"
+  }
+}

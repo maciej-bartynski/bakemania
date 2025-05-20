@@ -1,0 +1,17 @@
+{
+  "_id": "3727dfa3-2867-4114-8115-02843cd0e870",
+  "email": "klient119@gmail.com",
+  "password": "$2a$10$To44R0Pt3vMMGZidZY3EveWCczwgFWOjHXFNLTlSPPEWeSqKUBeGW",
+  "role": "user",
+  "agreements": true,
+  "verification": {
+    "isVerified": true
+  },
+  "stamps": {
+    "amount": 0,
+    "history": []
+  },
+  "metadata": {
+    "createdAt": "03.04.2025 15:52:37"
+  }
+}

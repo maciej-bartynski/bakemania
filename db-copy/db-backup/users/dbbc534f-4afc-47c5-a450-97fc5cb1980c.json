@@ -1,0 +1,17 @@
+{
+  "_id": "dbbc534f-4afc-47c5-a450-97fc5cb1980c",
+  "email": "klient92@gmail.com",
+  "password": "$2a$10$4jR4325aQjhDjMH0k4J2buIYxC.lyoA0J5cfSPN8mzc5RX/8FeLSS",
+  "role": "user",
+  "agreements": true,
+  "verification": {
+    "isVerified": true
+  },
+  "stamps": {
+    "amount": 0,
+    "history": []
+  },
+  "metadata": {
+    "createdAt": "03.04.2025 15:52:35"
+  }
+}

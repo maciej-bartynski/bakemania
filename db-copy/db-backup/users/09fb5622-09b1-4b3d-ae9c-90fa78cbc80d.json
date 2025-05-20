@@ -1,0 +1,39 @@
+{
+  "_id": "09fb5622-09b1-4b3d-ae9c-90fa78cbc80d",
+  "email": "papiesz10@gmail.com",
+  "password": "$2a$10$Xpi7TItFAsLJGTVrBWddCudufA225Sl3c5MK/DEZJ8s1kb4vWim7W",
+  "role": "user",
+  "agreements": true,
+  "verification": {
+    "isVerified": true
+  },
+  "card": {
+    "hash": "$2a$10$PoWmpnGlPSYokEpE.CdPs.RkxynnEnUft/akGHBh2g7B9aSlsEItO",
+    "createdAt": 1743844742913
+  },
+  "stamps": {
+    "amount": 2,
+    "history": [
+      {
+        "_id": "a5824458-33a7-4b61-ac84-43bd6b076bf8",
+        "by": 0,
+        "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+        "balance": 0,
+        "createdAt": "12.04.2025 12:09:04",
+        "userId": "09fb5622-09b1-4b3d-ae9c-90fa78cbc80d"
+      },
+      {
+        "_id": "26ac2638-7427-46fd-943f-636d5759724e",
+        "by": 2,
+        "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+        "balance": 2,
+        "createdAt": "16.05.2025 16:13:57",
+        "userId": "09fb5622-09b1-4b3d-ae9c-90fa78cbc80d"
+      }
+    ]
+  },
+  "metadata": {
+    "createdAt": "05.04.2025 11:19:02",
+    "updatedAt": "16.05.2025 16:13:57"
+  }
+}

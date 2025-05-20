@@ -1,0 +1,21 @@
+{
+  "_id": "436c6282-4fad-4ca7-b72b-2348d954e998",
+  "email": "papiesz2@gmail.com",
+  "password": "$2a$10$LmyMIOrBJU7CMf3tac5pou.Pakb5VvxBA3V6h9.C76YVXuOl5DU32",
+  "role": "user",
+  "agreements": true,
+  "verification": {
+    "isVerified": true
+  },
+  "card": {
+    "hash": "$2a$10$qGe214jS.iCwJBKjrsbniOA0OgJqJ7vdtUOLnNHaTBeXWtqwzPXay",
+    "createdAt": 1743844732612
+  },
+  "stamps": {
+    "amount": 0,
+    "history": []
+  },
+  "metadata": {
+    "createdAt": "05.04.2025 11:18:52"
+  }
+}

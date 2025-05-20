@@ -1,0 +1,17 @@
+{
+  "_id": "cb443256-abd8-45fb-9517-5a4be949241f",
+  "email": "klient94@gmail.com",
+  "password": "$2a$10$xCkR1Zgg/vlUaq0HBIUQyOMe3cZL4WwMujCeb/EeQWKscVABZlqNq",
+  "role": "user",
+  "agreements": true,
+  "verification": {
+    "isVerified": true
+  },
+  "stamps": {
+    "amount": 0,
+    "history": []
+  },
+  "metadata": {
+    "createdAt": "03.04.2025 15:52:35"
+  }
+}

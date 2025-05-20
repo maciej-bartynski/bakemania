@@ -1,0 +1,21 @@
+{
+  "_id": "edc77e9b-e9d5-4236-9e39-acc2e6242ec2",
+  "email": "klient0@gmail.com",
+  "password": "$2a$10$7IsN3AJSRtxViBlUTbEifu1.OAQewWRI1mccajCOnmqfR6wW1Y/pm",
+  "role": "user",
+  "agreements": true,
+  "verification": {
+    "isVerified": true
+  },
+  "card": {
+    "hash": "$2a$10$PIU/kH3hX1pRbRjAAU.doOLDfo1SEFLbJtiMy6gN9/3FgVQVGoCSa",
+    "createdAt": 1743844737077
+  },
+  "stamps": {
+    "amount": 0,
+    "history": []
+  },
+  "metadata": {
+    "createdAt": "05.04.2025 11:18:57"
+  }
+}

@@ -1,0 +1,1992 @@
+{
+  "_id": "51c75174-f5aa-4467-8e47-69c9df438406",
+  "email": "pawel@gmail.com",
+  "password": "$2a$10$n8TD4kwjU1puAjjt4hj6guIx/6Cp/atG2FhoZ6RA6kOPmBpO.7DGi",
+  "role": "admin",
+  "transactionsHistory": [
+    {
+      "_id": "05e81c56-d83c-4088-8011-6083b861cdae",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 27,
+      "createdAt": "08.04.2025 15:14:41",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "19e0c166-4343-442c-bdba-8ca9dcc269ac",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 18,
+      "createdAt": "08.04.2025 15:20:57",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "e8cd63de-57da-4adf-860d-59711ca879ca",
+      "by": -7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 11,
+      "createdAt": "08.04.2025 15:21:08",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "0a6ec9bc-0c90-4f9e-9ccf-4bdb32952ca1",
+      "by": -2,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 9,
+      "createdAt": "09.04.2025 21:36:25",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "4817767c-902e-463e-9ed9-b88f14cce8b0",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 1,
+      "createdAt": "11.04.2025 12:44:41",
+      "userId": "081d1c8f-c317-4860-ac35-430a52ef36b6"
+    },
+    {
+      "_id": "01a03710-eff2-4b3d-b82d-1674355e5fe2",
+      "by": -3,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 24,
+      "createdAt": "12.04.2025 11:07:51",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "a5824458-33a7-4b61-ac84-43bd6b076bf8",
+      "by": 0,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 0,
+      "createdAt": "12.04.2025 12:09:04",
+      "userId": "09fb5622-09b1-4b3d-ae9c-90fa78cbc80d"
+    },
+    {
+      "_id": "76c34f4d-ff05-4f86-9024-438f8479c576",
+      "by": 0,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 0,
+      "createdAt": "12.04.2025 12:09:25",
+      "userId": "1101282a-cbc0-4be6-b90c-5cdac7b3bacb"
+    },
+    {
+      "_id": "59c4bc22-50b7-4d4e-b998-22f2e7925bb1",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 25,
+      "createdAt": "12.04.2025 12:15:12",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "a67f552c-0b37-418f-9ea4-69a5362699c0",
+      "by": 0,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 25,
+      "createdAt": "12.04.2025 12:20:49",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "8a7244c8-e023-44bd-8a81-a46ef6f74be1",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 26,
+      "createdAt": "12.04.2025 12:27:48",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "bd55f085-e855-4386-a924-684274d3be4c",
+      "by": 3,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 3,
+      "createdAt": "12.04.2025 12:27:57",
+      "userId": "01e2cd2a-1520-4b59-bb31-c91f4f2a848a"
+    },
+    {
+      "_id": "246aab00-2bed-48fb-9b79-991559f3ea23",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 27,
+      "createdAt": "12.04.2025 12:28:41",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "b26c44f2-1212-4af0-bae0-52095bedc21c",
+      "by": 10,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 13,
+      "createdAt": "12.04.2025 12:28:51",
+      "userId": "01e2cd2a-1520-4b59-bb31-c91f4f2a848a"
+    },
+    {
+      "_id": "3b5b51ce-534f-46f7-8c1a-ca2c7a4c29c2",
+      "by": 7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 34,
+      "createdAt": "12.04.2025 12:35:45",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "354035eb-f18a-4440-b912-ee13392bba36",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 14,
+      "createdAt": "12.04.2025 12:36:04",
+      "userId": "01e2cd2a-1520-4b59-bb31-c91f4f2a848a"
+    },
+    {
+      "_id": "fd8e6fd3-4611-49a2-8c3b-752ca04f3fe3",
+      "by": -2,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 12,
+      "createdAt": "12.04.2025 12:36:18",
+      "userId": "01e2cd2a-1520-4b59-bb31-c91f4f2a848a"
+    },
+    {
+      "_id": "6359d38e-3611-4597-9ce6-a03906115afa",
+      "by": -2,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 32,
+      "createdAt": "12.04.2025 12:36:36",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "b0d566fd-feb8-480d-a1c8-cfec78468f18",
+      "by": -14,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 18,
+      "createdAt": "12.04.2025 12:37:39",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "cc9c9152-9f4f-4676-94b4-f5dd5e3f2cb5",
+      "by": -7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 11,
+      "createdAt": "12.04.2025 12:38:09",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "3ce15a6f-fbaa-44f4-a846-e460e47544d1",
+      "by": -7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 4,
+      "createdAt": "12.04.2025 12:38:33",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "e0220a26-9b80-4a0f-bd0a-4edf41cca587",
+      "by": 2,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 6,
+      "createdAt": "12.04.2025 12:43:54",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "b1cd6ede-a333-42ea-b564-aa0ba3b7a146",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 7,
+      "createdAt": "12.04.2025 12:45:16",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "10277507-a7eb-4991-a809-949b6065cc60",
+      "by": -5,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 2,
+      "createdAt": "12.04.2025 12:51:38",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "f31c6ce6-dd1a-4fdd-a94f-220a4c2f445f",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 10,
+      "createdAt": "12.04.2025 12:56:28",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "d1d1664e-48e1-42bb-998e-6b384b9095cf",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 11,
+      "createdAt": "12.04.2025 13:11:08",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "f1a671d3-bf95-421a-93a0-052761307100",
+      "by": 3,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 14,
+      "createdAt": "12.04.2025 13:11:30",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "39a4bd5a-2c67-4aa3-bf93-aebf39954d01",
+      "by": -7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 7,
+      "createdAt": "12.04.2025 13:12:05",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "7e6fd5df-9162-43be-9b78-6c2184c353ce",
+      "by": -1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 6,
+      "createdAt": "12.04.2025 13:12:29",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "5bc5e594-ab94-4311-8a06-9670fcd5248d",
+      "by": 10,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 16,
+      "createdAt": "12.04.2025 13:15:32",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "638d8aae-de3a-478a-9aeb-285ba0d62304",
+      "by": -7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 9,
+      "createdAt": "12.04.2025 13:15:49",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "fde9a65a-d963-4b1f-85c5-89996410c012",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 3,
+      "createdAt": "09.05.2025 16:09:19",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "c58d69ac-a2da-4e32-a04e-f81fc1e66eaf",
+      "by": 3,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 6,
+      "createdAt": "09.05.2025 16:09:33",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "520a4a01-4b5f-4ad6-9931-1414b5bec1ed",
+      "by": -7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 2,
+      "createdAt": "09.05.2025 16:26:35",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "1ce4e6d6-85a7-4d48-b856-8944cb184167",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 7,
+      "createdAt": "10.05.2025 10:54:49",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "d12ef888-8931-4410-abde-d02b35e6583b",
+      "by": -2,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 0,
+      "createdAt": "10.05.2025 11:14:14",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "aa15d169-323a-4ffe-ab65-844d8a03fd88",
+      "by": 2,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 2,
+      "createdAt": "10.05.2025 11:16:15",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "35185b95-9bfb-4181-8c09-0d90977b8087",
+      "by": 48,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 50,
+      "createdAt": "10.05.2025 11:31:38",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "40483c80-fbfa-4689-a628-be6982687873",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 51,
+      "createdAt": "10.05.2025 11:36:54",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "065330a4-9857-488a-a7b8-e1fe253389d3",
+      "by": 7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 58,
+      "createdAt": "10.05.2025 11:36:58",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "cf690926-43ef-4c06-afae-2e0f85492de6",
+      "by": -21,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 37,
+      "createdAt": "10.05.2025 11:38:27",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "d686b87f-9664-4858-838e-52b07bc446e3",
+      "by": 0,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 37,
+      "createdAt": "10.05.2025 11:39:16",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "6ca8ced3-79c8-48d8-8049-8009c678a994",
+      "by": 0,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 37,
+      "createdAt": "10.05.2025 11:39:33",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "6296d526-c29f-4f31-b8cf-c73fa8a06dc7",
+      "by": 0,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 7,
+      "createdAt": "11.05.2025 14:17:25",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "8a72a95d-3b53-4f8d-ba90-a549e1f30878",
+      "by": 0,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 7,
+      "createdAt": "11.05.2025 14:17:33",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "9d319f52-1fba-49f3-b341-a8d7eebe4f21",
+      "by": -1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 6,
+      "createdAt": "11.05.2025 14:20:58",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "4316c9f4-c784-4ca9-b111-8842344b5458",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 7,
+      "createdAt": "11.05.2025 14:25:13",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "ebac5806-e526-48cd-9a07-8c83c7bc5ee4",
+      "by": 16,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 23,
+      "createdAt": "11.05.2025 14:25:36",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "e3ccd363-7201-4da7-9534-971e75c1a5eb",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 24,
+      "createdAt": "11.05.2025 14:25:57",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "255d3b96-b1fb-4061-84aa-a78f27bc4e8e",
+      "by": -7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 17,
+      "createdAt": "11.05.2025 14:26:10",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "68e1e38a-c68a-43e5-b5a3-daacbfca843b",
+      "by": -1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 16,
+      "createdAt": "11.05.2025 14:26:15",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "e38802bc-1a18-4e00-b3b2-77ec40428b57",
+      "by": -1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 15,
+      "createdAt": "11.05.2025 14:35:05",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "9d4b5bed-29e2-4e2a-8acd-3de0295a8cd7",
+      "by": -1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 14,
+      "createdAt": "11.05.2025 14:35:12",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "93d242f3-72a6-47a7-bc8d-7b1b3f631ee7",
+      "by": -14,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 0,
+      "createdAt": "11.05.2025 14:35:37",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "3923288e-0123-49d8-ba58-84a234e875b9",
+      "by": 10,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 10,
+      "createdAt": "11.05.2025 14:35:47",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "9ebea7d0-d62d-4424-9f4c-1d992137361d",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 11,
+      "createdAt": "11.05.2025 14:42:59",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "7c5f5c5c-34aa-404c-ab0f-295025257de1",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 12,
+      "createdAt": "11.05.2025 14:43:46",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "7d2652bb-cf8f-420e-aac3-bb5b437b6ec6",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 13,
+      "createdAt": "11.05.2025 14:44:19",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "5373e463-048b-4175-b623-c0952b3947ea",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 14,
+      "createdAt": "11.05.2025 14:55:43",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "b0261f9d-b40c-4b25-bc9c-cf5f14a3ec1c",
+      "by": -7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 7,
+      "createdAt": "16.05.2025 10:41:04",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "27883f71-2fea-4f9c-8e45-8a784351ff83",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 8,
+      "createdAt": "16.05.2025 10:41:11",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "6d09f7c8-9c16-497b-b342-af85144f06c5",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 9,
+      "createdAt": "16.05.2025 10:41:16",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "7008118f-51a7-4e93-a1d9-0b841798a0b8",
+      "by": -7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 2,
+      "createdAt": "16.05.2025 10:41:30",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "b84573a3-e6cf-4c17-9614-bebf5bab0331",
+      "by": -1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 1,
+      "createdAt": "16.05.2025 10:41:36",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "c2a33694-2ebf-43f8-a20d-3bc405c91a81",
+      "by": 33,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 34,
+      "createdAt": "16.05.2025 10:51:09",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "4ba43743-6b0f-4a9d-bf26-1b56c8a3aaf1",
+      "by": 34,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 68,
+      "createdAt": "16.05.2025 10:51:21",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "b39f47d4-0dca-4693-83db-54b7c82cb20e",
+      "by": -21,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 47,
+      "createdAt": "16.05.2025 10:51:29",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "8b9c6e8d-1a21-45f2-86cc-8564dcc52076",
+      "by": -7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 40,
+      "createdAt": "16.05.2025 10:51:36",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "fe0dcc7d-c7b3-4f58-ab61-9083e44ca2df",
+      "by": -1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 39,
+      "createdAt": "16.05.2025 10:51:48",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "55085ecd-5891-41c6-b372-612ed1c8688a",
+      "by": -3,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 36,
+      "createdAt": "16.05.2025 10:51:52",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "8df6938d-8906-4b44-9230-3b5205af728a",
+      "by": -5,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 31,
+      "createdAt": "16.05.2025 10:52:01",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "a8fdc4eb-31bb-4f45-b7b4-f399b558ac12",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 32,
+      "createdAt": "16.05.2025 10:52:22",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "afd8471b-cb06-4934-8936-405636d993a5",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 33,
+      "createdAt": "16.05.2025 10:53:32",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "ec9eaf58-4c24-4b8b-ba0a-b50599dbd8c4",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 34,
+      "createdAt": "16.05.2025 10:54:21",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "bee4579b-054b-4854-8244-bb2dee908453",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 35,
+      "createdAt": "16.05.2025 11:01:44",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "320957a7-f39e-4eb4-a747-2b71a5200547",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 36,
+      "createdAt": "16.05.2025 11:01:53",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "5ec3dde3-b8a6-4045-a758-2c616cf1f704",
+      "by": -7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 29,
+      "createdAt": "16.05.2025 11:01:58",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "f131d92f-d0e4-4646-a836-9c9f3c728779",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 30,
+      "createdAt": "16.05.2025 11:03:10",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "48a7af80-3dc3-4d55-8ad8-51744d90eb20",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 31,
+      "createdAt": "16.05.2025 11:03:16",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "a840bc9d-b28d-4919-a88c-51c0ea098c60",
+      "by": -7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 24,
+      "createdAt": "16.05.2025 11:03:21",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "6eb680f4-1c35-478a-bd01-3932a12a5e71",
+      "by": -3,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 21,
+      "createdAt": "16.05.2025 11:26:11",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "a77f87aa-1e24-4c0f-8318-8b16f31e9df0",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 22,
+      "createdAt": "16.05.2025 11:28:16",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "8dc42d6d-d9bb-4040-9f1f-8da7c027a5ec",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 23,
+      "createdAt": "16.05.2025 11:30:15",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "f4cb6da2-4cca-4653-be9a-a2f184a2a5af",
+      "by": 78,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 101,
+      "createdAt": "16.05.2025 11:32:12",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "9efa5a70-319b-41d0-a255-675579bbc83c",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 102,
+      "createdAt": "16.05.2025 11:32:37",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "3a696801-85b5-4b31-abe0-9e0e55c0e9f9",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 103,
+      "createdAt": "16.05.2025 11:34:46",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "696187e4-8d45-4734-9126-3aa5bdc0ed8a",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 104,
+      "createdAt": "16.05.2025 11:35:43",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "b00030fd-a260-4eec-828c-31355c792c27",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 105,
+      "createdAt": "16.05.2025 11:36:43",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "e5688c19-0801-4215-b391-002ecfdd5519",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 106,
+      "createdAt": "16.05.2025 11:37:15",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "e6c42ddb-51c7-4fbf-aebe-5f7bce7c0bc0",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 13,
+      "createdAt": "16.05.2025 11:37:38",
+      "userId": "01e2cd2a-1520-4b59-bb31-c91f4f2a848a"
+    },
+    {
+      "_id": "7857a476-11a4-4ae5-b1fc-3788d30109e0",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 14,
+      "createdAt": "16.05.2025 11:42:24",
+      "userId": "01e2cd2a-1520-4b59-bb31-c91f4f2a848a"
+    },
+    {
+      "_id": "e4b3e240-06f7-4acd-aea5-3794bef2d508",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 15,
+      "createdAt": "16.05.2025 11:43:59",
+      "userId": "01e2cd2a-1520-4b59-bb31-c91f4f2a848a"
+    },
+    {
+      "_id": "a26be63d-dec3-4264-a7fe-7e761f0e4d73",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 16,
+      "createdAt": "16.05.2025 11:45:17",
+      "userId": "01e2cd2a-1520-4b59-bb31-c91f4f2a848a"
+    },
+    {
+      "_id": "bfdc033c-cbc7-475f-9ffd-26b863c44342",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 17,
+      "createdAt": "16.05.2025 11:45:38",
+      "userId": "01e2cd2a-1520-4b59-bb31-c91f4f2a848a"
+    },
+    {
+      "_id": "d6bdc7bb-b173-4468-a4ea-2148761d6247",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 18,
+      "createdAt": "16.05.2025 11:48:01",
+      "userId": "01e2cd2a-1520-4b59-bb31-c91f4f2a848a"
+    },
+    {
+      "_id": "092f8a56-0994-41c6-a58d-2e2142189269",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 19,
+      "createdAt": "16.05.2025 11:49:34",
+      "userId": "01e2cd2a-1520-4b59-bb31-c91f4f2a848a"
+    },
+    {
+      "_id": "17fc516b-126a-42e8-96ac-f800562cd5c2",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 20,
+      "createdAt": "16.05.2025 11:50:26",
+      "userId": "01e2cd2a-1520-4b59-bb31-c91f4f2a848a"
+    },
+    {
+      "_id": "0efe1413-226a-410a-933a-33d7e61b0f75",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 21,
+      "createdAt": "16.05.2025 11:51:24",
+      "userId": "01e2cd2a-1520-4b59-bb31-c91f4f2a848a"
+    },
+    {
+      "_id": "c0186fb0-f997-4435-9ad1-820288cb69a5",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 107,
+      "createdAt": "16.05.2025 11:53:16",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "a98b7a1c-542f-44f9-a4c0-4f54c02d6d1e",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 108,
+      "createdAt": "16.05.2025 11:53:25",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "c9374c58-8779-4ea4-a1c9-dcb2c20fba11",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 109,
+      "createdAt": "16.05.2025 11:54:01",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "de66ada3-7043-436c-8179-745156b77cda",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 110,
+      "createdAt": "16.05.2025 11:57:44",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "8e5804e4-f6fe-4eae-b828-d4f5e5008f87",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 111,
+      "createdAt": "16.05.2025 11:58:28",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "ea9f3f14-edf4-4c22-81d0-8c47c89177ef",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 112,
+      "createdAt": "16.05.2025 12:00:18",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "75148e1e-ec64-474c-b65f-ea2f539a626d",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 113,
+      "createdAt": "16.05.2025 12:02:04",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "3555be88-9a09-4fe2-b571-15aa403d5b7a",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 114,
+      "createdAt": "16.05.2025 12:02:53",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "604b171b-b6ac-4314-bb99-b12cf342f499",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 115,
+      "createdAt": "16.05.2025 12:07:03",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "5c7f505e-a71b-4077-b271-6080e645306e",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 116,
+      "createdAt": "16.05.2025 12:09:09",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "c8c32d19-15e8-4aad-bbe7-757ef66c990d",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 117,
+      "createdAt": "16.05.2025 12:09:25",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "f3944606-9a08-4eab-96c5-fd0aff5a28ff",
+      "by": 18,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 18,
+      "createdAt": "16.05.2025 12:09:58",
+      "userId": "fa3d2918-fbd2-490f-be3f-8830e3b2bfd5"
+    },
+    {
+      "_id": "2a0dd867-8ec7-42ca-938a-33d4d8a5176d",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 118,
+      "createdAt": "16.05.2025 12:11:21",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "f306abff-a8dc-41e5-b5d4-1f8a4c87045f",
+      "by": -7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 111,
+      "createdAt": "16.05.2025 12:13:44",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "11a81077-5e73-4d98-8bc5-5cbb6b8d2239",
+      "by": -7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 104,
+      "createdAt": "16.05.2025 12:13:59",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "f66ef1dc-83d4-4041-bf54-19b039a2957f",
+      "by": -7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 97,
+      "createdAt": "16.05.2025 12:14:09",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "d8131225-e697-45ce-9237-cebfd44b463f",
+      "by": -7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 90,
+      "createdAt": "16.05.2025 12:14:47",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "1fec9492-b3b7-4cbf-a3f0-a2fb730fd390",
+      "by": -7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 83,
+      "createdAt": "16.05.2025 12:14:53",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "e9a09045-b1ad-4b46-8085-937c51427d79",
+      "by": -7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 76,
+      "createdAt": "16.05.2025 12:17:21",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "e08eda1d-89bd-42f3-8fcf-b1f1f1cb99c6",
+      "by": -7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 69,
+      "createdAt": "16.05.2025 12:18:26",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "609a2554-5039-42f6-93f3-0d517c66d1e5",
+      "by": -7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 62,
+      "createdAt": "16.05.2025 12:42:38",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "acb51758-295e-4fe3-8490-9412e5c899dd",
+      "by": -21,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 41,
+      "createdAt": "16.05.2025 12:43:53",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "a0a75157-58c5-423f-be89-3ce377567acb",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 22,
+      "createdAt": "16.05.2025 12:44:44",
+      "userId": "01e2cd2a-1520-4b59-bb31-c91f4f2a848a"
+    },
+    {
+      "_id": "18683a3b-7b3a-4048-916e-c58ea64e6129",
+      "by": 2,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 24,
+      "createdAt": "16.05.2025 12:52:46",
+      "userId": "01e2cd2a-1520-4b59-bb31-c91f4f2a848a"
+    },
+    {
+      "_id": "61a74bce-ef47-447b-b2f1-ec968984fe5a",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 42,
+      "createdAt": "16.05.2025 12:52:57",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "537cc6f0-c123-46e9-ab96-3733bf5837b8",
+      "by": -14,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 10,
+      "createdAt": "16.05.2025 12:53:12",
+      "userId": "01e2cd2a-1520-4b59-bb31-c91f4f2a848a"
+    },
+    {
+      "_id": "c498bdcc-e45a-4159-9351-b7cbdb5d6953",
+      "by": -1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 9,
+      "createdAt": "16.05.2025 12:54:11",
+      "userId": "01e2cd2a-1520-4b59-bb31-c91f4f2a848a"
+    },
+    {
+      "_id": "79aa2b7b-2e96-4ab9-a784-4de4b1e74130",
+      "by": -7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 2,
+      "createdAt": "16.05.2025 12:54:35",
+      "userId": "01e2cd2a-1520-4b59-bb31-c91f4f2a848a"
+    },
+    {
+      "_id": "efb3fad7-313e-45bd-8c1f-0ca03c432b50",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 43,
+      "createdAt": "16.05.2025 12:54:54",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "8352941b-f945-462b-b405-dbc1abfa71d6",
+      "by": -7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 36,
+      "createdAt": "16.05.2025 12:59:21",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "ef896a9c-d13a-4880-a159-e90d8253cfa7",
+      "by": -7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 29,
+      "createdAt": "16.05.2025 12:59:56",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "880f580d-6cc3-4f79-a4ba-0fb7d3f38f84",
+      "by": -7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 22,
+      "createdAt": "16.05.2025 13:00:05",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "63991913-8605-41db-877d-809b0b8620ea",
+      "by": -7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 15,
+      "createdAt": "16.05.2025 13:06:07",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "c26b3a43-7a00-46b4-8c6c-38b033aedff4",
+      "by": -7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 8,
+      "createdAt": "16.05.2025 13:06:53",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "330a5be8-41f2-4b4f-b492-45a812d839dc",
+      "by": -7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 1,
+      "createdAt": "16.05.2025 13:07:35",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "83f73a3e-a52f-4aa9-a03f-caec41350359",
+      "by": 100,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 101,
+      "createdAt": "16.05.2025 13:09:29",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "15a27e0e-dd50-44ba-97f6-28a2a1d770b2",
+      "by": -7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 94,
+      "createdAt": "16.05.2025 13:09:35",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "8440876e-37f7-4311-9c7b-e6f0cde403ed",
+      "by": -21,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 73,
+      "createdAt": "16.05.2025 13:09:49",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "213e1bc3-c1f7-4bde-8d06-de00791f979a",
+      "by": 6,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 79,
+      "createdAt": "16.05.2025 13:10:48",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "59eb3611-a50f-456f-a6d4-b2b7bc961871",
+      "by": 2,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 81,
+      "createdAt": "16.05.2025 13:11:57",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "db1e319b-499a-435d-9b85-857955b23267",
+      "by": -2,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 79,
+      "createdAt": "16.05.2025 13:12:42",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "04c3f354-7dc5-4e88-9802-1f66beac118b",
+      "by": -1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 78,
+      "createdAt": "16.05.2025 13:14:18",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "9c3f4fe0-1fdd-484c-9337-7d959532b193",
+      "by": -7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 71,
+      "createdAt": "16.05.2025 13:15:20",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "1d027316-3a87-4b3f-ae46-5f3ef9ffc6d7",
+      "by": 3,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 74,
+      "createdAt": "16.05.2025 13:15:40",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "961d98b4-edff-4689-a1c8-67189f087975",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 75,
+      "createdAt": "16.05.2025 13:27:54",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "c1d9115a-a231-4a06-a017-532687a11deb",
+      "by": -11,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 64,
+      "createdAt": "16.05.2025 13:30:30",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "ab56c5e2-8724-4107-9919-8effd0658326",
+      "by": -11,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 53,
+      "createdAt": "16.05.2025 13:31:54",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "9929cade-8491-4f15-a3c1-b566ff8484f6",
+      "by": 8,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 61,
+      "createdAt": "16.05.2025 13:56:26",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "c099c563-208f-4185-9e59-8934426592b2",
+      "by": -4,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 57,
+      "createdAt": "16.05.2025 14:04:42",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "430436db-d9ea-4763-b94d-9bab0b9360f7",
+      "by": -10,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 47,
+      "createdAt": "16.05.2025 14:04:50",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "cddaed19-342d-43b5-9f07-e28461e88bfa",
+      "by": -10,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 37,
+      "createdAt": "16.05.2025 14:04:56",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "680c34d0-5017-4b73-a2d2-b2f4b2d34369",
+      "by": 3,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 40,
+      "createdAt": "16.05.2025 14:05:02",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "b5af4b49-7bdf-4764-aa5d-c5f6e0aad528",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 41,
+      "createdAt": "16.05.2025 14:05:20",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "316173a5-59ca-4c85-b23f-69e8391fc867",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 42,
+      "createdAt": "16.05.2025 14:06:13",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "d5fdf260-9e90-4c35-a205-4027bcd03392",
+      "by": -20,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 22,
+      "createdAt": "16.05.2025 14:06:28",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "925940e5-98ff-4801-a457-bbda4e92a203",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 23,
+      "createdAt": "16.05.2025 14:06:46",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "f7fc7f0d-501d-45d5-8d3e-df9faf0fca5a",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 24,
+      "createdAt": "16.05.2025 14:08:35",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "061dc7b9-593e-40c2-a08d-b9188b854e73",
+      "by": 2,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 26,
+      "createdAt": "16.05.2025 14:10:34",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "7b6932ab-220d-4e53-8f4b-a8936adb65ef",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 27,
+      "createdAt": "16.05.2025 14:11:13",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "c32378f1-100c-4170-9a9c-7b6ca594aa19",
+      "by": 2,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 29,
+      "createdAt": "16.05.2025 14:12:23",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "e9df4270-4cf2-4119-9f23-0c908eb3aa89",
+      "by": 3,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 32,
+      "createdAt": "16.05.2025 14:14:30",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "f05d239b-e0c5-4764-bee1-b11515280eeb",
+      "by": -1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 31,
+      "createdAt": "16.05.2025 14:20:49",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "1cf8f513-ffda-4630-bab8-bbd08aef7c1e",
+      "by": -1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 30,
+      "createdAt": "16.05.2025 14:43:40",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "1373c099-04d4-4f53-8eac-056f563ae38a",
+      "by": -1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 29,
+      "createdAt": "16.05.2025 14:44:27",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "10dabd3e-7c38-4309-9ff4-0a15a93b182c",
+      "by": 2,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 31,
+      "createdAt": "16.05.2025 14:49:23",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "a80853f9-5d75-4dff-8d1e-19b5a990f471",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 32,
+      "createdAt": "16.05.2025 14:50:45",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "32a0b04d-fbf4-40fb-91e6-66ba78b5c70e",
+      "by": 5,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 37,
+      "createdAt": "16.05.2025 14:53:50",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "6ec13675-29eb-4456-8892-5356dc155329",
+      "by": -10,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 27,
+      "createdAt": "16.05.2025 15:02:09",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "aa939a35-921e-4233-82c2-085190751235",
+      "by": 24,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 51,
+      "createdAt": "16.05.2025 15:02:39",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "5c933978-1f8a-4e83-bb6a-81f81573bf72",
+      "by": -10,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 41,
+      "createdAt": "16.05.2025 15:09:02",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "10337982-5fc4-47ed-a60b-13abed2fdd82",
+      "by": -30,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 11,
+      "createdAt": "16.05.2025 15:11:31",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "d5a886c5-8fd3-4377-8763-a062ba533585",
+      "by": 4,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 15,
+      "createdAt": "16.05.2025 15:12:03",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "2481b8ff-3e11-4e57-a13c-791a44457cd8",
+      "by": 16,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 31,
+      "createdAt": "16.05.2025 15:13:21",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "ca795c9d-7de1-4705-9987-a2e66155bcb4",
+      "by": -10,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 21,
+      "createdAt": "16.05.2025 15:13:34",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "2ebc8cf0-6bed-41a7-b08e-811e043e03bd",
+      "by": -1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 20,
+      "createdAt": "16.05.2025 15:13:55",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "de676483-60ef-41e2-a438-023971c0ca2c",
+      "by": 2,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 22,
+      "createdAt": "16.05.2025 15:14:14",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "0a089b95-c5d3-4948-8be6-9c37376dd3cf",
+      "by": 16,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 38,
+      "createdAt": "16.05.2025 15:14:26",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "1d08eefd-c491-45b5-b75c-a4e9b569d342",
+      "by": -1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 37,
+      "createdAt": "16.05.2025 15:14:33",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "42c05f2c-5eb7-46fd-b809-e156170dc5a6",
+      "by": -10,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 27,
+      "createdAt": "16.05.2025 15:14:42",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "41a80d50-d6fb-4a7f-a03b-2484df1b00da",
+      "by": -20,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 7,
+      "createdAt": "16.05.2025 15:15:15",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "18349e76-67cd-42d5-94c5-6b4f859420e4",
+      "by": -1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 6,
+      "createdAt": "16.05.2025 15:16:13",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "3874c991-cb84-4008-9048-dfab906b311f",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 7,
+      "createdAt": "16.05.2025 15:49:52",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "1219ab60-222c-441b-b861-d3f12be99126",
+      "by": 94,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 101,
+      "createdAt": "16.05.2025 16:00:20",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "26ac2638-7427-46fd-943f-636d5759724e",
+      "by": 2,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 2,
+      "createdAt": "16.05.2025 16:13:57",
+      "userId": "09fb5622-09b1-4b3d-ae9c-90fa78cbc80d"
+    },
+    {
+      "_id": "9b03ad69-721b-4026-b7e1-7db9db3fda33",
+      "by": -10,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 91,
+      "createdAt": "16.05.2025 16:15:50",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "095ec51e-9121-4af5-b093-8829350bf9b2",
+      "by": 89,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 180,
+      "createdAt": "16.05.2025 16:15:57",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "4944f9e3-f00a-45ca-ae9a-04bcadd1b16b",
+      "by": -10,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 27,
+      "createdAt": "16.05.2025 16:16:45",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "49b99086-b851-4081-9589-f72af6c8f2b1",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 28,
+      "createdAt": "16.05.2025 21:14:01",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "d188cabb-e83f-482c-8607-473d227446f4",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 29,
+      "createdAt": "16.05.2025 21:19:16",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "177cca73-9a77-4836-9dbb-3c18944e111e",
+      "by": 15,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 44,
+      "createdAt": "16.05.2025 21:22:35",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "0099cab1-b52a-40a2-b3ad-46dcab1b6556",
+      "by": 6,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 50,
+      "createdAt": "16.05.2025 21:23:07",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "436b57bb-ba92-485b-8865-999eeb5f6047",
+      "by": 3,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 53,
+      "createdAt": "16.05.2025 21:23:31",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "4eadea51-7030-4681-ae31-a0e42cb23a14",
+      "by": 7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 60,
+      "createdAt": "16.05.2025 21:24:10",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "8ed8b78c-7391-45cb-90b4-6d7eaf2ab1a0",
+      "by": -20,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 40,
+      "createdAt": "16.05.2025 21:24:42",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "c9c9dc08-37d7-49b5-b9f6-b143abc8a6c2",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 41,
+      "createdAt": "17.05.2025 10:51:14",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "ebec4cee-ba43-4686-9aee-5e115c60120e",
+      "by": 3,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 44,
+      "createdAt": "17.05.2025 10:58:24",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "faad16b8-7585-4cdb-a7b1-d7f2ddcc765e",
+      "by": 2,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 46,
+      "createdAt": "17.05.2025 10:58:55",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "69bdfa27-5d09-46e3-b191-973fc6a10ba8",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 47,
+      "createdAt": "17.05.2025 11:07:42",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "04d27d61-9127-4e05-bfb4-34b85e76a5c1",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 48,
+      "createdAt": "17.05.2025 11:09:17",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "060f3041-133e-4414-9811-46940c54db57",
+      "by": 49,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 97,
+      "createdAt": "17.05.2025 11:15:41",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "f8ff2433-38bc-49a8-895d-1134cdacca67",
+      "by": 65,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 162,
+      "createdAt": "17.05.2025 11:16:24",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "e83d3198-8532-4ad0-81ed-c9bfdad013ea",
+      "by": 250,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 412,
+      "createdAt": "17.05.2025 11:26:46",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "e24d6b5e-3fbf-48b3-ac17-f0c1beee2fa7",
+      "by": 5,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 417,
+      "createdAt": "17.05.2025 11:35:48",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "95620096-defe-42ec-ab6a-9bb7c866b001",
+      "by": 12,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 429,
+      "createdAt": "17.05.2025 11:37:14",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "432d7bda-3302-4140-beaf-a5a530995ea4",
+      "by": 32,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 461,
+      "createdAt": "17.05.2025 11:42:10",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "bbafdb76-d740-44bb-9871-19cb02ebdc1b",
+      "by": 50,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 511,
+      "createdAt": "17.05.2025 11:43:10",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "78b2c20e-26f1-4607-910b-6cb6616e7e24",
+      "by": 47,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 558,
+      "createdAt": "17.05.2025 11:50:05",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "db7ca7af-c8f1-41c2-bbbb-c3de5d038e88",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 559,
+      "createdAt": "17.05.2025 12:15:14",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "134f17be-7740-4294-943e-22be7403a17c",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 560,
+      "createdAt": "17.05.2025 12:15:28",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "e69e75ac-c4d8-4d91-917c-cc313db9a58c",
+      "by": -100,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 460,
+      "createdAt": "17.05.2025 12:16:43",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "5d6785b4-bc7a-4aff-995a-ca31f155a7fc",
+      "by": -300,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 160,
+      "createdAt": "17.05.2025 12:16:59",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "50f5eb79-c923-4309-8a0d-f04ebbc47d4e",
+      "by": -100,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 60,
+      "createdAt": "17.05.2025 12:17:16",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "3014028c-5b44-426b-b0ca-657347e97a4d",
+      "by": -21,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 39,
+      "createdAt": "17.05.2025 12:17:26",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "ed933e85-04c8-44d3-9829-2e225721926d",
+      "by": -21,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 18,
+      "createdAt": "17.05.2025 12:17:41",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "813a0e51-90cf-4af1-94e5-187dd08ff225",
+      "by": -14,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 4,
+      "createdAt": "17.05.2025 12:17:59",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "e8a48cba-c536-454d-9d92-754f61fc91c4",
+      "by": -4,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 0,
+      "createdAt": "17.05.2025 12:18:21",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "6e631e07-ed17-492e-a1de-d54ad7faebcf",
+      "by": 7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 7,
+      "createdAt": "17.05.2025 12:18:38",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "0f5444d8-0053-45f9-b6e9-85fb5ac272d7",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 8,
+      "createdAt": "17.05.2025 12:18:59",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "fd27ebb3-9c61-42d6-834d-21a0dd71806b",
+      "by": 6,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 14,
+      "createdAt": "17.05.2025 12:19:21",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "43d9d2a2-e2b1-4f1d-a823-e1f05deca0bd",
+      "by": 7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 21,
+      "createdAt": "17.05.2025 12:20:42",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "1abddbcb-2d7d-426c-9fe8-6eb82af9213f",
+      "by": 7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 28,
+      "createdAt": "17.05.2025 12:22:54",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "d602a8f0-6112-42fd-bb10-4eb27a755679",
+      "by": 9,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 37,
+      "createdAt": "17.05.2025 12:23:18",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "c030b83d-9ca7-423e-bf0a-f6b5e1abf50c",
+      "by": -7,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 30,
+      "createdAt": "17.05.2025 12:27:37",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "8a97ec58-03f6-4406-8d68-7caf32900de2",
+      "by": -21,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 9,
+      "createdAt": "17.05.2025 12:29:24",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "a8eb3586-69f8-4e20-a9bd-36314bfdb7af",
+      "by": -1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 8,
+      "createdAt": "17.05.2025 12:29:53",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "a2dae102-f710-4830-8c28-c650d7e401b3",
+      "by": -1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 7,
+      "createdAt": "17.05.2025 12:31:40",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "90b0505b-85e1-4b5b-a26d-7a05ea1b7967",
+      "by": 60,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 67,
+      "createdAt": "17.05.2025 12:31:56",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "026dc7dc-5483-4407-b7f5-d7243a72da03",
+      "by": -13,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 54,
+      "createdAt": "17.05.2025 12:32:11",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "db23753c-6e3f-461a-96d8-23a97d1e198e",
+      "by": 15,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 69,
+      "createdAt": "17.05.2025 12:34:40",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "5783b867-341c-4b21-a37a-9ae22ef1475f",
+      "by": -21,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 48,
+      "createdAt": "17.05.2025 12:36:41",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "9fede5d6-8ca1-46ac-a5f6-7b79af9aa255",
+      "by": -21,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 27,
+      "createdAt": "17.05.2025 12:36:56",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "7c238fbc-5cfb-4de9-8c77-2701ad20e9bd",
+      "by": -21,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 6,
+      "createdAt": "17.05.2025 12:37:16",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "0d34c650-2c29-4229-b698-b04dd90d45d5",
+      "by": 6,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 12,
+      "createdAt": "17.05.2025 12:37:44",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "a2b4d607-82e7-426e-9f2a-fec7ae55a86c",
+      "by": 9,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 30,
+      "createdAt": "17.05.2025 13:08:14",
+      "userId": "167200e7-35db-497d-bd94-3d6e892fdbf2"
+    },
+    {
+      "_id": "e908773b-fc9f-480b-833a-8c0dcc3379d6",
+      "by": 18,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 30,
+      "createdAt": "17.05.2025 13:09:39",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "7ff2bb6e-3d6a-4a6e-aba3-d904f39625be",
+      "by": 4,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 34,
+      "createdAt": "17.05.2025 13:25:19",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "871e4129-e24d-4362-bf69-02642e3c5184",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 35,
+      "createdAt": "17.05.2025 13:26:11",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "5c403f8b-b139-4121-b1e5-cdee3e8feae9",
+      "by": 94,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 129,
+      "createdAt": "17.05.2025 13:26:25",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "3105f1a7-8ba5-4b19-9a30-7cde060059d6",
+      "by": 2,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 131,
+      "createdAt": "17.05.2025 15:11:37",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "abd89f0f-0cee-45d8-9423-847a845c7dbb",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 132,
+      "createdAt": "17.05.2025 15:11:57",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "5c01f011-827e-48ef-900d-9e624f88324b",
+      "by": 2,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 134,
+      "createdAt": "17.05.2025 15:13:31",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "4809fed3-4a35-450a-a95b-ce1930ba76f4",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 135,
+      "createdAt": "17.05.2025 15:14:24",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "d2eaa405-b81c-43a9-89e4-9bc401ed9f81",
+      "by": 12,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 147,
+      "createdAt": "17.05.2025 15:16:39",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "670d8088-ed6c-4e66-a1e4-a16b0073dbfc",
+      "by": 2,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 149,
+      "createdAt": "17.05.2025 15:20:13",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "a8605627-b11f-4e55-a01c-095520ab2117",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 150,
+      "createdAt": "17.05.2025 15:21:19",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "5b3ea723-d7b5-41ac-a395-832ca0703522",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 181,
+      "createdAt": "17.05.2025 15:45:11",
+      "userId": "000322d5-039d-45db-b39a-e1737b243f87"
+    },
+    {
+      "_id": "f235834f-231a-4196-9738-3c6c0f292729",
+      "by": 1,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 151,
+      "createdAt": "17.05.2025 15:46:19",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "4be3795d-2bc8-4868-b99e-6f977c08a00e",
+      "by": -21,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 130,
+      "createdAt": "17.05.2025 15:46:37",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    },
+    {
+      "_id": "0b27ef99-4f84-4cfb-9dfc-4ca8e461165a",
+      "by": -14,
+      "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+      "balance": 116,
+      "createdAt": "17.05.2025 15:47:05",
+      "userId": "294aa7df-5399-4799-8834-7c29197326a2"
+    }
+  ],
+  "agreements": true,
+  "verification": {
+    "isVerified": true
+  },
+  "metadata": {
+    "createdAt": "03.04.2025 15:52:38",
+    "updatedAt": "17.05.2025 15:47:05"
+  }
+}

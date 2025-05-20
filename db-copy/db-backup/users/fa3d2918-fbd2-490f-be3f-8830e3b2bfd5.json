@@ -1,0 +1,31 @@
+{
+  "_id": "fa3d2918-fbd2-490f-be3f-8830e3b2bfd5",
+  "email": "klient19@gmail.com",
+  "password": "$2a$10$UbHwk8w/uaVkxGH7HURsr.7.gfM75p5Dn.1wwX97IBZNX3XHk9LHO",
+  "role": "user",
+  "agreements": true,
+  "verification": {
+    "isVerified": true
+  },
+  "card": {
+    "hash": "$2a$10$1c.0ad.pHqP1zf3XzYQKY.EETzX2YoyJxo7QVRLnD7UQmS0Rh0O/O",
+    "createdAt": 1743844739375
+  },
+  "stamps": {
+    "amount": 18,
+    "history": [
+      {
+        "_id": "f3944606-9a08-4eab-96c5-fd0aff5a28ff",
+        "by": 18,
+        "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+        "balance": 18,
+        "createdAt": "16.05.2025 12:09:58",
+        "userId": "fa3d2918-fbd2-490f-be3f-8830e3b2bfd5"
+      }
+    ]
+  },
+  "metadata": {
+    "createdAt": "05.04.2025 11:18:59",
+    "updatedAt": "16.05.2025 12:09:58"
+  }
+}

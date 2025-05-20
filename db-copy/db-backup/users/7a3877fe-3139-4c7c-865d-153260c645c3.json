@@ -1,0 +1,17 @@
+{
+  "_id": "7a3877fe-3139-4c7c-865d-153260c645c3",
+  "email": "klient30@gmail.com",
+  "password": "$2a$10$j7bta0iw.3LqL.UlKw9kZO42gXLlZzlQfhj1dJHGgTS.9P4ZON.ie",
+  "role": "user",
+  "agreements": true,
+  "verification": {
+    "isVerified": true
+  },
+  "stamps": {
+    "amount": 0,
+    "history": []
+  },
+  "metadata": {
+    "createdAt": "03.04.2025 15:52:32"
+  }
+}

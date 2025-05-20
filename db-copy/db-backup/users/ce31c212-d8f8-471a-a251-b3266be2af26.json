@@ -1,0 +1,17 @@
+{
+  "_id": "ce31c212-d8f8-471a-a251-b3266be2af26",
+  "email": "klient90@gmail.com",
+  "password": "$2a$10$TBN9yj3FwBrPSrndbbrEEeFbdoJUOfygzqg.mI9S1XirGfcDcmYXW",
+  "role": "user",
+  "agreements": true,
+  "verification": {
+    "isVerified": true
+  },
+  "stamps": {
+    "amount": 0,
+    "history": []
+  },
+  "metadata": {
+    "createdAt": "03.04.2025 15:52:35"
+  }
+}

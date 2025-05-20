@@ -1,0 +1,30 @@
+{
+  "_id": "08999ea9-0025-4966-a686-7aaf1a94b205",
+  "email": "papiesz19@gmail.com",
+  "password": "$2a$10$kdtB6aTLqVPWXwftjnYnWepzIRe8hXyfbfrz8HpJsuRwHrYQJ.eoe",
+  "role": "user",
+  "agreements": true,
+  "verification": {
+    "isVerified": true
+  },
+  "card": {
+    "hash": "$2a$10$nwU0qyQI.iTNgCU2jZqhZefIVn2Qjs7XCO566jucF3Ta8y5wMwoPC",
+    "createdAt": 1743844729563
+  },
+  "stamps": {
+    "amount": 1,
+    "history": [
+      {
+        "_id": "e4d2ae6c-69ba-4348-ad22-7aa697d68f52",
+        "by": 1,
+        "assistantId": "51c75174-f5aa-4467-8e47-69c9df438406",
+        "balance": 1,
+        "createdAt": "06.04.2025 15:21:18"
+      }
+    ]
+  },
+  "metadata": {
+    "createdAt": "05.04.2025 11:18:49",
+    "updatedAt": "06.04.2025 15:21:18"
+  }
+}

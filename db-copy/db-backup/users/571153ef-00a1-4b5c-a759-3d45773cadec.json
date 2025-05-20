@@ -1,0 +1,17 @@
+{
+  "_id": "571153ef-00a1-4b5c-a759-3d45773cadec",
+  "email": "klient74@gmail.com",
+  "password": "$2a$10$BXLA2OSbQJWnTWhoV.MP4.YKW7C/75wa1Kdd6MPp66Hc0frK1/Yyq",
+  "role": "user",
+  "agreements": true,
+  "verification": {
+    "isVerified": true
+  },
+  "stamps": {
+    "amount": 0,
+    "history": []
+  },
+  "metadata": {
+    "createdAt": "03.04.2025 15:52:34"
+  }
+}

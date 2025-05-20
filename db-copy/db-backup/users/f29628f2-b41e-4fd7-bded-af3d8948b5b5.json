@@ -1,0 +1,21 @@
+{
+  "_id": "f29628f2-b41e-4fd7-bded-af3d8948b5b5",
+  "email": "klient107@gmail.com",
+  "password": "$2a$10$8Kfsfv3ARVh1CByowuesCOaXd1kolLSrmTs3LOSCk0ltR6AYZAaGm",
+  "role": "user",
+  "agreements": true,
+  "verification": {
+    "isVerified": true
+  },
+  "card": {
+    "hash": "$2a$10$uCo/l7N9o5LdQHBoFF/wae99J.EDZ5H2pvNPbtOyQiWRetqI84QI.",
+    "createdAt": 1743844738395
+  },
+  "stamps": {
+    "amount": 0,
+    "history": []
+  },
+  "metadata": {
+    "createdAt": "05.04.2025 11:18:58"
+  }
+}

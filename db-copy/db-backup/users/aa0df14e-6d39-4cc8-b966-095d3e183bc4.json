@@ -1,0 +1,17 @@
+{
+  "_id": "aa0df14e-6d39-4cc8-b966-095d3e183bc4",
+  "email": "klient2@gmail.com",
+  "password": "$2a$10$1RVqUm/6rcAk9pHMPr4CGumZyoLGtLL/GtBDHrx73Xpm23Nx2gyuq",
+  "role": "user",
+  "agreements": true,
+  "verification": {
+    "isVerified": true
+  },
+  "stamps": {
+    "amount": 0,
+    "history": []
+  },
+  "metadata": {
+    "createdAt": "03.04.2025 15:52:30"
+  }
+}

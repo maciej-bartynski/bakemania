@@ -1,0 +1,21 @@
+{
+  "_id": "fd6b8a47-3676-4e04-aa2f-3dab37bebebd",
+  "email": "klient15@gmail.com",
+  "password": "$2a$10$coM0ekzhJOwgIyBwYBBbeukbHsVa9UOCKRlCAa1JJ5vwBWo3tBlyW",
+  "role": "user",
+  "agreements": true,
+  "verification": {
+    "isVerified": true
+  },
+  "card": {
+    "hash": "$2a$10$aatHzh6Eo6nR6JUUZZUuPOm2bX1RW/49m4Ky6zJa4qbSsczvVphw2",
+    "createdAt": 1743844740261
+  },
+  "stamps": {
+    "amount": 0,
+    "history": []
+  },
+  "metadata": {
+    "createdAt": "05.04.2025 11:19:00"
+  }
+}
