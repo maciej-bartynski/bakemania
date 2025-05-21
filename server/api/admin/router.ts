@@ -269,6 +269,7 @@ adminRouter.post('/db-copy/restore', async (req, res) => {
         const dbCopyPath = path.resolve(process.cwd(), './db-copy');
         const dbBackupPath = path.join(dbCopyPath, 'db-backup');
         const dbPath = path.resolve(process.cwd(), './db');
+        const tempPath = path.join(os.tmpdir(), 'db-restore-temp');
 
         if (!fs.existsSync(dbCopyPath)) {
             res.status(404).json({
@@ -287,15 +288,13 @@ adminRouter.post('/db-copy/restore', async (req, res) => {
         }
 
         try {
-            // Usuń zawartość folderu db jeśli istnieje
-            if (fs.existsSync(dbPath)) {
-                fs.rmSync(dbPath, { recursive: true });
+            // Utwórz tymczasowy folder
+            if (fs.existsSync(tempPath)) {
+                fs.rmSync(tempPath, { recursive: true });
             }
+            fs.mkdirSync(tempPath);
 
-            // Utwórz nowy folder db
-            fs.mkdirSync(dbPath);
-
-            // Skopiuj zawartość db-backup do db
+            // Skopiuj zawartość db-backup do tymczasowego folderu
             const copyRecursive = (src: string, dest: string) => {
                 const entries = fs.readdirSync(src, { withFileTypes: true });
 
@@ -312,13 +311,47 @@ adminRouter.post('/db-copy/restore', async (req, res) => {
                 }
             };
 
-            copyRecursive(dbBackupPath, dbPath);
+            copyRecursive(dbBackupPath, tempPath);
+
+            // Usuń pliki z folderu db pojedynczo
+            const deleteRecursive = (dir: string) => {
+                if (fs.existsSync(dir)) {
+                    const entries = fs.readdirSync(dir, { withFileTypes: true });
+                    for (const entry of entries) {
+                        const fullPath = path.join(dir, entry.name);
+                        if (entry.isDirectory()) {
+                            deleteRecursive(fullPath);
+                            fs.rmdirSync(fullPath);
+                        } else {
+                            fs.unlinkSync(fullPath);
+                        }
+                    }
+                }
+            };
+
+            // Usuń zawartość folderu db
+            deleteRecursive(dbPath);
+
+            // Przenieś pliki z tymczasowego folderu do db
+            copyRecursive(tempPath, dbPath);
+
+            // Usuń tymczasowy folder
+            fs.rmSync(tempPath, { recursive: true });
 
             res.status(200).json({
                 message: 'Baza danych została przywrócona.',
                 success: true
             });
         } catch (error) {
+            // W przypadku błędu, spróbuj wyczyścić tymczasowy folder
+            if (fs.existsSync(tempPath)) {
+                try {
+                    fs.rmSync(tempPath, { recursive: true });
+                } catch (e) {
+                    // Ignoruj błędy podczas czyszczenia
+                }
+            }
+
             res.status(500).json({
                 message: 'Wystąpił błąd podczas przywracania bazy danych.',
                 error: (error as any)?.message ?? error,
@@ -346,6 +379,53 @@ adminRouter.get('/db-copy/confirm-exists', async (req, res) => {
     }, (e) => {
         res.status(500).json({
             message: 'Error while checking db-copy existence.',
+            error: (e as any)?.message ?? e,
+            success: false
+        });
+    });
+});
+
+adminRouter.delete('/flush-logs', async (req, res) => {
+    Logs.appLogs.catchUnhandled('Handler /flush-logs', async () => {
+        const logsPath = path.resolve(process.cwd(), './logs');
+        const requiredDirs = ['app', 'email', 'client', 'ws-server'];
+
+
+        // Usuń zawartość folderu logs pojedynczo
+        const deleteRecursive = (dir: string) => {
+            if (fs.existsSync(dir)) {
+                const entries = fs.readdirSync(dir, { withFileTypes: true });
+                for (const entry of entries) {
+                    const fullPath = path.join(dir, entry.name);
+                    if (entry.isDirectory()) {
+                        deleteRecursive(fullPath);
+                        fs.rmdirSync(fullPath);
+                    } else {
+                        fs.unlinkSync(fullPath);
+                    }
+                }
+            }
+        };
+
+        // Usuń zawartość folderu logs
+        deleteRecursive(logsPath);
+
+        // Utwórz wymagane katalogi
+        for (const dir of requiredDirs) {
+            const dirPath = path.join(logsPath, dir);
+            if (!fs.existsSync(dirPath)) {
+                fs.mkdirSync(dirPath, { recursive: true });
+            }
+        }
+
+        res.status(200).json({
+            message: 'Logi zostały wyczyszczone i struktura katalogów została odtworzona.',
+            success: true
+        });
+
+    }, (e) => {
+        res.status(500).json({
+            message: 'Error while flushing logs.',
             error: (e as any)?.message ?? e,
             success: false
         });

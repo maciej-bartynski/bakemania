@@ -21,23 +21,23 @@ const AuthRegistering: FC = () => {
     );
 
     function setRegistrationEmail(e: React.ChangeEvent<HTMLInputElement>): void {
-        registrationFormDispatch({ type: 'email', value: e.target.value });
+        registrationFormDispatch({ type: 'username', value: e.target.value });
     }
 
     function setRegistrationPassword(e: React.ChangeEvent<HTMLInputElement>): void {
-        registrationFormDispatch({ type: 'password', value: e.target.value });
+        registrationFormDispatch({ type: 'new-password', value: e.target.value });
     }
 
     function setRegistrationEmailTouched(): void {
-        registrationFormDispatch({ type: 'touch-email', value: '' });
+        registrationFormDispatch({ type: 'touch-username', value: '' });
     }
 
     function setRegistrationPasswordTouched(): void {
-        registrationFormDispatch({ type: 'touch-password', value: '' });
+        registrationFormDispatch({ type: 'touch-new-password', value: '' });
     }
 
     function setRegistrationConfirmPasswordTouched(): void {
-        registrationFormDispatch({ type: 'touch-confirm', value: '' });
+        registrationFormDispatch({ type: 'touch-confirm-new-password', value: '' });
     }
 
     function setAgreements(e: React.ChangeEvent<HTMLInputElement>): void {
@@ -46,7 +46,7 @@ const AuthRegistering: FC = () => {
     }
 
     function setRegistrationConfirmPassword(e: React.ChangeEvent<HTMLInputElement>): void {
-        registrationFormDispatch({ type: 'confirm', value: e.target.value });
+        registrationFormDispatch({ type: 'confirm-new-password', value: e.target.value });
     }
 
     const [missingCaptchaAlert, setMissingCaptchaAlert] = useState(false);
@@ -68,7 +68,7 @@ const AuthRegistering: FC = () => {
                 setMissingCaptchaAlert(false);
             }
 
-            if (registrationFormState.password.value !== registrationFormState.confirmPassword.value) {
+            if (registrationFormState['new-password'].value !== registrationFormState['confirm-new-password'].value) {
                 setIsLoading(false);
                 alert('Hasła nie pasują do siebie!');
                 return;
@@ -78,8 +78,8 @@ const AuthRegistering: FC = () => {
             (window as any).grecaptcha?.reset();
 
             const registrationRequestBody: RegisterRequestBody = {
-                email: registrationFormState.email.value,
-                password: registrationFormState.password.value,
+                email: registrationFormState.username.value,
+                password: registrationFormState['new-password'].value,
                 captchaToken,
                 agreements: registrationFormState.agreements.value,
             }
@@ -93,8 +93,8 @@ const AuthRegistering: FC = () => {
 
         } catch (er) {
             const dataToPass = JSON.parse(JSON.stringify(registrationFormState));
-            delete dataToPass.password.value;
-            delete dataToPass.confirmPassword.value;
+            delete dataToPass['new-password'].value;
+            delete dataToPass['confirm-new-password'].value;
             new ClientLogsService().report('Error on AuthRegistering', {
                 'What happened': er,
                 RegistrationFormState: registrationFormState,
@@ -292,55 +292,57 @@ const AuthRegistering: FC = () => {
                         register();
                     }}
                 >
-                    <div className={`auth-registering__fieldset ${registrationFormState.email.touched && registrationFormState.email.error ? "--error" : ""}`}>
+                    <div className={`auth-registering__fieldset ${registrationFormState.username.touched && registrationFormState.username.error ? "--error" : ""}`}>
                         <label>
                             <input
                                 type="email"
+                                autoComplete="username"
+                                name="username"
                                 placeholder="Wpisz swój e-mail"
                                 onChange={setRegistrationEmail}
                                 disabled={isLoading}
                                 onBlur={setRegistrationEmailTouched}
-                                autoComplete="off"
-                                value={registrationFormState.email.value}
+                                value={registrationFormState.username.value}
                             />
                             <span className="auth-registering__hint">Błędny adres może uniemoliwić użycie rabatów.</span>
                         </label>
 
                         <div className="auth-registering__error">
-                            {registrationFormState.email.touched && (
-                                registrationFormState.email.error
+                            {registrationFormState.username.touched && (
+                                registrationFormState.username.error
                             )}
                         </div>
                     </div>
 
-                    <div className={`auth-registering__fieldset ${registrationFormState.password.touched && registrationFormState.password.error ? "--error" : ""}`}>
+                    <div className={`auth-registering__fieldset ${registrationFormState['new-password'].touched && registrationFormState['new-password'].error ? "--error" : ""}`}>
                         <label>
                             <input
                                 type="password"
+                                name="new-password"
+                                autoComplete="new-password"
                                 placeholder="Wpisz hasło"
                                 onChange={setRegistrationPassword}
                                 disabled={isLoading}
                                 onBlur={setRegistrationPasswordTouched}
-                                autoComplete="new-password"
                                 minLength={8}
                                 maxLength={50}
                                 required
-                                value={registrationFormState.password.value}
+                                value={registrationFormState['new-password'].value}
                             />
                             <span className="auth-registering__hint">8-50 znaków: min. 1 wielka i mała litera, cyfra i symbol.</span>
                         </label>
                         <div className="auth-registering__error">
-                            {registrationFormState.password.touched && (
-                                registrationFormState.password.error
+                            {registrationFormState['new-password'].touched && (
+                                registrationFormState['new-password'].error
                             )}
                         </div>
                     </div>
 
-                    <div className={`auth-registering__fieldset ${registrationFormState.confirmPassword.touched && registrationFormState.confirmPassword.error ? "--error" : ""}`}>
+                    <div className={`auth-registering__fieldset ${registrationFormState['confirm-new-password'].touched && registrationFormState['confirm-new-password'].error ? "--error" : ""}`}>
                         <label>
                             <input
                                 type="password"
-                                name="confirm-password"
+                                name="confirm-new-password"
                                 autoComplete="new-password"
                                 placeholder="Potwierdź hasło"
                                 onChange={setRegistrationConfirmPassword}
@@ -349,12 +351,12 @@ const AuthRegistering: FC = () => {
                                 minLength={8}
                                 maxLength={50}
                                 required
-                                value={registrationFormState.confirmPassword.value}
+                                value={registrationFormState['confirm-new-password'].value}
                             />
                         </label>
                         <div className="auth-registering__error">
-                            {registrationFormState.confirmPassword.touched && (
-                                registrationFormState.confirmPassword.error
+                            {registrationFormState['confirm-new-password'].touched && (
+                                registrationFormState['confirm-new-password'].error
                             )}
                         </div>
                     </div>
@@ -387,7 +389,7 @@ const AuthRegistering: FC = () => {
                         </div>
                     </div>
                     <button
-                        disabled={isLoading || !!registrationFormState.email.error || !!registrationFormState.password.error || !!registrationFormState.confirmPassword.error || !!registrationFormState.agreements.error}
+                        disabled={isLoading || !!registrationFormState.username.error || !!registrationFormState['new-password'].error || !!registrationFormState['confirm-new-password'].error || !!registrationFormState.agreements.error}
                         type="submit"
                     >
                         Rejestruję się

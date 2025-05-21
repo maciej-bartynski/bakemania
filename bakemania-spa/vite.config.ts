@@ -129,6 +129,10 @@ export default defineConfig(({ mode }) => {
               },
             },
           },
+          {
+            urlPattern: /^wss:\/\/.*/,
+            handler: 'NetworkOnly'
+          }
         ],
       },
 
