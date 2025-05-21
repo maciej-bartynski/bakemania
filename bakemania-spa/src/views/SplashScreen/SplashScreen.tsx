@@ -72,23 +72,16 @@ const SplashScreen: FC = () => {
 
     return (
         <Background>
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <span>Ups! Coś poszło nie tak :C</span>
-            <button onClick={() => {
-                window.location.reload();
-            }}>
-                Odśwież stronę
-            </button>
+            <div className="splashScreen__error-wrapper">
+                <span>Coś poszło nie tak 😞</span>
+                <button
+                    onClick={() => {
+                        window.location.reload();
+                    }}
+                >
+                    Odśwież stronę
+                </button>
+            </div>
         </Background>
     );
 }

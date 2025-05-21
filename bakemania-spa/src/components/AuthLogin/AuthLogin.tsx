@@ -131,7 +131,6 @@ const AuthLogin: FC = () => {
 
                     <div className={`authorization__fieldset ${passwordTouched && passwordError ? "--error" : ""}`}>
                         <label>
-
                             <input
                                 type="password"
                                 autoComplete="current-password"
