@@ -29,7 +29,7 @@ start:
 start-staging:
 	docker run -d \
 	--env-file .env \
-	-p 3000:3000 \
+	-p 3000:3001 \
 	-v ./db:/app/db \
 	-v ./logs:/app/logs \
 	--name staging-bakemania-container staging-bakemania-app
