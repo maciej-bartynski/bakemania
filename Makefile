@@ -11,12 +11,10 @@ build-staging:
 	docker build -t staging-bakemania-app .
 
 build-local:
-	docker run -d \
-	--env-file .env \
-	-p 3000:3000 \
-	-v ./db:/app/db \
-	-v ./logs:/app/logs \
-	--name local-bakemania-container local-bakemania-app
+	docker stop local-bakemania-container || true && \
+	docker rm local-bakemania-container || true && \
+	docker rmi local-bakemania-app || true && \
+	docker build -t local-bakemania-app .
 
 start:
 	docker run -d \
