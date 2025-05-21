@@ -1,15 +1,15 @@
 type RegistrationState = {
-    email: {
+    username: {
         value: string;
         error: string;
         touched: boolean;
     };
-    password: {
+    ['new-password']: {
         value: string;
         error: string;
         touched: boolean;
     };
-    confirmPassword: {
+    ['confirm-new-password']: {
         value: string;
         error: string;
         touched: boolean;
@@ -22,14 +22,14 @@ type RegistrationState = {
 };
 
 type RegistrationAction = {
-    type: 'email' | 'password' | 'touch-email' | 'touch-password' | 'confirm' | 'touch-confirm' | 'agreements' | 'reset',
+    type: 'username' | 'new-password' | 'touch-username' | 'touch-new-password' | 'confirm-new-password' | 'touch-confirm-new-password' | 'agreements' | 'reset',
     value: string | boolean | undefined
 } & (
         {
             type: 'agreements',
             value: boolean
         } | {
-            type: 'email' | 'password' | 'touch-email' | 'touch-password' | 'confirm' | 'touch-confirm',
+            type: 'username' | 'new-password' | 'touch-username' | 'touch-new-password' | 'confirm-new-password' | 'touch-confirm-new-password',
             value: string
         } | {
             type: 'reset',
@@ -38,17 +38,17 @@ type RegistrationAction = {
     );
 
 const registrationState: RegistrationState = {
-    email: {
+    username: {
         value: '',
         error: 'Email jest wymagany.',
         touched: false,
     },
-    password: {
+    ['new-password']: {
         value: '',
         error: 'Hasło jest wymagane.',
         touched: false
     },
-    confirmPassword: {
+    ['confirm-new-password']: {
         value: '',
         error: 'Potwierdź swoje hasło.',
         touched: false
@@ -79,21 +79,21 @@ function registrationReducer(
                 }
             };
         }
-        case 'touch-confirm': {
+        case 'touch-confirm-new-password': {
             return {
                 ...state,
-                confirmPassword: {
-                    ...state.confirmPassword,
+                ['confirm-new-password']: {
+                    ...state['confirm-new-password'],
                     touched: true,
                 }
             }
         }
-        case 'confirm': {
-            if (action.value !== state.password.value) {
+        case 'confirm-new-password': {
+            if (action.value !== state['new-password'].value) {
                 return {
                     ...state,
-                    confirmPassword: {
-                        ...state.confirmPassword,
+                    ['confirm-new-password']: {
+                        ...state['confirm-new-password'],
                         value: action.value,
                         error: 'Hasła nie pasują do siebie.',
                     }
@@ -101,40 +101,40 @@ function registrationReducer(
             }
             return {
                 ...state,
-                confirmPassword: {
-                    ...state.confirmPassword,
+                ['confirm-new-password']: {
+                    ...state['confirm-new-password'],
                     value: action.value,
                     error: '',
                 }
             }
         }
-        case 'touch-email': {
+        case 'touch-username': {
             return {
                 ...state,
                 email: {
-                    ...state.email,
+                    ...state.username,
                     touched: true,
                 }
             }
         }
-        case 'touch-password': {
+        case 'touch-new-password': {
             return {
                 ...state,
                 password: {
-                    ...state.password,
+                    ...state['new-password'],
                     touched: true,
                 }
             }
         }
-        case 'email': {
+        case 'username': {
             const { value: email } = action;
             const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             const isEmail = regex.test(email);
             if (isEmail) {
                 return {
                     ...state,
-                    email: {
-                        ...state.email,
+                    username: {
+                        ...state.username,
                         value: email,
                         error: ''
                     }
@@ -142,15 +142,15 @@ function registrationReducer(
             } else {
                 return {
                     ...state,
-                    email: {
-                        ...state.email,
+                    username: {
+                        ...state.username,
                         value: email,
                         error: 'Format e-maila powinen przypominać: uzytkownik@domena.pl'
                     }
                 }
             }
         }
-        case 'password': {
+        case 'new-password': {
             const { value: password } = action;
 
             const errors = [];
@@ -159,7 +159,7 @@ function registrationReducer(
                 errors.push("mieć od 8 do 50 znaków");
             }
 
-            const confirmField = state.confirmPassword;
+            const confirmField = state['confirm-new-password'];
 
             if (confirmField.value !== password) {
                 confirmField.error = 'Hasła nie pasują do siebie.';
@@ -171,8 +171,8 @@ function registrationReducer(
                 return {
                     ...state,
                     confirmPassword: confirmField,
-                    password: {
-                        ...state.password,
+                    ['new-password']: {
+                        ...state['new-password'],
                         value: password,
                         error: ''
                     }
@@ -180,9 +180,9 @@ function registrationReducer(
             } else {
                 return {
                     ...state,
-                    confirmPassword: confirmField,
-                    password: {
-                        ...state.password,
+                    ['confirm-new-password']: confirmField,
+                    ['new-password']: {
+                        ...state['new-password'],
                         value: password,
                         error: errors.length > 1 ? `Hasło musi: ${errors.join(', ')}.` : `Hasło musi ${errors.join('')}.`
                     }
