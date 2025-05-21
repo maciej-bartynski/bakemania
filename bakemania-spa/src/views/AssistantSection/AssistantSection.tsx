@@ -191,6 +191,15 @@ const AssistantSection: FC<{
                         </div>
                     </div>
 
+                    <span
+                        style={{
+                            textAlign: 'center',
+                            alignSelf: 'center',
+                        }}
+                    >
+                        {assistant.email}
+                    </span>
+
                     <button onClick={isScanning ? stopScanning : startScanning}>
                         {isScanning ? "Zatrzymaj" : "Skanuj"}
                     </button>
