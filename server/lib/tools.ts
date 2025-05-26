@@ -9,8 +9,12 @@ import { Document } from "./../services/DbService/DbTypes";
 
 const createCardId = async (): Promise<UserCard> => {
     const cardIssueTimestamp = new Date().getTime();
+    const randomPart = Math.random().toString(36).substring(2, 8); // 6 znaków losowych
+    const timestampPart = cardIssueTimestamp.toString(36); // timestamp w base36
+    const combinedString = `${timestampPart}${randomPart}`;
+
     return {
-        hash: await bcrypt.hash(`${cardIssueTimestamp}`, 10),
+        hash: combinedString,
         createdAt: cardIssueTimestamp
     }
 }
