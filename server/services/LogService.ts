@@ -1,8 +1,10 @@
 import fs from 'fs';
 import path from 'path';
 
+const LOGS_FOLDER_NAME = process.env.NODE_ENV === 'test' ? 'logs-test' : 'logs';
+
 class LogService {
-    logPath = path.join(process.cwd(), "logs");
+    logPath = path.join(process.cwd(), LOGS_FOLDER_NAME);
     location?: LogLocations;
 
     constructor(params?: {
@@ -15,7 +17,7 @@ class LogService {
         try {
             return await callback()
         } catch (e) {
-            console.error(`Catched error: ${e}`);
+            // console.error(`Catched error: ${e}`);
             this.report(message, (setDetails) => {
                 setDetails('What happend:', (e as any)?.message || `${e}`);
             });
@@ -24,6 +26,7 @@ class LogService {
                 try {
                     return await fallback(e)
                 } catch (fallbackError) {
+                    // console.error(`Catched fallback error: ${fallbackError}`);
                     this.report(message, (setDetails) => {
                         setDetails('Fallback error:', (fallbackError as any)?.message || `${fallbackError}`);
                     });
@@ -43,7 +46,6 @@ class LogService {
         setData((key: string, value: any) => {
             entry.details[key] = JSON.stringify(value);
         });
-        console.error(entry);
         return this.saveReport(entry);
     }
 

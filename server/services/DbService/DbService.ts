@@ -5,8 +5,10 @@ import fsPromises from "fs/promises";
 import Logs from "../LogService";
 import { Document, Pagination } from "./DbTypes";
 
+const DB_FOLDER_NAME = process.env.NODE_ENV === 'test' ? './db-test' : './db';
+
 class DbService {
-    path = path.resolve(process.cwd(), './db');
+    path = path.resolve(process.cwd(), DB_FOLDER_NAME);
     dbStore: string;
     route: string;
     __lock: Record<string, boolean>;
@@ -62,6 +64,7 @@ class DbService {
 
                 if (fileExits) {
                     reject(new Error("File already exists"));
+                    return;
                 }
 
                 const doc: Document<T> = {
@@ -111,24 +114,26 @@ class DbService {
             return new Promise<Document<T> | null>((resolve) => {
                 const readFilePath = path.join(this.route, `/${id}.json`);
                 fs.readFile(readFilePath, 'utf8', (err, data) => {
-                    if (err || !data) {
-                        resolve(null);
-                        /**
-                         * Do nothing: record does not exist
-                         */
-                    } else {
-                        try {
-                            const file: Document<T> = JSON.parse(data);
-                            resolve(file);
-                        } catch (e) {
-                            /**
-                             * Something went wrong with the file.
-                             * Return null and throw the error to the Logs.
-                             */
+                    Logs.appLogs.catchUnhandled('DbService error on getById-readFile', () => {
+                        if (err || !data) {
                             resolve(null);
-                            throw e;
+                            /**
+                             * Do nothing: record does not exist
+                             */
+                        } else {
+                            try {
+                                const file: Document<T> = JSON.parse(data);
+                                resolve(file);
+                            } catch (e) {
+                                /**
+                                 * Something went wrong with the file.
+                                 * Return null and throw the error to the Logs.
+                                 */
+                                resolve(null);
+                                throw e;
+                            }
                         }
-                    }
+                    });
                 });
             });
         }, async () => {
