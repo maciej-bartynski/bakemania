@@ -68,8 +68,8 @@ class DbService {
                 }
 
                 const doc: Document<T> = {
-                    _id: id,
                     ...data,
+                    _id: id,
                     metadata: {
                         createdAt: this.getFormattedDateString(new Date()),
                     }
@@ -111,31 +111,24 @@ class DbService {
 
     getById = async <T extends Record<string, any>>(id: string): Promise<Document<T> | null> => {
         return await Logs.appLogs.catchUnhandled('DbService error on getById', async () => {
-            return new Promise<Document<T> | null>((resolve) => {
+            return await new Promise<Document<T> | null>((resolve, reject) => {
                 const readFilePath = path.join(this.route, `/${id}.json`);
-                fs.readFile(readFilePath, 'utf8', (err, data) => {
-                    Logs.appLogs.catchUnhandled('DbService error on getById-readFile', () => {
-                        if (err || !data) {
-                            resolve(null);
-                            /**
-                             * Do nothing: record does not exist
-                             */
-                        } else {
-                            try {
-                                const file: Document<T> = JSON.parse(data);
-                                resolve(file);
-                            } catch (e) {
-                                /**
-                                 * Something went wrong with the file.
-                                 * Return null and throw the error to the Logs.
-                                 */
-                                resolve(null);
-                                throw e;
-                            }
+                fs.readFile(readFilePath, 'utf8', async (err, data) => {
+                    if (err) {
+                        reject(err);
+                    } else if (!data) {
+                        resolve(null);
+                    } else {
+                        try {
+                            const file: Document<T> = JSON.parse(data);
+                            resolve(file);
+                        } catch (e) {
+                            reject(e);
                         }
-                    });
+                    }
                 });
             });
+
         }, async () => {
             return null;
         }) ?? null;

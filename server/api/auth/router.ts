@@ -50,7 +50,7 @@ const limiterForPasswordChangeRequests = rateLimit({
 });
 
 router.post('/resend-verification-email', async (req, res) => {
-    return Logs.appLogs.catchUnhandled('Handler "/verify-email-token" error', async () => {
+    Logs.appLogs.catchUnhandled('Handler "/verify-email-token" error', async () => {
         const { email } = (req as any).body;
         const user = await tools.getUserOrAssistantByEmail(email);
         if (!user) {
@@ -100,7 +100,7 @@ router.post('/resend-verification-email', async (req, res) => {
 });
 
 router.post('/change-password', middleware.authenticateChangePasswordToken, async (req, res) => {
-    return Logs.appLogs.catchUnhandled('Handler "/change-password" error', async () => {
+    Logs.appLogs.catchUnhandled('Handler "/change-password" error', async () => {
         const { password } = (req as any).body;
         const user = (req as any).user;
 
@@ -413,7 +413,7 @@ router.post('/register',
     });
 
 router.post('/login', async (req, res) => {
-    return Logs.appLogs.catchUnhandled('Handler "/login" error', async () => {
+    Logs.appLogs.catchUnhandled('Handler "/login" error', async () => {
         const { email, password } = req.body;
 
         const userOrAssistan: UserModel | ManagerModel | AdminModel | null = await Tools.getUserOrAssistantByEmail(email);

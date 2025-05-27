@@ -1,7 +1,7 @@
 import { cleanTestDatabase, cleanTestLogs } from './setup-helpers';
 
 beforeAll(async () => {
-    console.log('🧹 Cleaning test database before all tests...');
+    console.log('🧹 Cleaning test environment before all tests...');
     await cleanTestDatabase();
     await cleanTestLogs();
 });
@@ -9,5 +9,5 @@ beforeAll(async () => {
 afterAll(async () => {
     await cleanTestDatabase();
     await cleanTestLogs();
-    console.log('🧹 Test database cleaden after all tests!');
+    console.log('🧹 Test environment cleaned after all tests!');
 });

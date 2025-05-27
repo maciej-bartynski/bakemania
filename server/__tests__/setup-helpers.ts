@@ -26,16 +26,31 @@ export const cleanTestDatabase = async () => {
 
 export const cleanTestLogs = async () => {
     try {
-        if (fs.existsSync(LOGS_FOLDER_NAME)) {
-            await fsPromises.rm(LOGS_FOLDER_NAME, { recursive: true, force: true });
+        if (fs.existsSync(TEST_LOGS_PATH)) {
+            await fsPromises.rm(TEST_LOGS_PATH, { recursive: true, force: true });
         }
-        await fsPromises.mkdir(LOGS_FOLDER_NAME, { recursive: true });
-        await fsPromises.mkdir(path.join(LOGS_FOLDER_NAME, 'app'), { recursive: true });
-        await fsPromises.mkdir(path.join(LOGS_FOLDER_NAME, 'client'), { recursive: true });
-        await fsPromises.mkdir(path.join(LOGS_FOLDER_NAME, 'email'), { recursive: true });
-        await fsPromises.mkdir(path.join(LOGS_FOLDER_NAME, 'ws-server'), { recursive: true });
+
+        // Tworzenie folderów testowych
+        await fsPromises.mkdir(TEST_LOGS_PATH, { recursive: true });
+        await fsPromises.mkdir(path.join(TEST_LOGS_PATH, 'app'), { recursive: true });
+        await fsPromises.mkdir(path.join(TEST_LOGS_PATH, 'client'), { recursive: true });
+        await fsPromises.mkdir(path.join(TEST_LOGS_PATH, 'ws-server'), { recursive: true });
+        await fsPromises.mkdir(path.join(TEST_LOGS_PATH, 'email'), { recursive: true });
     } catch (error) {
         console.error('Error cleaning test logs:', error);
         throw error;
     }
+};
+
+export const getLatestLog = async (_path: string) => {
+    const resolvedPath = path.join(TEST_LOGS_PATH, _path);
+    const files = await fsPromises.readdir(resolvedPath);
+    if (files.length === 0) return null;
+
+    const latestFile = files.sort().pop();
+    const content = await fsPromises.readFile(
+        path.join(resolvedPath, latestFile!),
+        'utf8'
+    );
+    return JSON.parse(content);
 };
