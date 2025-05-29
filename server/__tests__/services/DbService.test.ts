@@ -45,7 +45,7 @@ describe('DbService', () => {
 
     afterAll(async () => {
         jest.resetModules();
-        await fsPromises.rm(STORAGE_PATH, { recursive: true, force: true });
+        await fsPromises.rm(path.resolve(process.cwd(), DB_DIRNAME), { recursive: true, force: true });
     });
 
     describe('Constructor', () => {
