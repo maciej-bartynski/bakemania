@@ -22,3 +22,6 @@ key.pem
 .env
 .env.prod
 .env.dev
+
+# test
+db-test

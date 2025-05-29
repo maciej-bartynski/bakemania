@@ -2,11 +2,13 @@ import path from "path";
 import DbStores from "./DbStores";
 import fs from "fs";
 import fsPromises from "fs/promises";
-import Logs from "../LogService";
+import Logs from "@/services/LogService";
 import { Document, Pagination } from "./DbTypes";
 
+export const DB_DIRNAME = process.env.NODE_ENV === 'test' ? './db-test' : './db';
+
 class DbService {
-    path = path.resolve(process.cwd(), './db');
+    path = path.resolve(process.cwd(), DB_DIRNAME);
     dbStore: string;
     route: string;
     __lock: Record<string, boolean>;
@@ -17,6 +19,12 @@ class DbService {
         this.dbStore = config.dbStore;
         this.route = path.join(this.path, this.dbStore);
         this.__lock = {};
+    }
+
+    __config(config: { dbStore: string, path: string, lock: Record<string, boolean> }) {
+        this.dbStore = config.dbStore;
+        this.route = path.join(config.path, config.dbStore);
+        this.__lock = config.lock;
     }
 
     __drop = async () => {
@@ -62,11 +70,12 @@ class DbService {
 
                 if (fileExits) {
                     reject(new Error("File already exists"));
+                    return;
                 }
 
                 const doc: Document<T> = {
-                    _id: id,
                     ...data,
+                    _id: id,
                     metadata: {
                         createdAt: this.getFormattedDateString(new Date()),
                     }
@@ -108,29 +117,24 @@ class DbService {
 
     getById = async <T extends Record<string, any>>(id: string): Promise<Document<T> | null> => {
         return await Logs.appLogs.catchUnhandled('DbService error on getById', async () => {
-            return new Promise<Document<T> | null>((resolve) => {
+            return await new Promise<Document<T> | null>((resolve, reject) => {
                 const readFilePath = path.join(this.route, `/${id}.json`);
-                fs.readFile(readFilePath, 'utf8', (err, data) => {
-                    if (err || !data) {
+                fs.readFile(readFilePath, 'utf8', async (err, data) => {
+                    if (err) {
+                        reject(err);
+                    } else if (!data) {
                         resolve(null);
-                        /**
-                         * Do nothing: record does not exist
-                         */
                     } else {
                         try {
                             const file: Document<T> = JSON.parse(data);
                             resolve(file);
                         } catch (e) {
-                            /**
-                             * Something went wrong with the file.
-                             * Return null and throw the error to the Logs.
-                             */
-                            resolve(null);
-                            throw e;
+                            reject(e);
                         }
                     }
                 });
             });
+
         }, async () => {
             return null;
         }) ?? null;
