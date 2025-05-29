@@ -51,7 +51,6 @@ describe('DbService with Logs Integration', () => {
         expect(result).toBeNull();
         const log = await LogsModule.appLogs.getLatestLog('app');
         expect(log).not.toBeNull();
-        console.warn('log', log);
         expect(log?.message).toBe('DbService error on getById');
         expect(log?.details['What happend']).toContain('Unexpected token');
     });
@@ -65,7 +64,6 @@ describe('DbService with Logs Integration', () => {
         expect(result).toBeNull();
         const log = await LogsModule.appLogs.getLatestLog('app');
         expect(log).not.toBeNull();
-        console.warn('log3', log);
         expect(log?.message).toBe('DbService error on getById');
         expect(log?.details['What happend']).toContain(`Expected property name or '}' in JSON at position 1`);
     });

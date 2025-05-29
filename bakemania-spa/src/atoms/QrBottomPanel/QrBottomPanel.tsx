@@ -12,10 +12,6 @@ const QrBottomPanel: FC<{
 
     const cardId = window.localStorage.getItem(Config.sessionKeys.CardId);
 
-    console.log("variant", variant);
-    console.log("userId", userId);
-    console.log("cardId", cardId);
-
     return (
         <>
             {show && <div className="overlay" onClick={toggleBottomPanel}></div>}
