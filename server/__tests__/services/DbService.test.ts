@@ -1,48 +1,75 @@
-import DbService from '../../services/DbService/DbService';
-import DbStores from '../../services/DbService/DbStores';
-import { Document } from '../../services/DbService/DbTypes';
+jest.mock('@/services/LogService', () => {
+    async function catchUnhandled<T extends any>(
+        m: string,
+        c: () => (T | Promise<T>),
+        f?: (e: unknown) => (T | Promise<T>)
+    ): Promise<T | null> {
+        try {
+            return await c();
+        } catch (e) {
+            try {
+                return await f!(e);
+            } catch {
+                return null;
+            }
+        }
+    };
+    return {
+        appLogs: { catchUnhandled },
+        wsLogs: { catchUnhandled },
+        clientLogs: { catchUnhandled },
+        emailLogs: { catchUnhandled },
+    };
+});
+
+import DbService, { DB_DIRNAME } from '@/services/DbService/DbService';
+import { Document } from '@/services/DbService/DbTypes';
 import path from 'path';
 import fs from 'fs';
-import { cleanTestDatabase, TEST_DB_PATH } from '../setup-helpers';
 import * as uuid from 'uuid';
+import fsPromises from 'fs/promises';
+
+const STORAGE_NAME = 'dbservice-test-db-store';
+const STORAGE_PATH = path.join(path.resolve(process.cwd(), DB_DIRNAME), STORAGE_NAME);
 
 describe('DbService', () => {
     let dbService: DbService;
 
-    // Setup przed każdym testem
     beforeEach(async () => {
-        await cleanTestDatabase();
-        dbService = new DbService({
-            dbStore: DbStores.Users,
-        });
+        await fsPromises.rm(STORAGE_PATH, { recursive: true, force: true });
+        await fsPromises.mkdir(STORAGE_PATH, { recursive: true });
+        dbService = new DbService({ dbStore: STORAGE_NAME as any });
+        dbService.path = path.resolve(process.cwd(), DB_DIRNAME);
+        dbService.route = path.join(dbService.path, STORAGE_NAME);
     });
 
     afterAll(async () => {
-        await cleanTestDatabase();
+        jest.resetModules();
+        await fsPromises.rm(STORAGE_PATH, { recursive: true, force: true });
     });
 
     describe('Constructor', () => {
         it('should initialize with custom basePath', () => {
             const usersDb = new DbService({
-                dbStore: DbStores.Users,
+                dbStore: STORAGE_NAME as any,
             });
 
             const adminsDb = new DbService({
-                dbStore: DbStores.Admins,
+                dbStore: 'custom-1' as any,
             });
 
             const managersDb = new DbService({
-                dbStore: DbStores.Managers,
+                dbStore: 'custom-2' as any,
             });
 
             const appConfigDb = new DbService({
-                dbStore: DbStores.AppConfig,
+                dbStore: 'custom-3' as any,
             });
 
-            expect(usersDb.route).toBe(path.join(path.resolve(process.cwd(), './db-test'), DbStores.Users));
-            expect(managersDb.route).toBe(path.join(path.resolve(process.cwd(), './db-test'), DbStores.Managers));
-            expect(adminsDb.route).toBe(path.join(path.resolve(process.cwd(), './db-test'), DbStores.Admins));
-            expect(appConfigDb.route).toBe(path.join(path.resolve(process.cwd(), './db-test'), DbStores.AppConfig));
+            expect(usersDb.route).toBe(path.join(path.resolve(process.cwd(), './db-test'), STORAGE_NAME));
+            expect(managersDb.route).toBe(path.join(path.resolve(process.cwd(), './db-test'), 'custom-2'));
+            expect(adminsDb.route).toBe(path.join(path.resolve(process.cwd(), './db-test'), 'custom-1'));
+            expect(appConfigDb.route).toBe(path.join(path.resolve(process.cwd(), './db-test'), 'custom-3'));
         });
     });
 
@@ -55,7 +82,7 @@ describe('DbService', () => {
             }
             const result = await dbService.setById(testId, testData);
             expect(result).toBe(testId);
-            const filePath = path.join(TEST_DB_PATH, DbStores.Users, `${testId}.json`);
+            const filePath = path.join(STORAGE_PATH, `${testId}.json`);
             expect(fs.existsSync(filePath)).toBe(true);
             const fileContent = fs.readFileSync(filePath, 'utf8');
             const document: Document<typeof testData> = JSON.parse(fileContent);
@@ -73,7 +100,7 @@ describe('DbService', () => {
                 name: 'Robert',
                 email: 'rob@baratheon.stag'
             });
-            const expectedPath = path.join(TEST_DB_PATH, DbStores.Users, `${testId}.json`);
+            const expectedPath = path.join(STORAGE_PATH, `${testId}.json`);
             expect(fs.existsSync(expectedPath)).toBe(true);
 
             const result = await dbService.setById(testId, {
@@ -194,7 +221,7 @@ describe('DbService', () => {
 
         it('should return null and handle corrupted JSON gracefully', async () => {
             const testId = 'somefileid'
-            const filePath = path.join(TEST_DB_PATH, DbStores.Users, `${testId}.json`);
+            const filePath = path.join(STORAGE_PATH, `${testId}.json`);
             fs.writeFileSync(filePath, '{ "invalid": json }');
             const result = await dbService.getById(testId);
             expect(result).toBeNull();
@@ -261,7 +288,7 @@ describe('DbService', () => {
                 email: 'john@example.com',
                 age: 30,
             });
-            const filePath = path.join(TEST_DB_PATH, DbStores.Users, `${testId}.json`);
+            const filePath = path.join(STORAGE_PATH, `${testId}.json`);
             expect(fs.existsSync(filePath)).toBe(true);
             const result = await dbService.removeItemById(testId);
             expect(result).toBe(true);
@@ -271,7 +298,7 @@ describe('DbService', () => {
         it('removed file should not be in the database', async () => {
             const testId = uuid.v4();
             await dbService.setById(testId, { any: 'data' });
-            const filePath = path.join(TEST_DB_PATH, DbStores.Users, `${testId}.json`);
+            const filePath = path.join(STORAGE_PATH, `${testId}.json`);
             expect(fs.existsSync(filePath)).toBe(true);
             await dbService.removeItemById(testId);
             const result = await dbService.getById(testId);
@@ -297,7 +324,6 @@ describe('DbService', () => {
             }
 
             await Promise.all(operations);
-
 
             for (let i = 0; i < 100; i++) {
                 const testId = `${i}`;

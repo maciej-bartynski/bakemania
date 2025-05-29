@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "./app.js",
   "scripts": {
-    "dev-watch": "tsc --watch",
+    "dev-watch": "concurrently \"tsc --watch\" \"tsc-alias --watch\"",
     "dev-run": "NODE_ENV=development nodemon ./server-dist/app.js --watch ./server-dist",
     "dev": "concurrently --kill-others --raw \"npm run dev-watch\" \"npm run dev-run\"",
     "build": "tsc",
@@ -55,6 +55,8 @@
     "nodemon": "^3.1.9",
     "supertest": "^7.1.1",
     "ts-jest": "^29.3.4",
+    "tsc-alias": "^1.8.16",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.3"
   }
 }

@@ -1,16 +1,30 @@
 import path from 'path';
 import fsPromises from 'fs/promises';
 
-const LOGS_FOLDER_NAME = process.env.NODE_ENV === 'test' ? 'logs-test' : 'logs';
+export const LOGS_DIRNAME = process.env.NODE_ENV === 'test' ? 'logs-test' : 'logs';
 
 class LogService {
-    logPath = path.join(process.cwd(), LOGS_FOLDER_NAME);
-    location?: LogLocations;
+    logPath = path.join(process.cwd(), LOGS_DIRNAME);
+    location: LogLocations;
 
-    constructor(params?: {
-        location?: LogLocations,
-    }) {
-        this.location = params?.location;
+    constructor(params: { location: LogLocations }) {
+        this.location = params.location;
+    }
+
+    __config(conf: { location: string, logPath: string }) {
+        if (conf.location) {
+            this.location = conf.location as LogLocations;
+        }
+
+        if (conf.logPath) {
+            this.logPath = conf.logPath;
+        }
+    }
+
+    async __drop() {
+        const logsLocationDirname = path.join(this.logPath, this.location || '');
+        await fsPromises.rm(logsLocationDirname, { recursive: true, force: true });
+        await fsPromises.mkdir(logsLocationDirname, { recursive: true });
     }
 
     async catchUnhandled<T extends any>(message: string, callback: () => (T | Promise<T>), fallback?: (e: unknown) => (T | Promise<T>)): Promise<T | null> {
@@ -54,14 +68,18 @@ class LogService {
 
     async saveReport(entry: Entry) {
         const now = new Date();
+        const timestamp = now.getTime();
         const pad = (num: number) => String(num).padStart(2, '0');
-        const day = pad(now.getDate());
-        const month = pad(now.getMonth() + 1);
-        const year = now.getFullYear();
         const hours = pad(now.getHours());
         const minutes = pad(now.getMinutes());
         const seconds = pad(now.getSeconds());
-        const fileName = `${day}-${month}-${year}_${hours}:${minutes}:${seconds}`;
+
+        const dateString = now.toLocaleString('en-US', {
+            month: 'short',
+            day: '2-digit',
+            year: 'numeric'
+        }).replaceAll(' ', '').replaceAll(',', '-');
+        const fileName = `${timestamp}__${dateString}__${hours}-${minutes}-${seconds}`;
         const logFullPath = path.join(this.logPath, this.location || '', `${fileName}.json`);
 
         try {
@@ -71,6 +89,18 @@ class LogService {
             console.error('LogService error on saving report:', err);
         }
     }
+
+    async getLatestLog(_path: string) {
+        const resolvedPath = path.join(this.logPath, this.location || '');
+        const files = await fsPromises.readdir(resolvedPath);
+        if (files.length === 0) return null;
+        const latestFile = files.sort().pop();
+        const content = await fsPromises.readFile(
+            path.join(resolvedPath, latestFile!),
+            'utf8'
+        );
+        return JSON.parse(content);
+    };
 }
 
 type Entry = {

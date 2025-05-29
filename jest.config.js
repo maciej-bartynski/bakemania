@@ -31,4 +31,9 @@ module.exports = {
 
     // Pokaż szczegółowe informacje o testach
     verbose: true,
+
+    // Projekty dla różnych typów testów
+    moduleNameMapper: {
+        '^@/(.*)$': '<rootDir>/server/$1',
+    },
 };

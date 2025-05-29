@@ -2,13 +2,13 @@ import path from "path";
 import DbStores from "./DbStores";
 import fs from "fs";
 import fsPromises from "fs/promises";
-import Logs from "../LogService";
+import Logs from "@/services/LogService";
 import { Document, Pagination } from "./DbTypes";
 
-const DB_FOLDER_NAME = process.env.NODE_ENV === 'test' ? './db-test' : './db';
+export const DB_DIRNAME = process.env.NODE_ENV === 'test' ? './db-test' : './db';
 
 class DbService {
-    path = path.resolve(process.cwd(), DB_FOLDER_NAME);
+    path = path.resolve(process.cwd(), DB_DIRNAME);
     dbStore: string;
     route: string;
     __lock: Record<string, boolean>;
@@ -19,6 +19,12 @@ class DbService {
         this.dbStore = config.dbStore;
         this.route = path.join(this.path, this.dbStore);
         this.__lock = {};
+    }
+
+    __config(config: { dbStore: string, path: string, lock: Record<string, boolean> }) {
+        this.dbStore = config.dbStore;
+        this.route = path.join(config.path, config.dbStore);
+        this.__lock = config.lock;
     }
 
     __drop = async () => {
