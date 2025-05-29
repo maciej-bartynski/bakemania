@@ -49,6 +49,15 @@ get-in-staging:
 get-in-local:
 	docker exec -it local-bakemania-container sh
 
+get-in-local-image:
+	docker run -it local-bakemania-app sh
+
+get-in-staging-image:
+	docker run -it staging-bakemania-app sh
+
+get-in-image:
+	docker run -it bakemania-app sh
+
 see-logs:
 	docker logs -f bakemania-container
 

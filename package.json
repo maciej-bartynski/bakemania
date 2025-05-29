@@ -6,7 +6,7 @@
     "dev-watch": "concurrently \"tsc --watch\" \"tsc-alias --watch\"",
     "dev-run": "NODE_ENV=development nodemon ./server-dist/app.js --watch ./server-dist",
     "dev": "concurrently --kill-others --raw \"npm run dev-watch\" \"npm run dev-run\"",
-    "build": "tsc",
+    "build": "tsc && tsc-alias",
     "start": "NODE_ENV=production node ./server-dist/app.js",
     "reset-db": "NODE_ENV=development node ./server-dist/DbFixtures.js",
     "copy-db": "NODE_ENV=development node ./server-dist/copyDb.js",
