@@ -136,69 +136,69 @@ describe('POST /auth/register', () => {
         expect(EmailService.sendVerificationEmail).toHaveBeenCalled();
     });
 
-    // it('powinien zwrócić błąd gdy email już istnieje', async () => {
-    //     // Najpierw utwórz użytkownika
-    //     const existingUser = {
-    //         _id: 'test-id',
-    //         email: 'existing@example.com',
-    //         password: 'Test123!@#',
-    //         role: UserRole.User,
-    //         verification: { isVerified: false },
-    //         agreements: true
-    //     };
-    //     await usersDb.setById(existingUser._id, existingUser);
+    it('powinien zwrócić błąd gdy email już istnieje', async () => {
+        // Najpierw utwórz użytkownika
+        const existingUser = {
+            _id: 'test-id',
+            email: 'existing@example.com',
+            password: 'Test123!@#',
+            role: UserRole.User,
+            verification: { isVerified: false },
+            agreements: true
+        };
+        await usersDb.setById(existingUser._id, existingUser);
 
-    //     // Próbuj zarejestrować użytkownika z tym samym emailem
-    //     const response = await request(app)
-    //         .post('/api/auth/register')
-    //         .send({
-    //             email: 'existing@example.com',
-    //             password: 'Test123!@#',
-    //             captchaToken: 'fake-captcha-token',
-    //             agreements: true
-    //         });
+        // Próbuj zarejestrować użytkownika z tym samym emailem
+        const response = await request(app)
+            .post('/api/auth/register')
+            .send({
+                email: 'existing@example.com',
+                password: 'Test123!@#',
+                captchaToken: 'fake-captcha-token',
+                agreements: true
+            });
 
-    //     expect(response.status).toBe(400);
-    //     expect(response.body.message).toBe('Ten adres email jest już zajęty.');
-    // });
+        expect(response.status).toBe(400);
+        expect(response.body.message).toBe('Ten adres email jest już zajęty.');
+    });
 
-    // it('powinien zwrócić błąd gdy reCAPTCHA nie przejdzie', async () => {
-    //     // Mock nieudanej weryfikacji reCAPTCHA
-    //     (global.fetch as jest.Mock).mockResolvedValueOnce({
-    //         json: () => Promise.resolve({ success: false })
-    //     });
+    it('powinien zwrócić błąd gdy reCAPTCHA nie przejdzie', async () => {
+        // Mock nieudanej weryfikacji reCAPTCHA
+        (global.fetch as jest.Mock).mockResolvedValueOnce({
+            json: () => Promise.resolve({ success: false })
+        });
 
-    //     const response = await request(app)
-    //         .post('/api/auth/register')
-    //         .send({
-    //             email: 'test@example.com',
-    //             password: 'Test123!@#',
-    //             captchaToken: 'invalid-token',
-    //             agreements: true
-    //         });
+        const response = await request(app)
+            .post('/api/auth/register')
+            .send({
+                email: 'test@example.com',
+                password: 'Test123!@#',
+                captchaToken: 'invalid-token',
+                agreements: true
+            });
 
-    //     expect(response.status).toBe(400);
-    //     expect(response.body.message).toBe('Weryfikacja reCAPTCHA nie powiodła się');
-    // });
+        expect(response.status).toBe(400);
+        expect(response.body.message).toBe('Weryfikacja reCAPTCHA nie powiodła się');
+    });
 
-    // it('powinien zalogować błąd gdy wystąpi problem z bazą danych', async () => {
-    //     // Mock błędu bazy danych
-    //     jest.spyOn(usersDb, 'setById').mockRejectedValueOnce(new Error('DB Error'));
+    it('powinien zalogować błąd gdy wystąpi problem z bazą danych', async () => {
+        // Mock błędu bazy danych
+        jest.spyOn(usersDb, 'setById').mockRejectedValueOnce(new Error('DB Error'));
 
-    //     const response = await request(app)
-    //         .post('/api/auth/register')
-    //         .send({
-    //             email: 'test@example.com',
-    //             password: 'Test123!@#',
-    //             captchaToken: 'fake-captcha-token',
-    //             agreements: true
-    //         });
+        const response = await request(app)
+            .post('/api/auth/register')
+            .send({
+                email: 'test@example.com',
+                password: 'Test123!@#',
+                captchaToken: 'fake-captcha-token',
+                agreements: true
+            });
 
-    //     expect(response.status).toBe(500);
+        expect(response.status).toBe(500);
 
-    //     // Sprawdź czy błąd został zalogowany
-    //     const logs = await Logs.appLogs.getLatestLog('app');
-    //     expect(logs).toBeDefined();
-    //     expect(logs?.message).toBe('Handler "/register" error');
-    // });
+        // Sprawdź czy błąd został zalogowany
+        const logs = await Logs.appLogs.getLatestLog('app');
+        expect(logs).toBeDefined();
+        expect(logs?.message).toBe('Handler "/register" error');
+    });
 });
