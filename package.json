@@ -11,10 +11,10 @@
     "reset-db": "NODE_ENV=development node ./server-dist/DbFixtures.js",
     "copy-db": "NODE_ENV=development node ./server-dist/copyDb.js",
     "create-admin": "NODE_ENV=development node ./server-dist/CreateAdmin.js",
-    "test": "NODE_ENV=test jest",
-    "test:watch": "NODE_ENV=test jest --watch",
-    "test:coverage": "NODE_ENV=test jest --coverage",
-    "test:verbose": "NODE_ENV=test jest --verbose"
+    "test": "NODE_ENV=test jest --runInBand",
+    "test:watch": "NODE_ENV=test jest --watch --runInBand",
+    "test:coverage": "NODE_ENV=test jest --coverage --runInBand",
+    "test:verbose": "NODE_ENV=test jest --verbose --runInBand"
   },
   "author": "",
   "license": "ISC",
