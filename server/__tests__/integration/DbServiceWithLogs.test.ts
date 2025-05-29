@@ -30,6 +30,15 @@ describe('DbService with Logs Integration', () => {
         await LogsModule.appLogs.__drop();
     });
 
+    afterAll(async () => {
+        try {
+            await fsPromises.rm(path.join(process.cwd(), LOGS_DIRNAME), { recursive: true, force: true });
+            await fsPromises.rm(path.join(process.cwd(), DB_DIRNAME), { recursive: true, force: true });
+        } catch (e) {
+            console.error(e);
+        }
+    });
+
     it('dummy', async () => {
         expect(true).toBe(true);
     });

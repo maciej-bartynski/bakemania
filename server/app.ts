@@ -33,10 +33,6 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use((req, res, next) => {
-    next();
-})
-
 app.get('/api/ping', (req, res) => {
     res.status(204).send();
 })
@@ -73,6 +69,18 @@ app.get('*', (req, res) => {
 
 let wsServer: WebSocketServer;
 
+let servers: {
+    http: http.Server | null,
+    https: https.Server | null,
+    ws: WebSocketServer | null,
+    wss: WebSocketServer | null
+} = {
+    http: null,
+    https: null,
+    ws: null,
+    wss: null
+}
+
 if (process.env.NODE_ENV === 'production') {
     /**
      * Behind Nginx
@@ -85,7 +93,10 @@ if (process.env.NODE_ENV === 'production') {
         console.log(`http://localhost:${httpPort}`);
     });
 
-    wsServer = new WebSocketServer({ server: httpServer })
+    wsServer = new WebSocketServer({ server: httpServer });
+
+    servers.http = httpServer;
+    servers.ws = wsServer;
 } else {
     /**
      * **How to generate local cert**
@@ -104,7 +115,10 @@ if (process.env.NODE_ENV === 'production') {
         console.log(`https://localhost:${httpsPort}`);
     });
 
-    wsServer = new WebSocketServer({ server: httpsServer })
+    wsServer = new WebSocketServer({ server: httpsServer });
+
+    servers.https = httpsServer;
+    servers.wss = wsServer;
 }
 
 wsServer.on("connection", (ws, req) => {
@@ -175,3 +189,7 @@ wsServer.on("connection", (ws, req) => {
 
     });
 });
+
+export default app;
+
+export { servers };
