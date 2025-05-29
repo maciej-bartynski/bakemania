@@ -28,6 +28,7 @@ import jwt from 'jsonwebtoken';
 import connections from './wsConnections';
 import getLocalIP from './lib/getLocalIP';
 import Logs from './services/LogService';
+import consoleLog from './lib/consoleLog';
 
 const app = express();
 app.use(express.json());
@@ -81,7 +82,7 @@ let servers: {
     wss: null
 }
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test') {
     /**
      * Behind Nginx
      */
@@ -89,8 +90,8 @@ if (process.env.NODE_ENV === 'production') {
     const httpServer = http.createServer(app);
 
     httpServer.listen(httpPort, () => {
-        console.log(`http://${getLocalIP()}:${httpPort}`);
-        console.log(`http://localhost:${httpPort}`);
+        consoleLog(`http://${getLocalIP()}:${httpPort}`);
+        consoleLog(`http://localhost:${httpPort}`);
     });
 
     wsServer = new WebSocketServer({ server: httpServer });
@@ -111,8 +112,8 @@ if (process.env.NODE_ENV === 'production') {
     }, app);
 
     httpsServer.listen(httpsPort, () => {
-        console.log(`https://${getLocalIP()}:${httpsPort}`);
-        console.log(`https://localhost:${httpsPort}`);
+        consoleLog(`https://${getLocalIP()}:${httpsPort}`);
+        consoleLog(`https://localhost:${httpsPort}`);
     });
 
     wsServer = new WebSocketServer({ server: httpsServer });
