@@ -1,5 +1,5 @@
 import request from 'supertest';
-import app, { servers } from '@/app';
+import app, { serversToExportForTests } from '@/app';
 import usersDb from '@/services/DbService/instances/UsersDb';
 import EmailService from '@/services/EmailService/EmailService';
 import Logs from '@/services/LogService';
@@ -105,10 +105,8 @@ describe('POST /auth/login', () => {
     afterAll(async () => {
         await fsPromises.rm(DB_PATH, { recursive: true, force: true });
         await fsPromises.rm(LOG_PATH, { recursive: true, force: true });
-        servers.http?.close();
-        servers.https?.close();
-        servers.ws?.close();
-        servers.wss?.close();
+        serversToExportForTests.http?.close();
+        serversToExportForTests.ws?.close();
     });
 
     it('powinien zalogować użytkownika i zwrócić token', async () => {

@@ -13,8 +13,6 @@ jobs:
     env:
       JWT_SECRET: "test-secret"
       PORT: 4040
-      KEY_PATH: "./key.pem"
-      CERT_PATH: "./cert.pem"
       CAPTCHA_SECRET_KEY: "test-captcha-key"
       EMAIL_USER: "test@email.com"
       EMAIL_APP_PASSWORD: "test-password"

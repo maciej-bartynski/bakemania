@@ -20,11 +20,6 @@ This is a full-stack web application built with Node.js (backend) and React + Vi
 
 ### Backend Setup
 
-0. Create local certifiactes: (This step is probably no longer necessary). To check local IP, just run `npm run dev` in frontend directory. Local IP will be logged to terminal. Terminate frontend process and copy IP to clipboard (ex. 192.168.183.252). Now you can create local certs:
-```bash
-mkcert -key-file key.pem -cert-file cert.pem localhost {your IP}
-```
-
 1. Install dependencies:
 ```bash
 npm install
@@ -38,6 +33,11 @@ npm run dev-watch
 3. Start the backend server with nodemon (in another terminal):
 ```bash
 npm run dev-run
+```
+
+4. ...Or start typescript and nodemon conrurrently:
+```bash
+npm run dev
 ```
 
 ### Frontend Setup
@@ -140,8 +140,6 @@ The application uses environment variables for configuration. Make sure to creat
 1. Backend envs:
 JWT_SECRET= string
 PORT= string|number
-KEY_PATH= string, path to local certs. Default shoudl be: ./key.pem (this path is used for command earlier in this guide)
-CERT_PATH= string, path to local certs. Default shoudl be: ./cert.pem (this path is used for command earlier in this guide)
 CAPTCHA_SECRET_KEY= string, for local development use dummy key: 6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe
 EMAIL_USER= google email address for email services
 EMAIL_APP_PASSWORD= string, created for google email

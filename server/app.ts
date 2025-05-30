@@ -70,57 +70,26 @@ app.get('*', (req, res) => {
 
 let wsServer: WebSocketServer;
 
-let servers: {
+const serversToExportForTests: {
     http: http.Server | null,
-    https: https.Server | null,
     ws: WebSocketServer | null,
-    wss: WebSocketServer | null
 } = {
     http: null,
-    https: null,
     ws: null,
-    wss: null
 }
 
-if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test') {
-    /**
-     * Behind Nginx
-     */
-    const httpPort = 3000;
-    const httpServer = http.createServer(app);
+const httpPort = process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test' ? 3000 : 4040;
+const httpServer = http.createServer(app);
 
-    httpServer.listen(httpPort, () => {
-        consoleLog(`http://${getLocalIP()}:${httpPort}`);
-        consoleLog(`http://localhost:${httpPort}`);
-    });
+httpServer.listen(httpPort, () => {
+    consoleLog(`http://${getLocalIP()}:${httpPort}`);
+    consoleLog(`http://localhost:${httpPort}`);
+});
 
-    wsServer = new WebSocketServer({ server: httpServer });
+wsServer = new WebSocketServer({ server: httpServer });
 
-    servers.http = httpServer;
-    servers.ws = wsServer;
-} else {
-    /**
-     * **How to generate local cert**
-     * @domain localhost 192.168.183.252
-     * `mkcert -key-file key.pem -cert-file cert.pem {domain(s)}`
-     */
-
-    const httpsPort = process.env.PORT;
-    const httpsServer = https.createServer({
-        key: fs.readFileSync(process.env.KEY_PATH ?? ""),
-        cert: fs.readFileSync(process.env.CERT_PATH ?? ""),
-    }, app);
-
-    httpsServer.listen(httpsPort, () => {
-        consoleLog(`https://${getLocalIP()}:${httpsPort}`);
-        consoleLog(`https://localhost:${httpsPort}`);
-    });
-
-    wsServer = new WebSocketServer({ server: httpsServer });
-
-    servers.https = httpsServer;
-    servers.wss = wsServer;
-}
+serversToExportForTests.http = httpServer;
+serversToExportForTests.ws = wsServer;
 
 wsServer.on("connection", (ws, req) => {
     Logs.wsLogs.catchUnhandled('WsServer connection error', () => {
@@ -193,4 +162,4 @@ wsServer.on("connection", (ws, req) => {
 
 export default app;
 
-export { servers };
+export { serversToExportForTests };
