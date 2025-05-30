@@ -39,10 +39,6 @@ describe('DbService with Logs Integration', () => {
         }
     });
 
-    it('dummy', async () => {
-        expect(true).toBe(true);
-    });
-
     it('powinien zalogować błąd przy próbie aktualizacji nieistniejącego pliku', async () => {
         await dbService.updateById('random-id-never-created', { name: 'Test' });
         const log = await LogsModule.appLogs.getLatestLog('app');
