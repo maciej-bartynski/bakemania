@@ -134,10 +134,34 @@ class DbService {
                     }
                 });
             });
-
         }, async () => {
             return null;
         }) ?? null;
+    }
+
+    getByIdSilent = async <T extends Record<string, any>>(id: string): Promise<Document<T> | null> => {
+        try {
+            return await new Promise<Document<T> | null>((resolve, reject) => {
+                const readFilePath = path.join(this.route, `/${id}.json`);
+                fs.readFile(readFilePath, 'utf8', async (err, data) => {
+                    if (err) {
+                        reject(err);
+                    } else if (!data) {
+                        resolve(null);
+                    } else {
+                        try {
+
+                            const file: Document<T> = JSON.parse(data);
+                            resolve(file);
+                        } catch (e) {
+                            reject(e);
+                        }
+                    }
+                });
+            });
+        } catch {
+            return null;
+        }
     }
 
     getAllByField = async <T extends Record<string, any>>(fieldName: string, fieldValue: any, options: {

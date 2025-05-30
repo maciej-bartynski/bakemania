@@ -71,21 +71,20 @@ const getSanitizedAssistantById = async (id: string): Promise<SanitizedManagerMo
 }
 
 const getUserOrAssistantById = async (id: string): Promise<ManagerModel | UserModel | AdminModel | null> => {
-    const user = await usersDb.getById<UserModel>(id);
+    const user = await usersDb.getByIdSilent<UserModel>(id);
     if (user) {
         return user;
     }
 
-    const manager = await managersDb.getById<ManagerModel>(id);
+    const manager = await managersDb.getByIdSilent<ManagerModel>(id);
     if (manager) {
         return manager;
     }
 
-    const admin = await adminsDb.getById<AdminModel>(id);
+    const admin = await adminsDb.getByIdSilent<AdminModel>(id);
     if (admin) {
         return admin;
     }
-
 
     return null;
 }

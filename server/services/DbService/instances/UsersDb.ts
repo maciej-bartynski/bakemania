@@ -7,7 +7,7 @@ import * as uuid from 'uuid';
 class UsersDb extends DbService {
     async getSanitizedUserById(id: string) {
         return await Logs.appLogs.catchUnhandled('UsersDb error on getSanitizedUserById', async () => {
-            const user = await this.getById<UserModel>(id);
+            const user = await this.getByIdSilent<UserModel>(id);
             if (user) {
                 const sanitizedUser: SanitizedUserModel = {
                     _id: user._id,
