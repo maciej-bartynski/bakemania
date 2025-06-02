@@ -126,5 +126,129 @@ describe('LogService Unit Tests', () => {
             expect(log?.details.test).toBe(JSON.stringify(details.test));
             expect(log?.timestamp).toBeDefined();
         });
+
+        it('powinien usunąć najstarszy log gdy przekroczony zostanie limit 200 plików', async () => {
+            // Tworzymy 201 plików (200 + 1 nowy)
+            const logsDir = path.join(TEST_LOGS_PATH, 'app');
+            const baseTime = Date.now() - 1000000; // 1 sekunda wstecz
+
+            // Tworzymy 200 plików z różnymi datami utworzenia
+            for (let i = 0; i < 200; i++) {
+                const timestamp = baseTime + i;
+                const fileName = `log_${i}.json`;
+                const filePath = path.join(logsDir, fileName);
+
+                // Tworzymy plik z opóźnieniem, aby mieć pewność że daty utworzenia będą różne
+                await new Promise(resolve => setTimeout(resolve, 1));
+                await fsPromises.writeFile(
+                    filePath,
+                    JSON.stringify({ message: `Test ${i}`, details: {}, timestamp: new Date(timestamp) })
+                );
+            }
+
+            // Dodajemy nowy log
+            await appLogs.saveReport({
+                message: 'New log',
+                details: {},
+                timestamp: new Date()
+            });
+
+            // Sprawdzamy czy mamy dokładnie 200 plików
+            const files = await fsPromises.readdir(logsDir);
+            expect(files.length).toBe(200);
+
+            // Sprawdzamy czy najstarszy plik został usunięty
+            const fileStats = await Promise.all(
+                files.map(async (file) => {
+                    const filePath = path.join(logsDir, file);
+                    const stats = await fsPromises.stat(filePath);
+                    return {
+                        name: file,
+                        birthtime: stats.birthtime
+                    };
+                })
+            );
+
+            const sortedFiles = fileStats.sort((a, b) =>
+                a.birthtime.getTime() - b.birthtime.getTime()
+            );
+
+            // Najstarszy plik powinien mieć datę utworzenia większą niż baseTime
+            const oldestFileBirthtime = sortedFiles[0].birthtime.getTime();
+            expect(oldestFileBirthtime).toBeGreaterThan(baseTime);
+        });
+
+        it('powinien zachować najnowsze logi i usuwać najstarsze przy dużej liczbie operacji', async () => {
+            const logsDir = path.join(TEST_LOGS_PATH, 'app');
+            const totalLogs = 1000;
+            const expectedLogs = 200;
+            const createdLogs: { name: string; birthtime: Date }[] = [];
+
+            // Tworzymy 1000 logów
+            for (let i = 0; i < totalLogs; i++) {
+                await new Promise(resolve => setTimeout(resolve, 1)); // Zapewnia różne daty utworzenia
+                await appLogs.saveReport({
+                    message: `Test log ${i}`,
+                    details: { index: i },
+                    timestamp: new Date()
+                });
+
+                // Zapisz informacje o każdym utworzonym logu
+                const files = await fsPromises.readdir(logsDir);
+                const fileStats = await Promise.all(
+                    files.map(async (file) => {
+                        const filePath = path.join(logsDir, file);
+                        const stats = await fsPromises.stat(filePath);
+                        return {
+                            name: file,
+                            birthtime: stats.birthtime
+                        };
+                    })
+                );
+
+                const newestFile = fileStats.sort((a, b) =>
+                    b.birthtime.getTime() - a.birthtime.getTime()
+                )[0];
+
+                if (newestFile) {
+                    createdLogs.push({
+                        name: newestFile.name,
+                        birthtime: newestFile.birthtime
+                    });
+                }
+
+                // Co 100 logów sprawdzamy stan
+                if (i % 100 === 0) {
+                    expect(files.length).toBeLessThanOrEqual(expectedLogs);
+                }
+            }
+
+            // Końcowe sprawdzenie
+            const finalFiles = await fsPromises.readdir(logsDir);
+            expect(finalFiles.length).toBe(expectedLogs);
+
+            // Sprawdź czy wszystkie zachowane logi są najnowsze
+            const finalStats = await Promise.all(
+                finalFiles.map(async (file) => {
+                    const filePath = path.join(logsDir, file);
+                    const stats = await fsPromises.stat(filePath);
+                    return stats.birthtime;
+                })
+            );
+
+            // Upewnij się, że mamy wystarczającą liczbę zapisanych logów
+            expect(createdLogs.length).toBeGreaterThanOrEqual(expectedLogs);
+
+            // Znajdź najstarszy dozwolony czas (czas utworzenia 200-tego najnowszego logu)
+            const oldestAllowedTime = createdLogs
+                .sort((a, b) => b.birthtime.getTime() - a.birthtime.getTime())
+            [expectedLogs - 1]?.birthtime.getTime();
+
+            expect(oldestAllowedTime).toBeDefined();
+
+            finalStats.forEach(birthtime => {
+                expect(birthtime.getTime()).toBeGreaterThanOrEqual(oldestAllowedTime!);
+            });
+        });
     });
 }); 

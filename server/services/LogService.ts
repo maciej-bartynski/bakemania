@@ -83,7 +83,34 @@ class LogService {
         const logFullPath = path.join(this.logPath, this.location || '', `${fileName}.json`);
 
         try {
-            await fsPromises.mkdir(path.dirname(logFullPath), { recursive: true });
+            const logsDir = path.join(this.logPath, this.location || '');
+            await fsPromises.mkdir(logsDir, { recursive: true });
+
+            // Sprawdź ilość plików i usuń najstarszy jeśli przekracza limit
+            const files = await fsPromises.readdir(logsDir);
+            if (files.length >= 200) {
+                // Pobierz statystyki dla wszystkich plików
+                const fileStats = await Promise.all(
+                    files.map(async (file) => {
+                        const filePath = path.join(logsDir, file);
+                        const stats = await fsPromises.stat(filePath);
+                        return {
+                            name: file,
+                            birthtime: stats.birthtime
+                        };
+                    })
+                );
+
+                // Sortuj po dacie utworzenia
+                const sortedFiles = fileStats.sort((a, b) =>
+                    a.birthtime.getTime() - b.birthtime.getTime()
+                );
+
+                // Usuń najstarszy plik
+                const oldestFile = sortedFiles[0].name;
+                await fsPromises.unlink(path.join(logsDir, oldestFile));
+            }
+
             await fsPromises.writeFile(logFullPath, JSON.stringify({ ...entry, timestamp: new Date() }, null, 2), 'utf8');
         } catch (err) {
             console.error('LogService error on saving report:', err);
