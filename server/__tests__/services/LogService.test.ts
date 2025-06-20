@@ -1,6 +1,6 @@
 import path from 'path';
 import fsPromises from 'fs/promises';
-import LogsModule, { LOGS_DIRNAME } from '@/services/LogService';
+import LogsModule, { LOGS_DIRNAME, LogService } from '@/services/LogService';
 import fs from 'fs';
 
 const TEST_LOGS_PATH = path.resolve(process.cwd(), LOGS_DIRNAME);
@@ -119,7 +119,7 @@ describe('LogService Unit Tests', () => {
 
             const files = await fsPromises.readdir(path.join(TEST_LOGS_PATH, 'app'));
             expect(files.length).toBe(1);
-            expect(files[0]).toMatch(/^\d{13}__[A-Z][a-z]{2}\d{2}-\d{4}__\d{2}-\d{2}-\d{2}\.json$/);
+            expect(files[0]).toMatch(/^\d{13}__[A-Z][a-z]{2}\d{2}-\d{4}__\d{2}-\d{2}-\d{2}__[^.]+\.json$/);
             const log = await appLogs.getLatestLog('app');
             expect(log).not.toBeNull();
             expect(log?.message).toBe(message);
@@ -249,6 +249,178 @@ describe('LogService Unit Tests', () => {
             finalStats.forEach(birthtime => {
                 expect(birthtime.getTime()).toBeGreaterThanOrEqual(oldestAllowedTime!);
             });
+        });
+    });
+
+    describe('Wielokrotne serwisy logów', () => {
+        const CUSTOM_LOG_PATH = path.join(process.cwd(), 'test-multi-logs');
+        const CUSTOM_LOCATION_APP = 'test-app-logs';
+        const CUSTOM_LOCATION_WS = 'test-ws-logs';
+        const CUSTOM_LOCATION_CLIENT = 'test-client-logs';
+        const expectedLogs = 200;
+        const totalLogs = 1000;
+
+        const customAppLogs = new LogsModule.Service({ location: LogsModule.LogLocations.App });
+        const customWsLogs = new LogsModule.Service({ location: LogsModule.LogLocations.WsServer });
+        const customClientLogs = new LogsModule.Service({ location: LogsModule.LogLocations.Client });
+
+        beforeEach(async () => {
+            // Przygotuj katalogi
+            await fsPromises.rm(CUSTOM_LOG_PATH, { recursive: true, force: true });
+            await fsPromises.mkdir(CUSTOM_LOG_PATH, { recursive: true });
+            await fsPromises.mkdir(path.join(CUSTOM_LOG_PATH, CUSTOM_LOCATION_APP), { recursive: true });
+            await fsPromises.mkdir(path.join(CUSTOM_LOG_PATH, CUSTOM_LOCATION_WS), { recursive: true });
+            await fsPromises.mkdir(path.join(CUSTOM_LOG_PATH, CUSTOM_LOCATION_CLIENT), { recursive: true });
+
+            // Skonfiguruj serwisy
+            customAppLogs.__config({
+                location: CUSTOM_LOCATION_APP,
+                logPath: CUSTOM_LOG_PATH
+            });
+
+            customWsLogs.__config({
+                location: CUSTOM_LOCATION_WS,
+                logPath: CUSTOM_LOG_PATH
+            });
+
+            customClientLogs.__config({
+                location: CUSTOM_LOCATION_CLIENT,
+                logPath: CUSTOM_LOG_PATH
+            });
+        });
+
+        afterAll(async () => {
+            await fsPromises.rm(CUSTOM_LOG_PATH, { recursive: true, force: true });
+        });
+
+        it('powinien utrzymywać limit 200 logów dla każdego serwisu', async () => {
+            // Twórz logi dla każdego serwisu
+            for (let i = 0; i < totalLogs; i++) {
+                await new Promise(resolve => setTimeout(resolve, 1));
+
+                await customAppLogs.saveReport({
+                    message: `App log ${i}`,
+                    details: { service: 'app', index: i }
+                });
+
+                await customWsLogs.saveReport({
+                    message: `WS log ${i}`,
+                    details: { service: 'ws', index: i }
+                });
+
+                await customClientLogs.saveReport({
+                    message: `Client log ${i}`,
+                    details: { service: 'client', index: i }
+                });
+            }
+
+            // Sprawdź liczbę plików dla każdego serwisu
+            const appFiles = await fsPromises.readdir(path.join(CUSTOM_LOG_PATH, CUSTOM_LOCATION_APP));
+            const wsFiles = await fsPromises.readdir(path.join(CUSTOM_LOG_PATH, CUSTOM_LOCATION_WS));
+            const clientFiles = await fsPromises.readdir(path.join(CUSTOM_LOG_PATH, CUSTOM_LOCATION_CLIENT));
+
+            expect(appFiles.length).toBe(expectedLogs);
+            expect(wsFiles.length).toBe(expectedLogs);
+            expect(clientFiles.length).toBe(expectedLogs);
+        });
+
+        it('powinien zachować najnowsze logi dla każdego serwisu', async () => {
+            // Twórz logi dla każdego serwisu
+            for (let i = 0; i < totalLogs; i++) {
+                await new Promise(resolve => setTimeout(resolve, 1));
+
+                await customAppLogs.saveReport({
+                    message: `App log ${i}`,
+                    details: { service: 'app', index: i }
+                });
+
+                await customWsLogs.saveReport({
+                    message: `WS log ${i}`,
+                    details: { service: 'ws', index: i }
+                });
+
+                await customClientLogs.saveReport({
+                    message: `Client log ${i}`,
+                    details: { service: 'client', index: i }
+                });
+            }
+
+            // Sprawdź zawartość logów dla każdego serwisu
+            const checkServiceLogs = async (service: LogService, expectedService: string) => {
+                const files = await fsPromises.readdir(path.join(CUSTOM_LOG_PATH, service.location));
+                const fileStats = await Promise.all(
+                    files.map(async (file) => {
+                        const filePath = path.join(CUSTOM_LOG_PATH, service.location, file);
+                        const content = await fsPromises.readFile(filePath, 'utf8');
+                        const stats = await fsPromises.stat(filePath);
+                        return {
+                            content: JSON.parse(content),
+                            birthtime: stats.birthtime
+                        };
+                    })
+                );
+
+                // Sprawdź czy wszystkie logi są z odpowiedniego serwisu
+                fileStats.forEach(stat => {
+                    expect(stat.content.details.service).toBe(expectedService);
+                });
+
+                // Sprawdź czy zachowane są najnowsze logi
+                const sortedStats = fileStats.sort((a, b) =>
+                    b.birthtime.getTime() - a.birthtime.getTime()
+                );
+
+                // Sprawdź czy indeksy są z ostatnich 200 logów
+                const oldestAllowedIndex = totalLogs - expectedLogs;
+                sortedStats.forEach(stat => {
+                    expect(stat.content.details.index).toBeGreaterThanOrEqual(oldestAllowedIndex);
+                });
+            };
+
+            await checkServiceLogs(customAppLogs, 'app');
+            await checkServiceLogs(customWsLogs, 'ws');
+            await checkServiceLogs(customClientLogs, 'client');
+        });
+
+        it('powinien zachować niezależność między serwisami', async () => {
+            // Twórz logi dla każdego serwisu
+            for (let i = 0; i < totalLogs; i++) {
+                await new Promise(resolve => setTimeout(resolve, 1));
+
+                await customAppLogs.saveReport({
+                    message: `App log ${i}`,
+                    details: { service: 'app', index: i }
+                });
+
+                await customWsLogs.saveReport({
+                    message: `WS log ${i}`,
+                    details: { service: 'ws', index: i }
+                });
+
+                await customClientLogs.saveReport({
+                    message: `Client log ${i}`,
+                    details: { service: 'client', index: i }
+                });
+            }
+
+            // Sprawdź czy każdy serwis ma swoje własne logi
+            const appFiles = await fsPromises.readdir(path.join(CUSTOM_LOG_PATH, CUSTOM_LOCATION_APP));
+            const wsFiles = await fsPromises.readdir(path.join(CUSTOM_LOG_PATH, CUSTOM_LOCATION_WS));
+            const clientFiles = await fsPromises.readdir(path.join(CUSTOM_LOG_PATH, CUSTOM_LOCATION_CLIENT));
+
+            // Sprawdź czy nazwy plików są unikalne dla każdego serwisu
+            const appFileNames = new Set(appFiles);
+            const wsFileNames = new Set(wsFiles);
+            const clientFileNames = new Set(clientFiles);
+
+            // Sprawdź czy nie ma wspólnych plików między serwisami
+            const hasCommonFiles = (set1: Set<string>, set2: Set<string>) => {
+                return [...set1].some(file => set2.has(file));
+            };
+
+            expect(hasCommonFiles(appFileNames, wsFileNames)).toBe(false);
+            expect(hasCommonFiles(appFileNames, clientFileNames)).toBe(false);
+            expect(hasCommonFiles(wsFileNames, clientFileNames)).toBe(false);
         });
     });
 }); 

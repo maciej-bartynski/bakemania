@@ -79,7 +79,7 @@ class LogService {
             day: '2-digit',
             year: 'numeric'
         }).replaceAll(' ', '').replaceAll(',', '-');
-        const fileName = `${timestamp}__${dateString}__${hours}-${minutes}-${seconds}`;
+        const fileName = `${timestamp}__${dateString}__${hours}-${minutes}-${seconds}__${this.location}`;
         const logFullPath = path.join(this.logPath, this.location || '', `${fileName}.json`);
 
         try {
@@ -158,5 +158,7 @@ const Logs = {
     clientLogs,
     emailLogs
 }
+
+export type { LogService };
 
 export default Logs
