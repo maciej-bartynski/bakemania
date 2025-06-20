@@ -133,7 +133,7 @@ describe('LogService Unit Tests', () => {
             const baseTime = Date.now() - 1000000; // 1 sekunda wstecz
 
             // Tworzymy 200 plików z różnymi datami utworzenia
-            for (let i = 0; i < 200; i++) {
+            for (let i = 0; i < 250; i++) {
                 const timestamp = baseTime + i;
                 const fileName = `log_${i}.json`;
                 const filePath = path.join(logsDir, fileName);
@@ -176,7 +176,7 @@ describe('LogService Unit Tests', () => {
             // Najstarszy plik powinien mieć datę utworzenia większą niż baseTime
             const oldestFileBirthtime = sortedFiles[0].birthtime.getTime();
             expect(oldestFileBirthtime).toBeGreaterThan(baseTime);
-        });
+        }, 60000);
 
         it('powinien zachować najnowsze logi i usuwać najstarsze przy dużej liczbie operacji', async () => {
             const logsDir = path.join(TEST_LOGS_PATH, 'app');

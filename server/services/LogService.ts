@@ -86,10 +86,8 @@ class LogService {
             const logsDir = path.join(this.logPath, this.location || '');
             await fsPromises.mkdir(logsDir, { recursive: true });
 
-            // Sprawdź ilość plików i usuń najstarszy jeśli przekracza limit
             const files = await fsPromises.readdir(logsDir);
             if (files.length >= 200) {
-                // Pobierz statystyki dla wszystkich plików
                 const fileStats = await Promise.all(
                     files.map(async (file) => {
                         const filePath = path.join(logsDir, file);
@@ -101,14 +99,16 @@ class LogService {
                     })
                 );
 
-                // Sortuj po dacie utworzenia
                 const sortedFiles = fileStats.sort((a, b) =>
                     a.birthtime.getTime() - b.birthtime.getTime()
                 );
 
-                // Usuń najstarszy plik
-                const oldestFile = sortedFiles[0].name;
-                await fsPromises.unlink(path.join(logsDir, oldestFile));
+                const filesToDelete = sortedFiles.slice(0, sortedFiles.length - 199);
+                await Promise.all(
+                    filesToDelete.map(file =>
+                        fsPromises.unlink(path.join(logsDir, file.name))
+                    )
+                );
             }
 
             await fsPromises.writeFile(logFullPath, JSON.stringify({ ...entry, timestamp: new Date() }, null, 2), 'utf8');
