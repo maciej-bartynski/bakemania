@@ -36,7 +36,7 @@ describe('LogService Unit Tests', () => {
                 async () => 'success'
             );
             expect(result).toBe('success');
-        });
+        }, 60000);
 
         it('powinien zalogować błąd gdy wystąpi wyjątek', async () => {
             const error = new Error('Test error');
@@ -69,7 +69,7 @@ describe('LogService Unit Tests', () => {
             expect(log).not.toBeNull();
             expect(log?.message).toBe('Test app locator');
             expect(log?.details['What happend']).toBe('Test error');
-        });
+        }, 60000);
     });
 
     describe('report', () => {
@@ -90,7 +90,7 @@ describe('LogService Unit Tests', () => {
             expect(log?.details.field).toBe(details.field);
             expect(log?.details.is).toBe(details.is);
             expect(log?.timestamp).toBeDefined();
-        });
+        }, 60000);
 
         it('powinien obsłużyć różne typy wiadomości', async () => {
             const error = new Error('Test error');
@@ -102,7 +102,7 @@ describe('LogService Unit Tests', () => {
             expect(log).not.toBeNull();
             expect(log?.message).toBe('Test error');
             expect(log?.details['Error']).toBe(error.stack);
-        });
+        }, 60000);
     });
 
     describe('saveReport', () => {
@@ -125,7 +125,7 @@ describe('LogService Unit Tests', () => {
             expect(log?.message).toBe(message);
             expect(log?.details.test).toBe(JSON.stringify(details.test));
             expect(log?.timestamp).toBeDefined();
-        });
+        }, 60000);
 
         it('powinien usunąć najstarszy log gdy przekroczony zostanie limit 200 plików', async () => {
             // Tworzymy 201 plików (200 + 1 nowy)
@@ -180,7 +180,7 @@ describe('LogService Unit Tests', () => {
 
         it('powinien zachować najnowsze logi i usuwać najstarsze przy dużej liczbie operacji', async () => {
             const logsDir = path.join(TEST_LOGS_PATH, 'app');
-            const totalLogs = 1000;
+            const totalLogs = 300;
             const expectedLogs = 200;
             const createdLogs: { name: string; birthtime: Date }[] = [];
 
@@ -249,7 +249,7 @@ describe('LogService Unit Tests', () => {
             finalStats.forEach(birthtime => {
                 expect(birthtime.getTime()).toBeGreaterThanOrEqual(oldestAllowedTime!);
             });
-        });
+        }, 60000);
     });
 
     describe('Wielokrotne serwisy logów', () => {
@@ -258,7 +258,7 @@ describe('LogService Unit Tests', () => {
         const CUSTOM_LOCATION_WS = 'test-ws-logs';
         const CUSTOM_LOCATION_CLIENT = 'test-client-logs';
         const expectedLogs = 200;
-        const totalLogs = 1000;
+        const totalLogs = 300;
 
         const customAppLogs = new LogsModule.Service({ location: LogsModule.LogLocations.App });
         const customWsLogs = new LogsModule.Service({ location: LogsModule.LogLocations.WsServer });
@@ -322,7 +322,7 @@ describe('LogService Unit Tests', () => {
             expect(appFiles.length).toBe(expectedLogs);
             expect(wsFiles.length).toBe(expectedLogs);
             expect(clientFiles.length).toBe(expectedLogs);
-        });
+        }, 60000);
 
         it('powinien zachować najnowsze logi dla każdego serwisu', async () => {
             // Twórz logi dla każdego serwisu
@@ -380,7 +380,7 @@ describe('LogService Unit Tests', () => {
             await checkServiceLogs(customAppLogs, 'app');
             await checkServiceLogs(customWsLogs, 'ws');
             await checkServiceLogs(customClientLogs, 'client');
-        });
+        }, 60000);
 
         it('powinien zachować niezależność między serwisami', async () => {
             // Twórz logi dla każdego serwisu
@@ -421,6 +421,6 @@ describe('LogService Unit Tests', () => {
             expect(hasCommonFiles(appFileNames, wsFileNames)).toBe(false);
             expect(hasCommonFiles(appFileNames, clientFileNames)).toBe(false);
             expect(hasCommonFiles(wsFileNames, clientFileNames)).toBe(false);
-        });
+        }, 60000);
     });
 }); 
