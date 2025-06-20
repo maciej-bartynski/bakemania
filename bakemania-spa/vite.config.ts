@@ -23,12 +23,12 @@ export default defineConfig(({ mode }) => {
 
       proxy: {
         '/api': {
-          target: `https://${getLocalIP()}:4040`,
+          target: `http://${getLocalIP()}:4040`,
           changeOrigin: true,
           secure: false,
         },
         '/ws': {
-          target: `wss://${getLocalIP()}:4040`,
+          target: `ws://${getLocalIP()}:4040`,
           changeOrigin: true,
           secure: false,
           ws: true,

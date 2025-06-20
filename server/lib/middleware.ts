@@ -9,7 +9,7 @@ import { AdminModel } from '../services/DbService/instances/AdminsDb.types';
 const JWT_SECRET = process.env.JWT_SECRET!;
 
 async function authenticateChangePasswordToken(req: Request, res: Response, next: NextFunction) {
-    return await Logs.appLogs.catchUnhandled('[Middleware] authenticateChangePasswordToken()', async () => {
+    await Logs.appLogs.catchUnhandled('[Middleware] authenticateChangePasswordToken()', async () => {
         const token = req.header('Authorization')?.split(' ')[1];
 
         if (!token) {
@@ -90,8 +90,8 @@ async function authenticateChangePasswordToken(req: Request, res: Response, next
     });
 }
 
-async function authenticateEmailVerificationToken(req: Request, res: Response, next: NextFunction) {
-    return await Logs.appLogs.catchUnhandled('[Middleware] authenticateEmailVerificationToken()', async () => {
+async function authenticateEmailVerificationToken(req: Request, res: Response, next: NextFunction): Promise<void> {
+    await Logs.appLogs.catchUnhandled('[Middleware] authenticateEmailVerificationToken()', async () => {
 
         const token = req.header('Authorization')?.split(' ')[1];
 
@@ -157,7 +157,7 @@ async function authenticateEmailVerificationToken(req: Request, res: Response, n
 }
 
 async function authenticateToken(req: Request, res: Response, next: NextFunction) {
-    return await Logs.appLogs.catchUnhandled('Middleware error on authenticateToken', async () => {
+    await Logs.appLogs.catchUnhandled('Middleware error on authenticateToken', async () => {
 
         const token = req.header('Authorization')?.split(' ')[1];
 

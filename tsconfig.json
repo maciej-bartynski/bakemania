@@ -13,6 +13,17 @@
         "resolveJsonModule": true, // Pozwolenie na importowanie plików JSON
         "skipDefaultLibCheck": true,
         "noEmitOnError": true,
+        "baseUrl": ".",
+        "paths": {
+            "@/*": [
+                "./server/*"
+            ]
+        }
+    },
+    "ts-node": {
+        "require": [
+            "tsconfig-paths/register"
+        ]
     },
     "include": [
         "./server",

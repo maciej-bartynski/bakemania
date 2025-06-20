@@ -50,7 +50,7 @@ const limiterForPasswordChangeRequests = rateLimit({
 });
 
 router.post('/resend-verification-email', async (req, res) => {
-    return Logs.appLogs.catchUnhandled('Handler "/verify-email-token" error', async () => {
+    Logs.appLogs.catchUnhandled('Handler "/verify-email-token" error', async () => {
         const { email } = (req as any).body;
         const user = await tools.getUserOrAssistantByEmail(email);
         if (!user) {
@@ -100,7 +100,7 @@ router.post('/resend-verification-email', async (req, res) => {
 });
 
 router.post('/change-password', middleware.authenticateChangePasswordToken, async (req, res) => {
-    return Logs.appLogs.catchUnhandled('Handler "/change-password" error', async () => {
+    Logs.appLogs.catchUnhandled('Handler "/change-password" error', async () => {
         const { password } = (req as any).body;
         const user = (req as any).user;
 
@@ -229,187 +229,191 @@ router.get('/verify-email', middleware.authenticateEmailVerificationToken, async
     });
 });
 
-router.post('/register', limiterForApiCalls, async (req, res, next): Promise<void> => {
+router.post('/register',
+    limiterForApiCalls,
+    async (req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {
 
-    const {
-        password,
-        email,
-        captchaToken,
-        agreements,
-    } = req.body as {
-        password: string,
-        email: string,
-        captchaToken: string,
-        agreements: boolean,
-    };
+        const {
+            password,
+            email,
+            captchaToken,
+            agreements,
+        } = req.body as {
+            password: string,
+            email: string,
+            captchaToken: string,
+            agreements: boolean,
+        };
 
-    const verificationURL = 'https://www.google.com/recaptcha/api/siteverify';
+        const verificationURL = 'https://www.google.com/recaptcha/api/siteverify';
 
-    const captchaData: {
-        success: boolean,
-        error?: any
-    } = await fetch(verificationURL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: `secret=${process.env.CAPTCHA_SECRET_KEY}&response=${captchaToken}`
-    }).then(data => {
-        return data.json();
-    }).catch(err => {
-        Logs.appLogs.report('Captcha verification error', (setData) => {
-            setData('What happened:', err);
+        const captchaData: {
+            success: boolean,
+            error?: any
+        } = await fetch(verificationURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: `secret=${process.env.CAPTCHA_SECRET_KEY}&response=${captchaToken}`
+        }).then(data => {
+            return data.json();
+        }).catch(err => {
+            Logs.appLogs.report('Captcha verification error', (setData) => {
+                setData('What happened:', err);
+            });
+            return {
+                success: false,
+                error: err
+            }
         });
-        return {
-            success: false,
-            error: err
-        }
-    });
 
-    if (!captchaData.success) {
-        res.status(400).json({
-            message: 'Weryfikacja reCAPTCHA nie powiodła się'
-        });
-        return;
-    }
-
-    const JWT_SECRET = process.env.JWT_SECRET;
-
-    if (!JWT_SECRET) {
-        throw 'Missing secret.';
-    }
-
-    const newUserId = uuid.v4();
-    const emailVerificationToken = jwt.sign({
-        _id: newUserId,
-        stamp: uuid.v4(),
-    }, JWT_SECRET, { expiresIn: process.env.EMAIL_VERIFICATION_TOKEN_EXPIRATION_TIME });
-
-    const notSanitizedUser: UserModel = {
-        _id: newUserId,
-        role: UserRole.User,
-        stamps: {
-            amount: 0,
-            history: [] as StampsHistoryEntry[],
-        },
-        password,
-        email,
-        agreements: agreements as true,
-        verification: {
-            isVerified: false,
-            token: emailVerificationToken,
-        }
-    };
-
-    const errorMessage = userValidator(notSanitizedUser);
-
-    if (typeof errorMessage === 'string') {
-        if (errorMessage.trim()) {
-            res.status(400).json({ message: errorMessage });
-            return;
-        } else {
-            res.status(400).json({ message: 'Coś poszło źle podczas walidacji użytkownika' });
-            return;
-        }
-    }
-
-    const hashedPassword = await bcrypt.hash(notSanitizedUser.password, 10);
-
-    const sanitizedUser: UserModel = {
-        _id: notSanitizedUser._id,
-        email: notSanitizedUser.email,
-        password: notSanitizedUser.password,
-        card: notSanitizedUser.card,
-        role: notSanitizedUser.role,
-        stamps: {
-            amount: notSanitizedUser.stamps.amount,
-            history: notSanitizedUser.stamps.history,
-        },
-        agreements: notSanitizedUser.agreements,
-        verification: notSanitizedUser.verification,
-    };
-
-    const userErrorMessage = userValidator(sanitizedUser);
-
-    sanitizedUser.password = hashedPassword;
-
-    (sanitizedUser as any).unique = notSanitizedUser.password;
-
-    if (typeof userErrorMessage === 'string') {
-        if (userErrorMessage.trim()) {
-            res.status(400).json({ message: userErrorMessage });
-            return;
-        } else {
-            res.status(400).json({ message: 'Coś poszło źle podczas wtórnej walidacji użytkownika' });
-            return;
-        }
-    }
-
-    try {
-
-        const userFoundByMail = await Tools.getUserOrAssistantByEmail(sanitizedUser.email);
-
-        if (userFoundByMail) {
+        if (!captchaData.success) {
             res.status(400).json({
-                message: 'Ten adres email jest już zajęty.',
-                data: userFoundByMail.email
+                message: 'Weryfikacja reCAPTCHA nie powiodła się'
             });
             return;
-        } else {
-            const userFoundById = await Tools.getUserOrAssistantById(sanitizedUser._id);
-            if (userFoundById) {
+        }
+
+        const JWT_SECRET = process.env.JWT_SECRET;
+
+        if (!JWT_SECRET) {
+            throw 'Missing secret.';
+        }
+
+        const newUserId = uuid.v4();
+        const emailVerificationToken = jwt.sign({
+            _id: newUserId,
+            stamp: uuid.v4(),
+        }, JWT_SECRET, { expiresIn: process.env.EMAIL_VERIFICATION_TOKEN_EXPIRATION_TIME });
+
+        const notSanitizedUser: UserModel = {
+            _id: newUserId,
+            role: UserRole.User,
+            stamps: {
+                amount: 0,
+                history: [] as StampsHistoryEntry[],
+            },
+            password,
+            email,
+            agreements: agreements as true,
+            verification: {
+                isVerified: false,
+                token: emailVerificationToken,
+            }
+        };
+
+        const errorMessage = userValidator(notSanitizedUser);
+
+        if (typeof errorMessage === 'string') {
+            if (errorMessage.trim()) {
+                res.status(400).json({ message: errorMessage });
+                return;
+            } else {
+                res.status(400).json({ message: 'Coś poszło źle podczas walidacji użytkownika' });
+                return;
+            }
+        }
+
+        const hashedPassword = await bcrypt.hash(notSanitizedUser.password, 10);
+
+        const sanitizedUser: UserModel = {
+            _id: notSanitizedUser._id,
+            email: notSanitizedUser.email,
+            password: notSanitizedUser.password,
+            card: notSanitizedUser.card,
+            role: notSanitizedUser.role,
+            stamps: {
+                amount: notSanitizedUser.stamps.amount,
+                history: notSanitizedUser.stamps.history,
+            },
+            agreements: notSanitizedUser.agreements,
+            verification: notSanitizedUser.verification,
+        };
+
+        const userErrorMessage = userValidator(sanitizedUser);
+
+        sanitizedUser.password = hashedPassword;
+
+        (sanitizedUser as any).unique = notSanitizedUser.password;
+
+        if (typeof userErrorMessage === 'string') {
+            if (userErrorMessage.trim()) {
+                res.status(400).json({ message: userErrorMessage });
+                return;
+            } else {
+                res.status(400).json({ message: 'Coś poszło źle podczas wtórnej walidacji użytkownika' });
+                return;
+            }
+        }
+
+        try {
+
+            const userFoundByMail = await Tools.getUserOrAssistantByEmail(sanitizedUser.email);
+
+            if (userFoundByMail) {
                 res.status(400).json({
-                    message: 'Ups... ID w użyciu. To matematycznie nieprawdopodobne. Puść totka, bo masz szczęście! A co do rejestracji - proszę, spróbuj ponownie.',
-                    data: sanitizedUser._id
+                    message: 'Ten adres email jest już zajęty.',
+                    data: userFoundByMail.email
                 });
                 return;
             } else {
-                (req as any).creationData = sanitizedUser;
-                next();
+                const userFoundById = await Tools.getUserOrAssistantById(sanitizedUser._id);
+                if (userFoundById) {
+                    res.status(400).json({
+                        message: 'Ups... ID w użyciu. To matematycznie nieprawdopodobne. Puść totka, bo masz szczęście! A co do rejestracji - proszę, spróbuj ponownie.',
+                        data: sanitizedUser._id
+                    });
+                    return;
+                } else {
+                    (req as any).creationData = sanitizedUser;
+                    next();
+                }
             }
-        }
-    } catch (err) {
+        } catch (err) {
 
-        Logs.appLogs.report('/register unexpected error', (setData) => {
-            setData('Description:', 'Rejestracja nie powiodła się z nieznanej przyczyny.');
-            setData('What happened:', err);
-        });
+            Logs.appLogs.report('/register unexpected error', (setData) => {
+                setData('Description:', 'Rejestracja nie powiodła się z nieznanej przyczyny.');
+                setData('What happened:', err);
+            });
 
-        res
-            .status(400)
-            .json({
-                message: 'Rejestracja nie powiodła się z nieznanej przyczyny.',
-                details: err
-            });
-        return;
-    }
-}, limiterForAccountsCreated, async (req, res) => {
-    Logs.appLogs.catchUnhandled('Handler "/register" error', async () => {
-        const sanitizedUser = (req as any).creationData;
-        await EmailService.sendVerificationEmail(sanitizedUser);
-        const createdId = await usersDb.setById<UserModel>(sanitizedUser._id, sanitizedUser);
-        if (createdId) {
-            res.status(201).json({
-                id: sanitizedUser._id
-            });
+            res
+                .status(400)
+                .json({
+                    message: 'Rejestracja nie powiodła się z nieznanej przyczyny.',
+                    details: err
+                });
             return;
-        } else {
+        }
+    },
+    limiterForAccountsCreated,
+    async (req: express.Request, res: express.Response) => {
+        Logs.appLogs.catchUnhandled('Handler "/register" error', async () => {
+            const sanitizedUser = (req as any).creationData;
+            await EmailService.sendVerificationEmail(sanitizedUser);
+            const createdId = await usersDb.setById<UserModel>(sanitizedUser._id, sanitizedUser);
+            if (createdId) {
+                res.status(201).json({
+                    id: sanitizedUser._id
+                });
+                return;
+            } else {
+                res.status(500).json({
+                    message: 'Błąd podczas wysyłania emaila weryfikacyjnego [1].',
+                });
+                return;
+            }
+        }, (e) => {
             res.status(500).json({
-                message: 'Błąd podczas wysyłania emaila weryfikacyjnego [1].',
+                message: 'Coś poszło nie tak podczas wysyłania emaila weryfikacyjnego [2].',
+                details: JSON.stringify((e as any)?.message ?? e)
             });
             return;
-        }
-    }, (e) => {
-        res.status(500).json({
-            message: 'Coś poszło nie tak podczas wysyłania emaila weryfikacyjnego [2].',
-            details: JSON.stringify((e as any)?.message ?? e)
         });
-        return;
     });
-});
 
 router.post('/login', async (req, res) => {
-    return Logs.appLogs.catchUnhandled('Handler "/login" error', async () => {
+    Logs.appLogs.catchUnhandled('Handler "/login" error', async () => {
         const { email, password } = req.body;
 
         const userOrAssistan: UserModel | ManagerModel | AdminModel | null = await Tools.getUserOrAssistantByEmail(email);

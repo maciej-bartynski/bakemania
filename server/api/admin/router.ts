@@ -15,7 +15,7 @@ const adminRouter = express.Router();
 
 adminRouter.use(fileUpload());
 
-adminRouter.post('/users/:userId/change-role', async (req, res) => {
+adminRouter.post('/users/:userId/change-role', async (req: express.Request, res: express.Response) => {
     Logs.appLogs.catchUnhandled('Handler /users/:userId/change-role error', async () => {
         const { userId } = req.params;
         const { email, role } = req.body;

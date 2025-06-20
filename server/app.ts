@@ -28,14 +28,11 @@ import jwt from 'jsonwebtoken';
 import connections from './wsConnections';
 import getLocalIP from './lib/getLocalIP';
 import Logs from './services/LogService';
+import consoleLog from './lib/consoleLog';
 
 const app = express();
 app.use(express.json());
 app.use(cors());
-
-app.use((req, res, next) => {
-    next();
-})
 
 app.get('/api/ping', (req, res) => {
     res.status(204).send();
@@ -73,39 +70,26 @@ app.get('*', (req, res) => {
 
 let wsServer: WebSocketServer;
 
-if (process.env.NODE_ENV === 'production') {
-    /**
-     * Behind Nginx
-     */
-    const httpPort = 3000;
-    const httpServer = http.createServer(app);
-
-    httpServer.listen(httpPort, () => {
-        console.log(`http://${getLocalIP()}:${httpPort}`);
-        console.log(`http://localhost:${httpPort}`);
-    });
-
-    wsServer = new WebSocketServer({ server: httpServer })
-} else {
-    /**
-     * **How to generate local cert**
-     * @domain localhost 192.168.183.252
-     * `mkcert -key-file key.pem -cert-file cert.pem {domain(s)}`
-     */
-
-    const httpsPort = process.env.PORT;
-    const httpsServer = https.createServer({
-        key: fs.readFileSync(process.env.KEY_PATH ?? ""),
-        cert: fs.readFileSync(process.env.CERT_PATH ?? ""),
-    }, app);
-
-    httpsServer.listen(httpsPort, () => {
-        console.log(`https://${getLocalIP()}:${httpsPort}`);
-        console.log(`https://localhost:${httpsPort}`);
-    });
-
-    wsServer = new WebSocketServer({ server: httpsServer })
+const serversToExportForTests: {
+    http: http.Server | null,
+    ws: WebSocketServer | null,
+} = {
+    http: null,
+    ws: null,
 }
+
+const httpPort = process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test' ? 3000 : 4040;
+const httpServer = http.createServer(app);
+
+httpServer.listen(httpPort, () => {
+    consoleLog(`http://${getLocalIP()}:${httpPort}`);
+    consoleLog(`http://localhost:${httpPort}`);
+});
+
+wsServer = new WebSocketServer({ server: httpServer });
+
+serversToExportForTests.http = httpServer;
+serversToExportForTests.ws = wsServer;
 
 wsServer.on("connection", (ws, req) => {
     Logs.wsLogs.catchUnhandled('WsServer connection error', () => {
@@ -175,3 +159,7 @@ wsServer.on("connection", (ws, req) => {
 
     });
 });
+
+export default app;
+
+export { serversToExportForTests };

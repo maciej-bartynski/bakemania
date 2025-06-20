@@ -9,8 +9,12 @@ import { Document } from "./../services/DbService/DbTypes";
 
 const createCardId = async (): Promise<UserCard> => {
     const cardIssueTimestamp = new Date().getTime();
+    const randomPart = Math.random().toString(36).substring(2, 8); // 6 znaków losowych
+    const timestampPart = cardIssueTimestamp.toString(36); // timestamp w base36
+    const combinedString = `${timestampPart}${randomPart}`;
+
     return {
-        hash: await bcrypt.hash(`${cardIssueTimestamp}`, 10),
+        hash: combinedString,
         createdAt: cardIssueTimestamp
     }
 }
@@ -67,21 +71,20 @@ const getSanitizedAssistantById = async (id: string): Promise<SanitizedManagerMo
 }
 
 const getUserOrAssistantById = async (id: string): Promise<ManagerModel | UserModel | AdminModel | null> => {
-    const user = await usersDb.getById<UserModel>(id);
+    const user = await usersDb.getByIdSilent<UserModel>(id);
     if (user) {
         return user;
     }
 
-    const manager = await managersDb.getById<ManagerModel>(id);
+    const manager = await managersDb.getByIdSilent<ManagerModel>(id);
     if (manager) {
         return manager;
     }
 
-    const admin = await adminsDb.getById<AdminModel>(id);
+    const admin = await adminsDb.getByIdSilent<AdminModel>(id);
     if (admin) {
         return admin;
     }
-
 
     return null;
 }

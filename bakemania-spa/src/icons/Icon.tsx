@@ -24,6 +24,10 @@ import ChevronDoubleLeft from "./ChevronDoubleLeft";
 import ChevronTripleLeft from "./ChevronTripleLeft";
 import ChevronTriple from "./ChevronTriple";
 import WarningIcon from "./WarningIcon";
+import AndroidIcon from "./Android";
+import IosIcon from "./Ios";
+import MobileDownloadIcon from "./MobileDownload";
+import IosAddIcon from "./IosAdd";
 
 const Icon: FC<{
     width?: number;
@@ -140,6 +144,22 @@ const Icon: FC<{
             }
             case IconName.Warning: {
                 IconComponent = WarningIcon
+                break;
+            }
+            case IconName.Android: {
+                IconComponent = AndroidIcon
+                break;
+            }
+            case IconName.Ios: {
+                IconComponent = IosIcon
+                break;
+            }
+            case IconName.MobileDownload: {
+                IconComponent = MobileDownloadIcon
+                break;
+            }
+            case IconName.IosAdd: {
+                IconComponent = IosAddIcon
                 break;
             }
         }

@@ -2,6 +2,7 @@
 node_modules
 .DS_Store
 notions.md
+coverage
 
 # builds:
 bakemania-spa/dist
@@ -22,3 +23,6 @@ key.pem
 .env
 .env.prod
 .env.dev
+
+# test
+db-test

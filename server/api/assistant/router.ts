@@ -92,8 +92,10 @@ assistantRouter.post('/stamps/change', async (req, res) => {
         const historyEntry = await usersDb.changeStampsAndWriteHistory(userId, amount, assistantId);
 
         if (historyEntry) {
+            const oldHistory = (assistant.transactionsHistory ?? []);
+            const trimHistory = oldHistory.slice(-49);
             await Tools.updateUserOrAssistantById(assistantId, {
-                transactionsHistory: [...(assistant.transactionsHistory ?? []), historyEntry]
+                transactionsHistory: [...trimHistory, historyEntry]
             });
             const updatedUser = await usersDb.getSanitizedUserById(userId);
             broadcastToUser(userId, 'stamps');
@@ -168,8 +170,10 @@ assistantRouter.post('/stamps/change-force', async (req, res) => {
         const historyEntry = await usersDb.changeStampsAndWriteHistory(userId, amount, assistantId);
 
         if (historyEntry) {
+            const oldHistory = (assistant.transactionsHistory ?? []);
+            const trimHistory = oldHistory.slice(-49);
             await Tools.updateUserOrAssistantById(assistantId, {
-                transactionsHistory: [...(assistant.transactionsHistory ?? []), historyEntry]
+                transactionsHistory: [...trimHistory, historyEntry]
             });
             const updatedUser = await usersDb.getSanitizedUserById(userId);
             broadcastToUser(userId, 'stamps');

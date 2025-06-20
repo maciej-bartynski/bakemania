@@ -7,7 +7,7 @@ import { StampsHistoryEntry } from './UsersDb.types';
 class AdminsDb extends ManagersDb {
     async getSanitizedAdminById(managerId: string) {
         return await Logs.appLogs.catchUnhandled('AdminsDb error on getSanitizedAdmingById', async () => {
-            const manager = await this.getById<AdminModel>(managerId);
+            const manager = await this.getByIdSilent<AdminModel>(managerId);
             if (manager) {
                 const sanitizedUser: SanitizedAdminModel = {
                     _id: manager._id,
@@ -19,27 +19,6 @@ class AdminsDb extends ManagersDb {
                 }
 
                 return sanitizedUser;
-            }
-        });
-    }
-
-    async setRelationToUserHistory(managerId: string, historyEntry: StampsHistoryEntry) {
-        return await Logs.appLogs.catchUnhandled('AdminsDb error on setRelationToUserHistory', async () => {
-            const manager = await this.getById<AdminModel>(managerId);
-            if (manager) {
-                const currentHistory = manager.transactionsHistory;
-                let nextHistory: StampsHistoryEntry[] = [];
-                if (currentHistory.length >= 50) {
-                    nextHistory = [...(currentHistory.slice(-49)), historyEntry];
-                } else {
-                    nextHistory = [...currentHistory, historyEntry];
-                }
-                const updatedId = await this.updateById<AdminModel>(managerId, {
-                    transactionsHistory: nextHistory
-                })
-                if (updatedId) {
-                    return updatedId
-                }
             }
         });
     }

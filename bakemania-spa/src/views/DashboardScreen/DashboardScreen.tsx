@@ -8,7 +8,7 @@ import useAppDispatch from "../../storage/useAppDispatch";
 import appConfigActions from "../../storage/appConfig/appConfig-actions";
 import useAppConfigSelector from "../../storage/appConfig/appConfig-selectors";
 import ReducerState from "../../storage/types";
-import FooterNav from "../../components/FooterNav/FooterNav";
+import FooterNav, { NavAction } from "../../components/FooterNav/FooterNav";
 import IconName from "../../icons/IconName";
 import SettingsSection from "../../components/SettingsSection/SettingsSection";
 import { useLiveUpdateContext } from "../../LiveUpdate/LiveUpdateContext";
@@ -16,6 +16,9 @@ import Background from "../../atoms/Background/Background";
 import { Route, Routes } from "react-router";
 import useAppNavigation from "../../tools/useAppNavigation";
 import CustomerLiveUpdate from "../../atoms/CustomerLiveUpdate/CustomerLiveUpdate";
+import AddToHomeScreen from "../../atoms/AddToHomeScreen/AddToHomeScreen";
+import BottomPanel from "../../atoms/BottomPanel/BottomPanel";
+import { isStandalone } from "../../tools/isPwa";
 
 const DashboardScreen: FC<{
     me: Me,
@@ -27,6 +30,7 @@ const DashboardScreen: FC<{
         const [showGiftCardsSection, setShowGiftCardsSection] = useState(false);
         const { stampsUpdated } = useLiveUpdateContext();
         const { setSettingsRoute } = useAppNavigation();
+        const [showAppDownloadSection, setShowAppDownloadSection] = useState(false);
 
         useEffect(() => {
             if (!stampsUpdated) {
@@ -74,6 +78,11 @@ const DashboardScreen: FC<{
                                 action: setSettingsRoute,
                                 icon: IconName.Cog,
                             },
+                            !isStandalone() ? {
+                                label: 'Aplikacja',
+                                action: () => setShowAppDownloadSection(true),
+                                icon: IconName.MobileDownload,
+                            } : false,
                             {
                                 label: 'Nabij pieczątkę',
                                 action: toggleStampQr,
@@ -86,7 +95,7 @@ const DashboardScreen: FC<{
                                 variant: (me.stamps.amount > (appConfigState.appConfig?.cardSize ?? 7)) ? 'primary' : undefined,
                                 badge: currentGiftsAmount > 0 ? currentGiftsAmount : undefined
                             },
-                        ]}
+                        ].filter(Boolean) as NavAction[]}
                     />
                 }
                 panels={
@@ -137,8 +146,18 @@ const DashboardScreen: FC<{
                             />
                         </div>
                         <p className="dashboardScreen__message">{callToAction}<br />{me.email}</p>
+
                     </section>
                 </div>
+                {!isStandalone() && (
+                    <BottomPanel
+                        show={showAppDownloadSection}
+                        toggleBottomPanel={() => setShowAppDownloadSection(state => !state)}
+                        title="Zainstaluj aplikację na ekranie głównym"
+                    >
+                        <AddToHomeScreen />
+                    </BottomPanel>
+                )}
             </Background>
         )
     }
