@@ -23,6 +23,10 @@ enum IconName {
     ChevronTripleLeft = 'ChevronTripleLeft',
     ChevronTriple = 'ChevronTriple',
     Warning = 'Warning',
+    Android = 'Android',
+    Ios = 'Ios',
+    MobileDownload = 'MobileDownload',
+    IosAdd = 'IosAdd',
 }
 
 export default IconName;

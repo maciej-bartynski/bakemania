@@ -79,11 +79,38 @@ class LogService {
             day: '2-digit',
             year: 'numeric'
         }).replaceAll(' ', '').replaceAll(',', '-');
-        const fileName = `${timestamp}__${dateString}__${hours}-${minutes}-${seconds}`;
+        const fileName = `${timestamp}__${dateString}__${hours}-${minutes}-${seconds}__${this.location}`;
         const logFullPath = path.join(this.logPath, this.location || '', `${fileName}.json`);
 
         try {
-            await fsPromises.mkdir(path.dirname(logFullPath), { recursive: true });
+            const logsDir = path.join(this.logPath, this.location || '');
+            await fsPromises.mkdir(logsDir, { recursive: true });
+
+            const files = await fsPromises.readdir(logsDir);
+            if (files.length >= 200) {
+                const fileStats = await Promise.all(
+                    files.map(async (file) => {
+                        const filePath = path.join(logsDir, file);
+                        const stats = await fsPromises.stat(filePath);
+                        return {
+                            name: file,
+                            birthtime: stats.birthtime
+                        };
+                    })
+                );
+
+                const sortedFiles = fileStats.sort((a, b) =>
+                    a.birthtime.getTime() - b.birthtime.getTime()
+                );
+
+                const filesToDelete = sortedFiles.slice(0, sortedFiles.length - 199);
+                await Promise.all(
+                    filesToDelete.map(file =>
+                        fsPromises.unlink(path.join(logsDir, file.name))
+                    )
+                );
+            }
+
             await fsPromises.writeFile(logFullPath, JSON.stringify({ ...entry, timestamp: new Date() }, null, 2), 'utf8');
         } catch (err) {
             console.error('LogService error on saving report:', err);
@@ -131,5 +158,7 @@ const Logs = {
     clientLogs,
     emailLogs
 }
+
+export type { LogService };
 
 export default Logs

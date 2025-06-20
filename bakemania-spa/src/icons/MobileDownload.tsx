@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-const Chevron: FC<{
+const MobileDownload: FC<{
     width?: number;
     height?: number;
     color?: string;
@@ -21,9 +21,14 @@ const Chevron: FC<{
                 strokeLinecap="round"
                 strokeLinejoin="round"
             >
-                <path d="M9 6l6 6l-6 6" />
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M12.5 21h-4.5a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v7" />
+                <path d="M11 4h2" />
+                <path d="M12 17v.01" />
+                <path d="M19 16v6" />
+                <path d="M22 19l-3 3l-3 -3" />
             </svg>
         )
     }
 
-export default Chevron;
+export default MobileDownload;
